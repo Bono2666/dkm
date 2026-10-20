@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# macOS
+.DS_Store
+._*
+
+# Odoo / editor
+*.log
+*.swp
+.idea/
+.vscode/
