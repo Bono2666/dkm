@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_eh_approval_request_form_dkm_whatsapp" model="ir.ui.view">
+        <field name="name">eh.approval.request.form.dkm.whatsapp</field>
+        <field name="model">eh.approval.request</field>
+        <field name="inherit_id" ref="eh_account_approval.view_eh_approval_request_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_send_reminder']" position="after">
+                <button name="action_dkm_resend_whatsapp"
+                        type="object"
+                        string="Kirim Ulang Link WA"
+                        invisible="state != 'in_review'"
+                        confirm="Buat link baru dan kirim ulang ke WhatsApp approver yang belum memutuskan? Link lama tidak berlaku lagi."/>
+            </xpath>
+            <xpath expr="//notebook/page[@name='votes']" position="before">
+                <page string="Link WhatsApp" name="dkm_whatsapp_links">
+                    <field name="dkm_token_ids" readonly="1">
+                        <list create="0" delete="0"
+                              decoration-muted="state != 'active' or is_expired"
+                              decoration-danger="send_state == 'failed'">
+                            <field name="create_date" string="Dibuat"/>
+                            <field name="user_id"/>
+                            <field name="cycle" optional="hide"/>
+                            <field name="send_state" widget="badge"
+                                   decoration-success="send_state == 'sent'"
+                                   decoration-danger="send_state == 'failed'"
+                                   decoration-warning="send_state in ('queued', 'skipped')"/>
+                            <field name="send_detail" optional="show"/>
+                            <field name="expires_at"/>
+                            <field name="is_expired" optional="hide"/>
+                            <field name="state"/>
+                            <field name="decision"/>
+                            <field name="used_at" optional="hide"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_dkm_whatsapp" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.dkm.whatsapp</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="Approval via WhatsApp" name="dkm_whatsapp_block" id="dkm_whatsapp_block">
+                    <setting id="dkm_wa_enabled_setting"
+                             string="Kirim link persetujuan via WhatsApp"
+                             help="Setiap tahap approval mengirim link unik ke WhatsApp approver (gateway Fonnte). Keputusan memerlukan PIN 6 digit approver.">
+                        <field name="dkm_wa_enabled"/>
+                        <div class="content-group mt-2" invisible="not dkm_wa_enabled">
+                            <div class="row">
+                                <label for="dkm_wa_fonnte_token" class="col-lg-4 o_light_label"/>
+                                <field name="dkm_wa_fonnte_token" password="True"
+                                       placeholder="Token device dari dashboard fonnte.com"/>
+                            </div>
+                            <div class="row">
+                                <label for="dkm_wa_link_validity_hours" class="col-lg-4 o_light_label"/>
+                                <field name="dkm_wa_link_validity_hours"/>
+                            </div>
+                            <div class="mt-2">
+                                <button name="action_dkm_test_whatsapp" type="object"
+                                        string="Kirim pesan uji ke WA saya"
+                                        icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

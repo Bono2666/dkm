@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+access_dkm_approval_token_accounting,dkm.approval.token.accounting,dkm.approval.token,account.group_account_invoice,r,
+access_dkm_approval_token_manager,dkm.approval.token.manager,dkm.approval.token,eh_account_base.group_eh_manager,r,
+access_dkm_approval_token_auditor,dkm.approval.token.auditor,dkm.approval.token,eh_account_base.group_eh_auditor,r,
+rule_dkm_approval_token_company,dkm.approval.token: company isolation,dkm.approval.token,,crud,"[('company_id', 'in', company_ids)]"
+access_dkm_approval_pin_wizard,dkm.approval.pin.wizard,dkm.approval.pin.wizard,base.group_user,crud,

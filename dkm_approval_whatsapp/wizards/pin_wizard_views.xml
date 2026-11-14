@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_dkm_approval_pin_wizard_form" model="ir.ui.view">
+        <field name="name">dkm.approval.pin.wizard.form</field>
+        <field name="model">dkm.approval.pin.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Atur PIN Persetujuan">
+                <p class="text-muted">
+                    PIN 6 digit ini diminta setiap kali Anda menyetujui atau
+                    menolak pengajuan dari link WhatsApp. Jangan gunakan angka
+                    berulang/berurutan dan jangan beritahukan ke orang lain.
+                </p>
+                <group>
+                    <field name="user_id" force_save="1"/>
+                    <field name="new_pin" password="True"
+                           options="{'autocomplete': 'new-password'}"/>
+                    <field name="confirm_pin" password="True"
+                           options="{'autocomplete': 'new-password'}"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object"
+                            string="Simpan PIN" class="btn-primary"/>
+                    <button string="Batal" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

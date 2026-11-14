@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Admin user form -->
+    <record id="view_users_form_dkm_whatsapp" model="ir.ui.view">
+        <field name="name">res.users.form.dkm.whatsapp</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences']//group[@name='other_preferences']" position="inside">
+                <separator string="Approval via WhatsApp" colspan="2"/>
+                <field name="dkm_whatsapp" placeholder="0812xxxxxxx"/>
+                <label for="dkm_has_approval_pin"/>
+                <div class="o_row">
+                    <field name="dkm_has_approval_pin" readonly="1"/>
+                    <button name="action_dkm_open_pin_wizard" type="object"
+                            string="Atur / Reset PIN" class="btn-link"
+                            groups="base.group_system"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- My Preferences -->
+    <record id="view_users_form_simple_modif_dkm_whatsapp" model="ir.ui.view">
+        <field name="name">res.users.preferences.form.dkm.whatsapp</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='other_preferences']" position="inside">
+                <separator string="Approval via WhatsApp" colspan="2"/>
+                <field name="dkm_whatsapp" readonly="0" placeholder="0812xxxxxxx"/>
+                <label for="dkm_has_approval_pin"/>
+                <div class="o_row">
+                    <field name="dkm_has_approval_pin" readonly="1"/>
+                    <button name="action_dkm_open_pin_wizard" type="object"
+                            string="Atur PIN Persetujuan" class="btn-link"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
