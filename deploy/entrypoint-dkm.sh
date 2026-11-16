@@ -45,8 +45,11 @@ for _ in $(seq 1 30); do
     sleep 2
 done
 
-if ! psql -d postgres -Atc "SELECT 1 FROM pg_database WHERE datname = '${DB_NAME}'" | grep -q 1; then
-    echo "Database ${DB_NAME} not found: creating it with ${INIT_MODULES}"
+# Checks for Odoo's tables, not just the database: Easypanel's Postgres
+# service pre-creates an empty database named after the project.
+INITIALIZED="$(psql -d "$DB_NAME" -Atc "SELECT 1 FROM information_schema.tables WHERE table_name = 'ir_module_module'" 2>/dev/null || true)"
+if [ "$INITIALIZED" != "1" ]; then
+    echo "Database ${DB_NAME} not initialized: installing ${INIT_MODULES}"
     odoo -d "$DB_NAME" -i "$INIT_MODULES" --load-language="$LANG_CODE" \
          --stop-after-init --no-http
 fi
