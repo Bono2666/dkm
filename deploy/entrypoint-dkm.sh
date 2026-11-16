@@ -32,6 +32,9 @@ db_name = ${DB_NAME}
 dbfilter = ^${DB_NAME}\$
 list_db = False
 proxy_mode = True
+# Odoo 20 binds to 127.0.0.1 by default; Traefik reaches it over the
+# overlay network.
+http_interface = 0.0.0.0
 workers = ${WORKERS}
 max_cron_threads = 1
 limit_time_cpu = 600
