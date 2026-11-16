@@ -36,14 +36,21 @@ Di project `dkm` → **+ Service** → **Postgres**
 ```
 HOST=dkm_db
 PORT=5432
-USER=postgres
-PASSWORD=<password service db>
+USER=odoo
+PASSWORD=<password acak baru untuk role odoo>
+PG_SUPERUSER=postgres
+PG_SUPERUSER_PASSWORD=<password service db>
 ODOO_ADMIN_PASSWD=<master password acak, simpan di password manager>
 ODOO_INITIAL_ADMIN_PASSWORD=<password login admin, simpan di password manager>
 ODOO_BASE_URL=https://finance.alukhuwahbsd.com
 ODOO_DB_NAME=dkm
 ODOO_WORKERS=0
 ```
+
+Odoo menolak berjalan sebagai superuser `postgres`; entrypoint memakai
+`PG_SUPERUSER` untuk membuat role `odoo` (CREATEDB, bukan superuser) dan
+menjadikannya pemilik database `dkm` (Easypanel sudah membuat database kosong
+bernama project).
 
 **Mounts** → **Volume**: name `odoo-data`, mount path `/var/lib/odoo`
 (wajib: berisi lampiran/filestore; tanpa ini lampiran hilang saat redeploy).

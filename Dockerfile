@@ -2,6 +2,9 @@
 FROM odoo:20.0-20261112
 
 USER root
+# The base image's en_US.UTF-8 locale is not generated; avoids perl warnings
+# from the PostgreSQL client wrappers.
+ENV LANG=C.UTF-8
 # Python libraries required by base_accounting_kit that the official image
 # does not ship (openpyxl and xlsxwriter already come with Odoo).
 RUN pip3 install --no-cache-dir --break-system-packages \

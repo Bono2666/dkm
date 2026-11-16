@@ -2,7 +2,10 @@
 # Writes odoo.conf from environment variables, creates the database with the
 # DKM modules on first start, then hands over to the official entrypoint.
 #
-# Required env:  HOST, USER, PASSWORD   (PostgreSQL, read by the official image)
+# Required env:  HOST, USER, PASSWORD   (PostgreSQL role Odoo runs as; must
+#                                        not be a superuser such as 'postgres')
+#                PG_SUPERUSER, PG_SUPERUSER_PASSWORD (optional: used to create
+#                                        USER and give it DB_NAME)
 #                ODOO_ADMIN_PASSWD      (master password, never committed)
 # First start:   ODOO_INITIAL_ADMIN_PASSWORD (password of the 'admin' login,
 #                required only when the database is created)
@@ -37,13 +40,27 @@ limit_memory_soft = 1610612736
 limit_memory_hard = 2147483648
 EOF
 
-export PGHOST="$HOST" PGPORT="$DB_PORT" PGUSER="$USER" PGPASSWORD="$PASSWORD"
+export PGHOST="$HOST" PGPORT="$DB_PORT"
 
 for _ in $(seq 1 30); do
     pg_isready -q -d postgres && break
     echo "Waiting for PostgreSQL at ${HOST}:${DB_PORT}..."
     sleep 2
 done
+
+# Odoo refuses to run as the 'postgres' superuser. When superuser
+# credentials are given, (re)create USER as a plain role that owns DB_NAME.
+if [ -n "${PG_SUPERUSER:-}" ]; then
+    PGUSER="$PG_SUPERUSER" PGPASSWORD="${PG_SUPERUSER_PASSWORD:?PG_SUPERUSER_PASSWORD must be set}" \
+    psql -q -v ON_ERROR_STOP=1 -d postgres \
+         -v role="$USER" -v pw="$PASSWORD" -v db="$DB_NAME" <<'SQL'
+SELECT format('CREATE ROLE %I LOGIN', :'role') WHERE NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = :'role') \gexec
+SELECT format('ALTER ROLE %I LOGIN CREATEDB NOSUPERUSER PASSWORD %L', :'role', :'pw') \gexec
+SELECT format('ALTER DATABASE %I OWNER TO %I', :'db', :'role') WHERE EXISTS (SELECT 1 FROM pg_database WHERE datname = :'db') \gexec
+SQL
+fi
+
+export PGUSER="$USER" PGPASSWORD="$PASSWORD"
 
 # Checks for Odoo's tables, not just the database: Easypanel's Postgres
 # service pre-creates an empty database named after the project.
