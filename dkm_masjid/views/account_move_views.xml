@@ -44,6 +44,77 @@
             <xpath expr="//group[@name='sale_info_group']/field[@name='delivery_date']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+
+            <!-- Title: the receipt selector would print "Faktur Pelanggan". -->
+            <xpath expr="//div[hasclass('oe_title')]//field[@name='move_type']" position="attributes">
+                <attribute name="invisible">move_type in ('entry', 'out_invoice', 'out_refund') or is_self_billing</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]/span[field[@name='move_type']]" position="after">
+                <span class="o_form_label" invisible="move_type != 'out_invoice'">Nota Penerimaan</span>
+                <span class="o_form_label" invisible="move_type != 'out_refund'">Pengembalian Dana</span>
+            </xpath>
+
+            <!-- A receipt line is a category and an amount: no quantity,
+                 unit price, discount or tax (mosques are not PKP). -->
+            <xpath expr="//field[@id='document_tax_mode']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@id='document_tax_mode_mobile']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/control/button[@name='action_add_from_catalog']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='quantity']" position="attributes">
+                <attribute name="column_invisible">parent.move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='product_uom_id'][@optional='show']" position="attributes">
+                <attribute name="column_invisible">parent.move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_unit']" position="attributes">
+                <attribute name="column_invisible">parent.move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_unit']" position="after">
+                <field name="price_unit" string="Nominal"
+                       column_invisible="parent.move_type not in ('out_invoice', 'out_refund')"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='discount']" position="attributes">
+                <attribute name="column_invisible">parent.move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='tax_ids']" position="attributes">
+                <attribute name="column_invisible">parent.move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_subtotal']" position="attributes">
+                <attribute name="column_invisible">parent.document_tax_mode == 'tax_included' or parent.move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='price_total']" position="attributes">
+                <attribute name="column_invisible">parent.document_tax_mode == 'tax_excluded' or parent.move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+
+            <!-- Totals: one "Total Penerimaan" instead of untaxed/tax/total. -->
+            <xpath expr="//field[@name='narration']" position="attributes">
+                <attribute name="placeholder">Catatan</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tax_totals']" position="attributes">
+                <attribute name="invisible">move_type in ('out_invoice', 'out_refund')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tax_totals']" position="after">
+                <div class="d-flex justify-content-end align-items-baseline gap-3 mb-3" colspan="2"
+                     name="dkm_receipt_total" invisible="move_type not in ('out_invoice', 'out_refund')">
+                    <span class="o_form_label">Total Penerimaan</span>
+                    <field name="amount_total" class="fs-4 fw-bold w-auto"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[label[@for='amount_residual']]" position="attributes">
+                <attribute name="invisible">move_type == 'out_invoice'</attribute>
+            </xpath>
+            <xpath expr="//div[label[@for='amount_residual']]" position="after">
+                <div class="d-flex justify-content-end gap-3" colspan="2"
+                     invisible="move_type != 'out_invoice'">
+                    <label for="amount_residual" string="Belum Diterima"/>
+                    <field name="amount_residual" class="oe_subtotal_footer_separator w-auto"/>
+                </div>
+            </xpath>
             <xpath expr="//field[@name='invoice_incoterm_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>

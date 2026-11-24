@@ -211,6 +211,14 @@ class TestMasjid(TransactionCase):
         self.assertTrue(arch.xpath(
             "//field[@name='product_id'][@string='Kategori']"))
         self.assertTrue(arch.xpath("//page[@id='invoice_tab'][@string='Rincian']"))
+        out = "parent.move_type in ('out_invoice', 'out_refund')"
+        lines = arch.xpath("//field[@name='invoice_line_ids']/list")[0]
+        for fname in ('quantity', 'discount', 'tax_ids'):
+            self.assertEqual(lines.xpath(f"field[@name='{fname}']")[0]
+                             .get('column_invisible'), out, fname)
+        self.assertTrue(lines.xpath("field[@name='price_unit'][@string='Nominal']"))
+        self.assertTrue(arch.xpath("//span[text()='Nota Penerimaan']"))
+        self.assertTrue(arch.xpath("//div[@name='dkm_receipt_total']/field[@name='amount_total']"))
 
         zakat = self._category("Zakat").product_variant_id
         donor = self.cenv['res.partner'].create({'name': "Donatur Uji"})
