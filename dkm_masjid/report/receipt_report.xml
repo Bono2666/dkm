@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The customer invoice PDF is the mosque's receipt (kuitansi). -->
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//t[@name='invoice_title']" position="replace">
+            <t name="invoice_title">Kuitansi Penerimaan</t>
+        </xpath>
+        <xpath expr="//t[@name='draft_invoice_title']" position="replace">
+            <t name="draft_invoice_title">Kuitansi Penerimaan (Draft)</t>
+        </xpath>
+        <xpath expr="//t[@name='cancelled_invoice_title']" position="replace">
+            <t name="cancelled_invoice_title">Kuitansi Penerimaan (Dibatalkan)</t>
+        </xpath>
+        <xpath expr="//t[@name='credit_note_title']" position="replace">
+            <t name="credit_note_title">Bukti Pengembalian Dana</t>
+        </xpath>
+        <xpath expr="//t[@name='draft_credit_note_title']" position="replace">
+            <t name="draft_credit_note_title">Bukti Pengembalian Dana (Draft)</t>
+        </xpath>
+        <xpath expr="//t[@name='cancelled_credit_note_title']" position="replace">
+            <t name="cancelled_credit_note_title">Bukti Pengembalian Dana (Dibatalkan)</t>
+        </xpath>
+
+        <xpath expr="//div[@name='invoice_date']/t[1]" position="replace">
+            <t t-if="o.move_type == 'out_invoice'"><strong>Tanggal Penerimaan</strong></t>
+        </xpath>
+        <xpath expr="//div[@name='invoice_date']/t[2]" position="replace">
+            <t t-elif="o.move_type == 'out_refund'"><strong>Tanggal Pengembalian</strong></t>
+        </xpath>
+        <xpath expr="//div[@name='due_date']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@name='customer_code']/strong" position="replace">
+            <strong>Kode Donatur</strong>
+        </xpath>
+        <xpath expr="//div[@name='reference']/strong" position="replace">
+            <strong>Referensi</strong>
+        </xpath>
+
+        <xpath expr="//th[@name='th_description']/span" position="replace">
+            <span>Keterangan</span>
+        </xpath>
+        <xpath expr="//th[@name='th_priceunit']/span" position="replace">
+            <span>Nominal</span>
+        </xpath>
+        <xpath expr="//th[@name='th_subtotal']/span" position="replace">
+            <span>Jumlah</span>
+        </xpath>
+
+        <!-- A receipt is already paid: no payment instructions. -->
+        <xpath expr="//p[@name='payment_communication']" position="replace">
+            <p name="payment_communication" t-if="o.payment_state not in ('paid', 'in_payment')">
+                Referensi pembayaran: <span class="fw-bold" t-field="o.payment_reference"/>
+                <t t-if="o.partner_bank_id">
+                    <br/>ke rekening: <span t-field="o.partner_bank_id" class="fw-bold"/>
+                </t>
+            </p>
+        </xpath>
+        <xpath expr="//div[p[@name='payment_communication']]" position="after">
+            <div t-if="o.move_type == 'out_invoice'" name="dkm_receipt_footer" class="mt-4 avoid-page-break-inside">
+                <p>Jazakumullahu khairan katsiran. Semoga Allah SWT menerima amal
+                    jariyah Anda dan melimpahkan keberkahan.</p>
+                <div class="row mt-4">
+                    <div class="col-5 offset-7 text-center">
+                        <p class="mb-5">Penerima,</p>
+                        <p class="mb-0">( ________________________ )</p>
+                        <p>Bendahara <span t-field="o.company_id.name"/></p>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

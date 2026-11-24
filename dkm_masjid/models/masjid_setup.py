@@ -21,8 +21,9 @@ LABELS = {
     'account.menu_action_move_out_refund_type': "Pengembalian Dana",
     'account.action_move_out_refund_type_non_legacy': "Pengembalian Dana",
     'account.product_product_menu_sellable': "Kategori Penerimaan",
-    'account.menu_account_supplier': "Pemasok",
-    'account.res_partner_action_supplier': "Pemasok",
+    'account.menu_account_supplier': "Vendor",
+    'account.res_partner_action_supplier': "Vendor",
+    'account.account_invoices': "Kuitansi / Faktur PDF",
     'base_accounting_kit.customer_statements_menu': "Laporan Penagihan",
     'base_accounting_kit.menu_account_recurring_invoice': "Faktur Berulang",
     'base_accounting_kit.account_recurring_payments_child1':
@@ -96,6 +97,29 @@ ACCOUNTS = {
     'l10n_id_99999900': "Surplus (Defisit) Tahun Berjalan",
 }
 
+# Mosque receipts are numbered PNR/2026/00001 (refunds RPNR/...).
+RECEIPT_JOURNAL_CODE = 'PNR'
+
+# Odoo's Indonesian texts that say "pemasok": the committee knows "vendor".
+VENDOR_FIELD_HELP = {
+    'account.field_res_partner__debit':
+        "Jumlah total yang harus Anda bayar pada vendor ini.",
+    'account.field_res_users__debit':
+        "Jumlah total yang harus Anda bayar pada vendor ini.",
+    'product.field_product_supplierinfo__sequence':
+        "Tetapkan prioritas untuk daftar vendor produk.",
+    'product.field_product_supplierinfo__date_end':
+        "Tanggal berakhir untuk harga vendor ini",
+    'product.field_product_supplierinfo__date_start':
+        "Tanggal mulai untuk harga vendor ini",
+}
+VENDOR_VIEW_TERMS = {
+    'account.res_config_settings_view_form': {
+        'Print checks to pay your vendors':
+            "Cetak cek untuk membayar vendor Anda",
+    },
+}
+
 # Receipt categories (sellable services) -> income account code. Chosen in the
 # Kategori column of a Nota Penerimaan, they post to the right account.
 RECEIPT_CATEGORIES = [
@@ -134,6 +158,20 @@ class DkmMasjidSetup(models.AbstractModel):
             record = self.env.ref(xmlid, raise_if_not_found=False)
             if record:
                 self._set_name(record.sudo(), label, langs=['id_ID'])
+
+    @api.model
+    def _apply_vendor_wording(self):
+        """Called from data/labels.xml on every install and upgrade."""
+        if 'id_ID' not in dict(self.env['res.lang'].get_installed()):
+            return
+        for xmlid, text in VENDOR_FIELD_HELP.items():
+            field = self.env.ref(xmlid, raise_if_not_found=False)
+            if field:
+                field.sudo().update_field_translations('help', {'id_ID': text})
+        for xmlid, terms in VENDOR_VIEW_TERMS.items():
+            view = self.env.ref(xmlid, raise_if_not_found=False)
+            if view:
+                view.sudo().update_field_translations('arch_db', {'id_ID': terms})
 
     @api.model
     def _apply_menu_restrictions(self):
@@ -213,7 +251,23 @@ class DkmMasjidSetup(models.AbstractModel):
                 else:
                     self._set_name(account, name)
             self._setup_receipt_categories(company)
+            self._setup_receipt_numbering(company)
             _logger.info("dkm_masjid: mosque chart applied to %s", company.name)
+
+    @api.model
+    def _setup_receipt_numbering(self, companies):
+        """Give the receipt journal the PNR code (the sequence prefix), as
+        long as nothing has been numbered in it yet."""
+        for company in companies:
+            journal = self.with_company(company).env['account.chart.template'].ref(
+                'sale', raise_if_not_found=False)
+            if not journal or journal.company_id != company \
+                    or journal.code == RECEIPT_JOURNAL_CODE:
+                continue
+            if self.env['account.move'].with_context(active_test=False).search_count(
+                    [('journal_id', '=', journal.id)], limit=1):
+                continue
+            journal.code = RECEIPT_JOURNAL_CODE
 
     @api.model
     def _setup_receipt_categories(self, companies):

@@ -70,7 +70,7 @@ class TestMasjid(TransactionCase):
         self.assertEqual(self._name_id(menu), "Penerimaan")
         self.assertEqual(
             self._name_id(self.env.ref('account.menu_account_supplier')),
-            "Pemasok")
+            "Vendor")
         self.assertEqual(
             self._name_id(self.env.ref('base.menu_action_res_company_form')),
             "Masjid")
@@ -225,3 +225,38 @@ class TestMasjid(TransactionCase):
         self.assertEqual(move.type_name, "Nota Penerimaan")
         self.assertTrue(move.with_context(lang='id_ID').display_name
                         .startswith("Nota Penerimaan Draft"))
+
+    def test_receipt_numbering_pdf_and_email(self):
+        sale = self.chart.ref('sale')
+        self.assertEqual(sale.code, 'PNR')
+        infaq = self.cenv['product.product'].search([
+            ('default_code', '=', 'DKM-INFAQ'),
+            ('company_id', '=', self.company.id)])
+        donor = self.cenv['res.partner'].create({'name': "Hamba Allah"})
+        move = self.cenv['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': donor.id,
+            'invoice_line_ids': [(0, 0, {'product_id': infaq.id,
+                                         'price_unit': 150000.0})],
+        })
+        move.action_post()
+        self.assertTrue(move.name.startswith('PNR/'), move.name)
+
+        html = str(self.cenv['ir.actions.report'].with_context(lang='id_ID')
+                   ._render_qweb_html('account.account_invoices', move.ids)[0])
+        self.assertIn("Kuitansi Penerimaan", html)
+        self.assertIn("Jazakumullahu khairan", html)
+        self.assertIn("Tanggal Penerimaan", html)
+
+        template = move._get_mail_template()
+        self.assertEqual(template, self.env.ref('dkm_masjid.mail_template_receipt'))
+        subject = template._render_field('subject', move.ids)[move.id]
+        self.assertTrue(subject.startswith("Kuitansi PNR/"), subject)
+        body = template._render_field('body_html', move.ids)[move.id]
+        self.assertIn("Infaq &amp; Sedekah", str(body))
+
+    def test_vendor_wording(self):
+        help_text = self.env['res.partner'].with_context(
+            lang='id_ID').fields_get(['debit'], ['help'])['debit']['help']
+        self.assertIn("vendor", help_text)
+        self.assertNotIn("pemasok", help_text)

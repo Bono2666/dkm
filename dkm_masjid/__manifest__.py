@@ -17,6 +17,10 @@ Penyesuaian Odoo untuk keuangan masjid
   Tanggal Penerimaan, kolom Kategori (Infaq & Sedekah, Zakat, Wakaf, Sewa
   Fasilitas, masing-masing ke akun pendapatannya); jatuh tempo, pengiriman
   dan incoterm disembunyikan. Nota Kredit menjadi Pengembalian Dana.
+  Nomor PNR/2026/00001; PDF menjadi Kuitansi Penerimaan (dengan ucapan
+  terima kasih dan tanda tangan Bendahara) dan email kirimnya memakai
+  template berbahasa Indonesia.
+* Istilah "pemasok" di teks bantuan Odoo diganti "vendor".
 * Dashboard: kartu angka, keterangan jurnal dan panduan awal memakai
   istilah masjid (tanpa "Faktur" dan "Perusahaan").
 * Laporan base_accounting_kit memakai istilah nirlaba: Laporan
@@ -31,13 +35,15 @@ Penyesuaian Odoo untuk keuangan masjid
     'author': 'DKM',
     'license': 'LGPL-3',
     'category': 'Accounting/Accounting',
-    'version': '20.0.1.5.0',
+    'version': '20.0.1.6.0',
     'depends': ['account', 'l10n_id', 'base_accounting_kit'],
     'data': [
         'views/menus.xml',
         'views/journal_dashboard_views.xml',
         'views/account_move_views.xml',
         'data/labels.xml',
+        'data/mail_templates.xml',
+        'report/receipt_report.xml',
     ],
     'assets': {
         'web.assets_backend': [

@@ -23,6 +23,15 @@ class AccountMove(models.Model):
             if move.move_type in TYPE_NAMES:
                 move.type_name = TYPE_NAMES[move.move_type]
 
+    def _get_mail_template(self):
+        for move_type, xmlid in (('out_invoice', 'dkm_masjid.mail_template_receipt'),
+                                 ('out_refund', 'dkm_masjid.mail_template_refund')):
+            if self and all(move.move_type == move_type for move in self):
+                template = self.env.ref(xmlid, raise_if_not_found=False)
+                if template:
+                    return template
+        return super()._get_mail_template()
+
     def _get_move_display_name(self, show_ref=False):
         name = super()._get_move_display_name(show_ref=show_ref)
         source = DRAFT_SOURCES.get(self.move_type)

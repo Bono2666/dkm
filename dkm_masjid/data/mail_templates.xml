@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- noupdate: the treasurer may adjust the wording. -->
+    <data noupdate="1">
+        <record id="mail_template_receipt" model="mail.template">
+            <field name="name">Kuitansi Penerimaan: Kirim</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="subject">Kuitansi {{ object.name or '' }} - {{ object.company_id.name }}</field>
+            <field name="description">Dikirim ke donatur bersama kuitansi penerimaan</field>
+            <!-- The send wizard attaches the PDF itself, as for account's own template. -->
+            <field name="report_template_ids" eval="[]"/>
+            <field name="email_layout_xmlid">mail.mail_notification_layout_with_responsible_signature</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Assalamu'alaikum warahmatullahi wabarakatuh,
+        <br/><br/>
+        Yth. <t t-out="object.partner_id.name or ''">Bapak/Ibu</t>,
+        <br/><br/>
+        Terima kasih atas
+        <t t-if="object.invoice_line_ids.product_id">
+            <t t-out="', '.join(object.invoice_line_ids.product_id.mapped('name'))">infaq</t>
+        </t>
+        <t t-else="">donasi</t>
+        Anda sebesar
+        <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">Rp 100.000</span>
+        kepada <t t-out="object.company_id.name or ''">DKM</t>.
+        Kuitansi <span style="font-weight:bold;" t-out="object.name or ''">PNR/2026/00001</span> terlampir.
+        <br/><br/>
+        Jazakumullahu khairan katsiran. Semoga Allah SWT menerima amal jariyah
+        Anda dan melimpahkan keberkahan.
+        <br/><br/>
+        Wassalamu'alaikum warahmatullahi wabarakatuh.
+    </p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="mail_template_refund" model="mail.template">
+            <field name="name">Pengembalian Dana: Kirim</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="subject">Bukti Pengembalian Dana {{ object.name or '' }} - {{ object.company_id.name }}</field>
+            <field name="description">Dikirim ke donatur bersama bukti pengembalian dana</field>
+            <!-- The send wizard attaches the PDF itself, as for account's own template. -->
+            <field name="report_template_ids" eval="[]"/>
+            <field name="email_layout_xmlid">mail.mail_notification_layout_with_responsible_signature</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Assalamu'alaikum warahmatullahi wabarakatuh,
+        <br/><br/>
+        Yth. <t t-out="object.partner_id.name or ''">Bapak/Ibu</t>,
+        <br/><br/>
+        Bersama ini kami sampaikan bukti pengembalian dana
+        <span style="font-weight:bold;" t-out="object.name or ''">RPNR/2026/00001</span>
+        sebesar <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">Rp 100.000</span>
+        dari <t t-out="object.company_id.name or ''">DKM</t>.
+        <br/><br/>
+        Wassalamu'alaikum warahmatullahi wabarakatuh.
+    </p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
