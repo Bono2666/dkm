@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Re-applied on every install/upgrade: Indonesian (id_ID) labels for
+         menus, actions and report lines. -->
+    <function model="dkm.masjid.setup" name="_apply_labels"/>
+</odoo>

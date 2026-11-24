@@ -20,7 +20,7 @@ set -euo pipefail
 DB_NAME="${ODOO_DB_NAME:-dkm}"
 WORKERS="${ODOO_WORKERS:-0}"
 LANG_CODE="${ODOO_LANG:-id_ID}"
-INIT_MODULES="${ODOO_INIT_MODULES:-l10n_id,base_accounting_kit,base_account_budget,dkm_approval_whatsapp}"
+INIT_MODULES="${ODOO_INIT_MODULES:-l10n_id,base_accounting_kit,base_account_budget,dkm_approval_whatsapp,dkm_masjid}"
 DB_PORT="${PORT:-5432}"
 
 cat > /etc/odoo/odoo.conf <<EOF

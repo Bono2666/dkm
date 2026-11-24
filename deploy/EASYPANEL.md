@@ -5,7 +5,8 @@ Server: `43.173.27.76` (Easypanel di port 3000) · Domain: `finance.alukhuwahbsd
 Image dibangun dari `Dockerfile` di root repo ini: `odoo:20.0-20261112` plus
 semua modul DKM (`/opt/dkm-addons`). Saat pertama kali jalan, container
 membuat database `dkm` dan meng-install
-`l10n_id, base_accounting_kit, base_account_budget, dkm_approval_whatsapp`
+`l10n_id, base_accounting_kit, base_account_budget, dkm_approval_whatsapp,
+dkm_masjid`
 dengan bahasa Indonesia.
 
 ## 0. DNS (Niagahoster)

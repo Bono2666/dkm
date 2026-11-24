@@ -1,0 +1,174 @@
+# -*- coding: utf-8 -*-
+import logging
+
+from odoo import api, models
+
+_logger = logging.getLogger(__name__)
+
+# Indonesian UI labels, written for id_ID. On a database where en_US is not
+# installed Odoo also stores them as the source term, which is why
+# models/financial_report.py no longer relies on the English line names.
+LABELS = {
+    # Invoicing menus
+    'account.menu_finance_receivables': "Penerimaan",
+    'account.menu_account_customer': "Donatur",
+    'account.res_partner_action_customer': "Donatur",
+    'account.menu_finance_payables': "Pengeluaran",
+    # Company -> Masjid
+    'base.menu_users': "Pengguna & Masjid",
+    'base.menu_action_res_company_form': "Masjid",
+    'base.action_res_company_form': "Masjid",
+    # Nonprofit report names (ISAK 35)
+    'base_accounting_kit.account_financial_reports_profit_loss':
+        "Laporan Penghasilan Komprehensif",
+    'base_accounting_kit.action_profit_and_loss_report':
+        "Laporan Penghasilan Komprehensif",
+    'base_accounting_kit._account_financial_reports_balance_sheet':
+        "Laporan Posisi Keuangan",
+    'base_accounting_kit.action_balance_sheet_report':
+        "Laporan Posisi Keuangan",
+    'base_accounting_kit.account_financial_report_profitandloss0':
+        "Laporan Penghasilan Komprehensif",
+    'base_accounting_kit.account_financial_report_income0': "Pendapatan",
+    'base_accounting_kit.account_financial_report_other_income0':
+        "Pendapatan Lain-lain",
+    'base_accounting_kit.financial_report_gross_profit':
+        "Penerimaan Bersih",
+    'base_accounting_kit.financial_report_cost_of_revenue':
+        "Beban Langsung",
+    'base_accounting_kit.account_financial_report_operating_income0':
+        "Penerimaan Operasional",
+    'base_accounting_kit.account_financial_report_expense0': "Beban",
+    'base_accounting_kit.account_financial_report_balancesheet0':
+        "Laporan Posisi Keuangan",
+    'base_accounting_kit.account_financial_report_assets0': "Aset",
+    'base_accounting_kit.account_financial_report_liabilitysum0':
+        "Liabilitas & Aset Neto",
+    'base_accounting_kit.account_financial_report_liability0':
+        "Liabilitas & Aset Neto",
+    'base_accounting_kit.account_financial_report_profitloss_toreport0':
+        "Surplus (Defisit) Tahun Berjalan",
+}
+
+# Chart template journal ids -> name, None = archive.
+JOURNALS = {
+    'sale': "Penerimaan Dana",
+    'purchase': "Pengeluaran / Tagihan",
+    'inventory_valuation': None,
+}
+
+# l10n_id chart account ids -> name, None = archive.
+ACCOUNTS = {
+    'l10n_id_41000010': "Penerimaan Infaq & Sedekah",
+    'l10n_id_42000060': None,   # Pengembalian Penjualan
+    'l10n_id_42000070': None,   # Diskon Penjualan
+    'l10n_id_51000010': None,   # Harga Pokok Penjualan
+    'l10n_id_31100010': None,   # Modal Disahkan
+    'l10n_id_31100020': "Aset Neto Tidak Terikat",
+    'l10n_id_31100030': None,   # Modal Belum Disetor
+    'l10n_id_31100040': None,   # Prive
+    'l10n_id_31210010': "Aset Neto Terikat",
+    'l10n_id_31510010': "Akumulasi Surplus (Defisit)",
+    'l10n_id_31510020': None,   # Laba & Rugi Berjalan (manual duplicate)
+    'l10n_id_99999900': "Surplus (Defisit) Tahun Berjalan",
+}
+
+NEW_ACCOUNTS = [
+    ('41000020', "Penerimaan Zakat (Dana Terikat)", 'income'),
+    ('41000030', "Penerimaan Wakaf (Dana Terikat)", 'income'),
+    ('41000040', "Penerimaan Sewa Fasilitas", 'income'),
+    ('61200010', "Beban Operasional Masjid", 'expense'),
+]
+DEFAULT_EXPENSE_CODE = '61200010'
+
+
+class DkmMasjidSetup(models.AbstractModel):
+    _name = 'dkm.masjid.setup'
+    _description = "Penyesuaian Odoo untuk masjid"
+
+    @api.model
+    def _set_name(self, records, name, langs=None):
+        if langs is None:
+            langs = [code for code, _name in self.env['res.lang'].get_installed()]
+        for lang in langs:
+            records.with_context(lang=lang).write({'name': name})
+
+    @api.model
+    def _apply_labels(self):
+        """Called from data/labels.xml on every install and upgrade."""
+        if 'id_ID' not in dict(self.env['res.lang'].get_installed()):
+            return
+        for xmlid, label in LABELS.items():
+            record = self.env.ref(xmlid, raise_if_not_found=False)
+            if record:
+                self._set_name(record.sudo(), label, langs=['id_ID'])
+
+    @api.model
+    def _setup_accounting(self, companies):
+        """Turn the Indonesian commercial chart into a mosque chart.
+
+        Run once per company (chart load or module install), not on
+        upgrades, so later manual renames by the treasurer stick.
+        """
+        for company in companies:
+            env = self.with_company(company).env
+            chart = env['account.chart.template']
+            Account = env['account.account'].with_context(active_test=False)
+
+            # 1. Mosques are not PKP: no VAT by default anywhere.
+            company.write({
+                'account_sale_tax_id': False,
+                'account_purchase_tax_id': False,
+            })
+            taxed = Account.search([
+                ('company_ids', 'in', company.id), ('tax_ids', '!=', False),
+            ])
+            taxed.write({'tax_ids': [(5, 0, 0)]})
+            env['account.tax'].search([
+                ('company_id', '=', company.id),
+            ]).write({'active': False})
+
+            # 2. Accounts: new mosque accounts first, so the purchase journal
+            # and company default can move off Harga Pokok Penjualan before it
+            # is archived.
+            for code, name, account_type in NEW_ACCOUNTS:
+                account = Account.search([
+                    ('code', '=', code), ('company_ids', 'in', company.id),
+                ], limit=1)
+                if not account:
+                    account = Account.create({
+                        'code': code,
+                        'name': name,
+                        'account_type': account_type,
+                        'company_ids': [(6, 0, company.ids)],
+                    })
+                    self._set_name(account, name)
+            expense = Account.search([
+                ('code', '=', DEFAULT_EXPENSE_CODE),
+                ('company_ids', 'in', company.id),
+            ], limit=1)
+            company.expense_account_id = expense
+
+            # 3. Journals.
+            for key, name in JOURNALS.items():
+                journal = chart.ref(key, raise_if_not_found=False)
+                if not journal or journal.company_id != company:
+                    continue
+                if name is None:
+                    if company.account_stock_journal_id == journal:
+                        company.account_stock_journal_id = False
+                    journal.active = False
+                else:
+                    self._set_name(journal, name)
+                    if key == 'purchase':
+                        journal.default_account_id = expense
+
+            for key, name in ACCOUNTS.items():
+                account = chart.ref(key, raise_if_not_found=False)
+                if not account:
+                    continue
+                if name is None:
+                    account.active = False
+                else:
+                    self._set_name(account, name)
+            _logger.info("dkm_masjid: mosque chart applied to %s", company.name)

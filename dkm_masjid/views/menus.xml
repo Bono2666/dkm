@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- A mosque does not sell: customer invoices, credit notes and sellable
+         products stay available to the Accounting Administrator only (e.g.
+         for an occasional hall-rental invoice). -->
+    <record id="account.menu_action_move_out_invoice_type" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
+    </record>
+    <record id="account.menu_action_move_out_refund_type" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
+    </record>
+    <record id="account.product_product_menu_sellable" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
+    </record>
+</odoo>
