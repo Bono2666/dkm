@@ -253,7 +253,11 @@ class TestMasjid(TransactionCase):
         self.assertIn("Kuitansi Penerimaan", html)
         self.assertIn("Jazakumullahu khairan", html)
         self.assertIn("Tanggal Penerimaan", html)
-        self.assertIn("Kuantitas", html)
+        table = html.split("Keterangan", 1)[1].split("Total", 1)[0]
+        self.assertNotIn("Kuantitas", table)
+        self.assertNotIn("Harga", table)
+        self.assertNotIn("1,00", table)
+        self.assertIn("Jumlah", table)
         self.assertNotIn("[", html.split("Keterangan", 1)[1].split("Total", 1)[0])
 
         template = move._get_mail_template()

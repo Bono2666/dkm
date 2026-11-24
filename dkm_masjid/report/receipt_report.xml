@@ -44,10 +44,41 @@
             <span>Kuantitas</span>
         </xpath>
         <xpath expr="//th[@name='th_priceunit']/span" position="replace">
-            <span>Nominal</span>
+            <span>Harga Satuan</span>
         </xpath>
         <xpath expr="//th[@name='th_subtotal']/span" position="replace">
             <span>Jumlah</span>
+        </xpath>
+
+        <!-- A receipt lists only what was received and how much: no quantity
+             or unit price columns (vendor bills keep them). -->
+        <xpath expr="//th[@name='th_quantity']" position="attributes">
+            <attribute name="t-if">not is_receipt</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_priceunit']" position="attributes">
+            <attribute name="t-if">not is_receipt</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_quantity']" position="attributes">
+            <attribute name="t-if">not is_receipt</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_price_unit']" position="attributes">
+            <attribute name="t-if">not is_receipt</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_quantity_grouped']" position="attributes">
+            <attribute name="t-if">not is_receipt and (hide_details or (hide_prices and grouped_line['display_type'] not in ('line_section', 'line_subsection')))</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_price_unit_grouped']" position="attributes">
+            <attribute name="t-if">not is_receipt and (hide_details or grouped_line['display_type'] not in ('line_section', 'line_subsection'))</attribute>
+        </xpath>
+        <!-- Section and note rows span the remaining columns. -->
+        <xpath expr="(//t[@t-set='line_colspan'])[1]" position="attributes">
+            <attribute name="t-value">(1 if is_receipt else 3) + (1 if display_discount else 0) + (1 if display_taxes and not line.tax_ids else 0)</attribute>
+        </xpath>
+        <xpath expr="(//t[@t-set='line_colspan'])[3]" position="attributes">
+            <attribute name="t-value">(1 if is_receipt else 3) + (1 if display_discount else 0) + (1 if display_taxes and not grouped_line.get('taxes') else 0)</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='lines_to_report']" position="before">
+            <t t-set="is_receipt" t-value="o.move_type in ('out_invoice', 'out_refund')"/>
         </xpath>
 
         <!-- A receipt is already paid: no payment instructions. -->
