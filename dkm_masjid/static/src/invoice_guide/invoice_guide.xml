@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="account.InvoiceGuide" t-inherit-mode="extension">
+        <xpath expr="//a[@t-on-click='this.openCompanyDetailsPage']" position="replace">
+            <a href="#"
+                type="object"
+                class="btn btn-link px-0 fw-normal"
+                t-on-click="this.openCompanyDetailsPage"
+            >Lengkapi Data Masjid</a>
+        </xpath>
+        <xpath expr="//img[@src='/web/static/img/company.svg']" position="attributes">
+            <attribute name="alt">Masjid</attribute>
+        </xpath>
+    </t>
+</templates>

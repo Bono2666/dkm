@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 # models/financial_report.py no longer relies on the English line names.
 LABELS = {
     # Invoicing menus
+    'account.menu_finance': "Keuangan",
     'account.menu_finance_receivables': "Penerimaan",
     'account.menu_account_customer': "Donatur",
     'account.res_partner_action_customer': "Donatur",

@@ -106,3 +106,20 @@ class TestMasjid(TransactionCase):
             lang='id_ID', company_id=self.company.id, state='posted')
         res = wizard._compute_report_balance(report._get_children_by_order())
         self.assertAlmostEqual(res[assets.id]['balance'], 1000000.0)
+
+    def test_dashboard_labels(self):
+        Journal = self.cenv['account.journal'].with_context(lang='id_ID')
+        names = {card['id']: card['name']
+                 for card in Journal.get_account_dashboard_kpis()}
+        self.assertEqual(names.get('invoices'), "Penerimaan")
+        self.assertNotIn("Faktur", " ".join(names.values()))
+        sale = self.chart.ref('sale')
+        self.assertEqual(sale._get_onboarding_action_data()['title'],
+                         "Pengaturan Keuangan")
+        arch = Journal.get_views(
+            [(self.env.ref('account.account_journal_dashboard_kanban_view').id,
+              'kanban')])['views']['kanban']['arch']
+        self.assertIn("Catat penerimaan dana masjid", arch)
+        self.assertNotIn("electronic invoices", arch)
+        self.assertEqual(
+            self._name_id(self.env.ref('account.menu_finance')), "Keuangan")

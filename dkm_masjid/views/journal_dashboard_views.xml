@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_journal_dashboard_kanban_view" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.dkm.masjid</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//span[@t-if=&quot;journal_type == 'sale'&quot;]" position="replace">
+                <span class="text-muted" t-if="journal_type == 'sale'">Catat penerimaan dana masjid: infaq, zakat, wakaf dan sewa fasilitas.</span>
+            </xpath>
+            <xpath expr="//span[@t-if=&quot;journal_type == 'purchase'&quot;]" position="replace">
+                <span class="text-muted" t-if="journal_type == 'purchase'">Unggah nota atau catat tagihan pengeluaran, lalu ajukan persetujuan.</span>
+            </xpath>
+            <xpath expr="//span[@t-if=&quot;journal_type == 'bank'&quot;]" position="replace">
+                <span class="text-muted" t-if="journal_type == 'bank'">Hubungkan rekening bank masjid dan cocokkan transaksinya.</span>
+            </xpath>
+        </field>
+    </record>
+</odoo>
