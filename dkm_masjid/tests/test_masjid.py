@@ -158,3 +158,35 @@ class TestMasjid(TransactionCase):
         contacts = self.env.ref('contacts.menu_contacts', raise_if_not_found=False)
         if contacts:
             self.assertNotIn(contacts.id, visible)
+
+    def test_sale_new_button_admin_only(self):
+        from lxml import etree
+        view = self.env.ref('account.account_journal_dashboard_kanban_view')
+        bendahara = self.env['res.users'].create({
+            'name': "Bendahara Tombol", 'login': 'bendahara_tombol',
+            'group_ids': [(6, 0, [
+                self.env.ref('base.group_user').id,
+                self.env.ref('account.group_account_user').id,
+            ])],
+        })
+        sale_new = ("//div[@name='kanban_primary_left']"
+                    "/t[@t-if=\"journal_type == 'sale'\"]"
+                    "/button[@name='action_create_new']")
+        purchase_new = ("//div[@name='kanban_primary_left']"
+                        "/t[@t-if=\"journal_type == 'purchase'\"]"
+                        "//button[@name='action_create_new']")
+
+        def arch_for(user):
+            views = self.env['account.journal'].with_user(user).get_views(
+                [(view.id, 'kanban')])
+            return etree.fromstring(views['views']['kanban']['arch'])
+
+        arch = arch_for(bendahara)
+        self.assertFalse(arch.xpath(sale_new))
+        self.assertFalse(arch.xpath("//div[@name='kanban_manage_new_sale']"))
+        self.assertTrue(arch.xpath(purchase_new))
+        self.assertTrue(arch.xpath("//div[@name='kanban_manage_new']"))
+
+        arch = arch_for(self.env.ref('base.user_admin'))
+        self.assertTrue(arch.xpath(sale_new))
+        self.assertTrue(arch.xpath("//div[@name='kanban_manage_new_sale']"))

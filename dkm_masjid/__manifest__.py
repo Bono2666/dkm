@@ -13,7 +13,8 @@ Penyesuaian Odoo untuk keuangan masjid
   Accounting Administrator, begitu juga Laporan Penagihan, Faktur Berulang,
   Template Jurnal Berulang dan Produk dibeli. Aplikasi "Penagihan" menjadi "Keuangan".
   Aplikasi Kontak, Dashboard dan Aplikasi hanya untuk admin (Settings).
-* Dashboard: kartu angka, keterangan jurnal dan panduan awal memakai
+* Dashboard: tombol Baru (faktur) di kartu Penerimaan Dana hanya untuk
+  admin. Kartu angka, keterangan jurnal dan panduan awal memakai
   istilah masjid (tanpa "Faktur" dan "Perusahaan").
 * Laporan base_accounting_kit memakai istilah nirlaba: Laporan
   Penghasilan Komprehensif, Laporan Posisi Keuangan, Aset Neto,
@@ -27,7 +28,7 @@ Penyesuaian Odoo untuk keuangan masjid
     'author': 'DKM',
     'license': 'LGPL-3',
     'category': 'Accounting/Accounting',
-    'version': '20.0.1.3.1',
+    'version': '20.0.1.4.0',
     'depends': ['account', 'l10n_id', 'base_accounting_kit'],
     'data': [
         'views/menus.xml',
