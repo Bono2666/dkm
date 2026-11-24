@@ -14,30 +14,6 @@
             <xpath expr="//span[@t-if=&quot;journal_type == 'bank'&quot;]" position="replace">
                 <span class="text-muted" t-if="journal_type == 'bank'">Hubungkan rekening bank masjid dan cocokkan transaksinya.</span>
             </xpath>
-            <!-- Creating customer invoices from the Penerimaan Dana card is
-                 admin-only, like the Faktur menu. -->
-            <xpath expr="//div[@name='kanban_primary_left']/t[@t-if=&quot;journal_type == 'sale'&quot;]/button[@name='action_create_new']" position="attributes">
-                <attribute name="groups">account.group_account_manager</attribute>
-            </xpath>
-            <xpath expr="//div[@name='kanban_manage_new']" position="attributes">
-                <attribute name="t-if">journal_type != 'sale'</attribute>
-            </xpath>
-            <xpath expr="//div[@name='kanban_manage_new']" position="after">
-                <div class="col-4" t-if="journal_type == 'sale'" groups="account.group_account_manager" name="kanban_manage_new_sale">
-                    <h5 class="o_kanban_card_manage_title">
-                        <span>Baru</span>
-                    </h5>
-                    <div>
-                        <a type="object" name="action_create_new">Faktur</a>
-                    </div>
-                    <div>
-                        <a type="object" name="action_create_new" context="{'refund':True}">Nota Kredit</a>
-                    </div>
-                    <div>
-                        <widget name="account_file_uploader" title="Unggah Faktur" btnClass="file_upload_kanban_action_a"/>
-                    </div>
-                </div>
-            </xpath>
         </field>
     </record>
 </odoo>

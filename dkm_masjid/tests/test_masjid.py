@@ -80,9 +80,7 @@ class TestMasjid(TransactionCase):
 
     def test_sales_menus_admin_only(self):
         manager = self.env.ref('account.group_account_manager')
-        for xmlid in ('account.menu_action_move_out_invoice_type',
-                      'account.menu_action_move_out_refund_type',
-                      'account.product_product_menu_sellable',
+        for xmlid in ('account.product_product_menu_sellable',
                       'account.product_product_menu_purchasable',
                       'base_accounting_kit.customer_statements_menu',
                       'base_accounting_kit.menu_account_recurring_invoice',
@@ -139,13 +137,7 @@ class TestMasjid(TransactionCase):
             menu = self.env.ref(xmlid, raise_if_not_found=False)
             if menu:
                 self.assertEqual(menu.group_ids, admin, xmlid)
-        bendahara = self.env['res.users'].create({
-            'name': "Bendahara Uji", 'login': 'bendahara_uji',
-            'group_ids': [(6, 0, [
-                self.env.ref('base.group_user').id,
-                self.env.ref('account.group_account_user').id,
-            ])],
-        })
+        bendahara = self._bendahara('bendahara_uji')
         visible = self.env['ir.ui.menu'].with_user(bendahara)._visible_menu_ids()
         self.assertIn(self.env.ref('account.menu_finance').id, visible)
         for xmlid in ('account.menu_action_account_payments_receivable',
@@ -159,34 +151,77 @@ class TestMasjid(TransactionCase):
         if contacts:
             self.assertNotIn(contacts.id, visible)
 
-    def test_sale_new_button_admin_only(self):
-        from lxml import etree
-        view = self.env.ref('account.account_journal_dashboard_kanban_view')
-        bendahara = self.env['res.users'].create({
-            'name': "Bendahara Tombol", 'login': 'bendahara_tombol',
+    def _bendahara(self, login):
+        return self.env['res.users'].create({
+            'name': "Bendahara " + login, 'login': login,
             'group_ids': [(6, 0, [
                 self.env.ref('base.group_user').id,
                 self.env.ref('account.group_account_user').id,
             ])],
         })
-        sale_new = ("//div[@name='kanban_primary_left']"
-                    "/t[@t-if=\"journal_type == 'sale'\"]"
-                    "/button[@name='action_create_new']")
-        purchase_new = ("//div[@name='kanban_primary_left']"
-                        "/t[@t-if=\"journal_type == 'purchase'\"]"
-                        "//button[@name='action_create_new']")
 
-        def arch_for(user):
-            views = self.env['account.journal'].with_user(user).get_views(
-                [(view.id, 'kanban')])
-            return etree.fromstring(views['views']['kanban']['arch'])
+    def test_receipts_available_to_treasurer(self):
+        """Nota Penerimaan (customer invoices) is the mosque receipt form:
+        the treasurer sees its menu and the New button on the card."""
+        from lxml import etree
+        bendahara = self._bendahara('bendahara_nota')
+        visible = self.env['ir.ui.menu'].with_user(bendahara)._visible_menu_ids()
+        for xmlid in ('account.menu_action_move_out_invoice_type',
+                      'account.menu_action_move_out_refund_type'):
+            self.assertIn(self.env.ref(xmlid).id, visible, xmlid)
+        self.assertEqual(self._name_id(self.env.ref(
+            'account.menu_action_move_out_invoice_type')), "Nota Penerimaan")
+        view = self.env.ref('account.account_journal_dashboard_kanban_view')
+        arch = etree.fromstring(self.env['account.journal'].with_user(
+            bendahara).get_views([(view.id, 'kanban')])['views']['kanban']['arch'])
+        self.assertTrue(arch.xpath(
+            "//div[@name='kanban_primary_left']"
+            "/t[@t-if=\"journal_type == 'sale'\"]"
+            "/button[@name='action_create_new']"))
 
-        arch = arch_for(bendahara)
-        self.assertFalse(arch.xpath(sale_new))
-        self.assertFalse(arch.xpath("//div[@name='kanban_manage_new_sale']"))
-        self.assertTrue(arch.xpath(purchase_new))
-        self.assertTrue(arch.xpath("//div[@name='kanban_manage_new']"))
+    def test_receipt_categories(self):
+        Product = self.cenv['product.template']
+        for code, account_code in (('DKM-INFAQ', '41000010'),
+                                   ('DKM-ZAKAT', '41000020'),
+                                   ('DKM-WAKAF', '41000030'),
+                                   ('DKM-SEWA', '41000040')):
+            product = Product.search([('default_code', '=', code),
+                                      ('company_id', '=', self.company.id)])
+            self.assertEqual(len(product), 1, code)
+            self.assertEqual(product.property_account_income_id.code,
+                             account_code, code)
+            self.assertFalse(product.taxes_id, code)
+        self.env['dkm.masjid.setup']._setup_receipt_categories(self.company)
+        self.assertEqual(Product.search_count([
+            ('default_code', '=', 'DKM-ZAKAT'),
+            ('company_id', '=', self.company.id)]), 1)
 
-        arch = arch_for(self.env.ref('base.user_admin'))
-        self.assertTrue(arch.xpath(sale_new))
-        self.assertTrue(arch.xpath("//div[@name='kanban_manage_new_sale']"))
+    def test_receipt_form(self):
+        from lxml import etree
+        Move = self.cenv['account.move'].with_context(
+            lang='id_ID', default_move_type='out_invoice')
+        arch = etree.fromstring(Move.get_views([(False, 'form')])
+                                ['views']['form']['arch'])
+        self.assertTrue(arch.xpath("//label[@for='partner_id'][@string='Donatur']"))
+        self.assertFalse(arch.xpath("//label[@for='partner_id'][@string='Customer']"))
+        self.assertTrue(arch.xpath(
+            "//label[@for='invoice_date'][@string='Tanggal Penerimaan']"))
+        self.assertTrue(arch.xpath(
+            "//field[@name='product_id'][@string='Kategori']"))
+        self.assertTrue(arch.xpath("//page[@id='invoice_tab'][@string='Rincian']"))
+
+        zakat = self.cenv['product.product'].search([
+            ('default_code', '=', 'DKM-ZAKAT'),
+            ('company_id', '=', self.company.id)])
+        donor = self.cenv['res.partner'].create({'name': "Donatur Uji"})
+        move = self.cenv['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': donor.id,
+            'invoice_line_ids': [(0, 0, {'product_id': zakat.id,
+                                         'price_unit': 2500000.0})],
+        })
+        self.assertEqual(move.invoice_line_ids.account_id.code, '41000020')
+        self.assertEqual(move.amount_total, 2500000.0)
+        self.assertEqual(move.type_name, "Nota Penerimaan")
+        self.assertTrue(move.with_context(lang='id_ID').display_name
+                        .startswith("Nota Penerimaan Draft"))

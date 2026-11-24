@@ -9,12 +9,15 @@ Penyesuaian Odoo untuk keuangan masjid
 
 * Menu: "Pelanggan" menjadi "Penerimaan" (daftar kontak menjadi
   "Donatur"), "Vendor" menjadi "Pengeluaran", "Perusahaan" menjadi
-  "Masjid". Faktur, Nota Kredit dan Produk dijual hanya terlihat oleh
-  Accounting Administrator, begitu juga Laporan Penagihan, Faktur Berulang,
-  Template Jurnal Berulang dan Produk dibeli. Aplikasi "Penagihan" menjadi "Keuangan".
-  Aplikasi Kontak, Dashboard dan Aplikasi hanya untuk admin (Settings).
-* Dashboard: tombol Baru (faktur) di kartu Penerimaan Dana hanya untuk
-  admin. Kartu angka, keterangan jurnal dan panduan awal memakai
+  "Masjid", aplikasi "Penagihan" menjadi "Keuangan". Kategori Penerimaan,
+  Laporan Penagihan, Faktur Berulang, Template Jurnal Berulang dan Produk
+  dibeli hanya untuk Accounting Administrator; aplikasi Kontak, Dashboard
+  dan Aplikasi hanya untuk admin (Settings).
+* Faktur pelanggan dipakai sebagai Nota Penerimaan: label Donatur,
+  Tanggal Penerimaan, kolom Kategori (Infaq & Sedekah, Zakat, Wakaf, Sewa
+  Fasilitas, masing-masing ke akun pendapatannya); jatuh tempo, pengiriman
+  dan incoterm disembunyikan. Nota Kredit menjadi Pengembalian Dana.
+* Dashboard: kartu angka, keterangan jurnal dan panduan awal memakai
   istilah masjid (tanpa "Faktur" dan "Perusahaan").
 * Laporan base_accounting_kit memakai istilah nirlaba: Laporan
   Penghasilan Komprehensif, Laporan Posisi Keuangan, Aset Neto,
@@ -28,11 +31,12 @@ Penyesuaian Odoo untuk keuangan masjid
     'author': 'DKM',
     'license': 'LGPL-3',
     'category': 'Accounting/Accounting',
-    'version': '20.0.1.4.0',
+    'version': '20.0.1.5.0',
     'depends': ['account', 'l10n_id', 'base_accounting_kit'],
     'data': [
         'views/menus.xml',
         'views/journal_dashboard_views.xml',
+        'views/account_move_views.xml',
         'data/labels.xml',
     ],
     'assets': {

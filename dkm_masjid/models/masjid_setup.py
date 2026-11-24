@@ -15,6 +15,12 @@ LABELS = {
     'account.menu_account_customer': "Donatur",
     'account.res_partner_action_customer': "Donatur",
     'account.menu_finance_payables': "Pengeluaran",
+    'account.menu_action_move_out_invoice_type': "Nota Penerimaan",
+    'account.action_move_out_invoice': "Nota Penerimaan",
+    'account.action_move_out_invoice_type': "Nota Penerimaan",
+    'account.menu_action_move_out_refund_type': "Pengembalian Dana",
+    'account.action_move_out_refund_type_non_legacy': "Pengembalian Dana",
+    'account.product_product_menu_sellable': "Kategori Penerimaan",
     'account.menu_account_supplier': "Pemasok",
     'account.res_partner_action_supplier': "Pemasok",
     'base_accounting_kit.customer_statements_menu': "Laporan Penagihan",
@@ -89,6 +95,15 @@ ACCOUNTS = {
     'l10n_id_31510020': None,   # Laba & Rugi Berjalan (manual duplicate)
     'l10n_id_99999900': "Surplus (Defisit) Tahun Berjalan",
 }
+
+# Receipt categories (sellable services) -> income account code. Chosen in the
+# Kategori column of a Nota Penerimaan, they post to the right account.
+RECEIPT_CATEGORIES = [
+    ('DKM-INFAQ', "Infaq & Sedekah", '41000010'),
+    ('DKM-ZAKAT', "Zakat", '41000020'),
+    ('DKM-WAKAF', "Wakaf", '41000030'),
+    ('DKM-SEWA', "Sewa Fasilitas", '41000040'),
+]
 
 NEW_ACCOUNTS = [
     ('41000020', "Penerimaan Zakat (Dana Terikat)", 'income'),
@@ -197,4 +212,33 @@ class DkmMasjidSetup(models.AbstractModel):
                     account.active = False
                 else:
                     self._set_name(account, name)
+            self._setup_receipt_categories(company)
             _logger.info("dkm_masjid: mosque chart applied to %s", company.name)
+
+    @api.model
+    def _setup_receipt_categories(self, companies):
+        for company in companies:
+            env = self.with_company(company).env
+            Account = env['account.account']
+            Product = env['product.template'].with_context(active_test=False)
+            for code, name, account_code in RECEIPT_CATEGORIES:
+                if Product.search([('default_code', '=', code),
+                                   ('company_id', '=', company.id)], limit=1):
+                    continue
+                account = Account.search([
+                    ('code', '=', account_code),
+                    ('company_ids', 'in', company.id),
+                ], limit=1)
+                product = Product.create({
+                    'name': name,
+                    'default_code': code,
+                    'type': 'service',
+                    'sale_ok': True,
+                    'purchase_ok': False,
+                    'list_price': 0.0,
+                    'taxes_id': [(5, 0, 0)],
+                    'supplier_taxes_id': [(5, 0, 0)],
+                    'company_id': company.id,
+                    'property_account_income_id': account.id,
+                })
+                self._set_name(product, name)
