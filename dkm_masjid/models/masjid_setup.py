@@ -122,11 +122,12 @@ VENDOR_VIEW_TERMS = {
 
 # Receipt categories (sellable services) -> income account code. Chosen in the
 # Kategori column of a Nota Penerimaan, they post to the right account.
+# No internal reference: it would be printed on the receipt.
 RECEIPT_CATEGORIES = [
-    ('DKM-INFAQ', "Infaq & Sedekah", '41000010'),
-    ('DKM-ZAKAT', "Zakat", '41000020'),
-    ('DKM-WAKAF', "Wakaf", '41000030'),
-    ('DKM-SEWA', "Sewa Fasilitas", '41000040'),
+    ("Infaq & Sedekah", '41000010'),
+    ("Zakat", '41000020'),
+    ("Wakaf", '41000030'),
+    ("Sewa Fasilitas", '41000040'),
 ]
 
 NEW_ACCOUNTS = [
@@ -275,8 +276,8 @@ class DkmMasjidSetup(models.AbstractModel):
             env = self.with_company(company).env
             Account = env['account.account']
             Product = env['product.template'].with_context(active_test=False)
-            for code, name, account_code in RECEIPT_CATEGORIES:
-                if Product.search([('default_code', '=', code),
+            for name, account_code in RECEIPT_CATEGORIES:
+                if Product.search([('name', '=', name), ('sale_ok', '=', True),
                                    ('company_id', '=', company.id)], limit=1):
                     continue
                 account = Account.search([
@@ -285,7 +286,6 @@ class DkmMasjidSetup(models.AbstractModel):
                 ], limit=1)
                 product = Product.create({
                     'name': name,
-                    'default_code': code,
                     'type': 'service',
                     'sale_ok': True,
                     'purchase_ok': False,

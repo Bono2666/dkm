@@ -179,22 +179,24 @@ class TestMasjid(TransactionCase):
             "/t[@t-if=\"journal_type == 'sale'\"]"
             "/button[@name='action_create_new']"))
 
+    def _category(self, name):
+        return self.cenv['product.template'].search([
+            ('name', '=', name), ('company_id', '=', self.company.id)])
+
     def test_receipt_categories(self):
         Product = self.cenv['product.template']
-        for code, account_code in (('DKM-INFAQ', '41000010'),
-                                   ('DKM-ZAKAT', '41000020'),
-                                   ('DKM-WAKAF', '41000030'),
-                                   ('DKM-SEWA', '41000040')):
-            product = Product.search([('default_code', '=', code),
-                                      ('company_id', '=', self.company.id)])
-            self.assertEqual(len(product), 1, code)
+        for name, account_code in (("Infaq & Sedekah", '41000010'),
+                                   ("Zakat", '41000020'),
+                                   ("Wakaf", '41000030'),
+                                   ("Sewa Fasilitas", '41000040')):
+            product = self._category(name)
+            self.assertEqual(len(product), 1, name)
             self.assertEqual(product.property_account_income_id.code,
-                             account_code, code)
-            self.assertFalse(product.taxes_id, code)
+                             account_code, name)
+            self.assertFalse(product.taxes_id, name)
+            self.assertFalse(product.default_code, name)
         self.env['dkm.masjid.setup']._setup_receipt_categories(self.company)
-        self.assertEqual(Product.search_count([
-            ('default_code', '=', 'DKM-ZAKAT'),
-            ('company_id', '=', self.company.id)]), 1)
+        self.assertEqual(len(self._category("Zakat")), 1)
 
     def test_receipt_form(self):
         from lxml import etree
@@ -210,9 +212,7 @@ class TestMasjid(TransactionCase):
             "//field[@name='product_id'][@string='Kategori']"))
         self.assertTrue(arch.xpath("//page[@id='invoice_tab'][@string='Rincian']"))
 
-        zakat = self.cenv['product.product'].search([
-            ('default_code', '=', 'DKM-ZAKAT'),
-            ('company_id', '=', self.company.id)])
+        zakat = self._category("Zakat").product_variant_id
         donor = self.cenv['res.partner'].create({'name': "Donatur Uji"})
         move = self.cenv['account.move'].create({
             'move_type': 'out_invoice',
@@ -229,9 +229,7 @@ class TestMasjid(TransactionCase):
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
         self.assertEqual(sale.code, 'PNR')
-        infaq = self.cenv['product.product'].search([
-            ('default_code', '=', 'DKM-INFAQ'),
-            ('company_id', '=', self.company.id)])
+        infaq = self._category("Infaq & Sedekah").product_variant_id
         donor = self.cenv['res.partner'].create({'name': "Hamba Allah"})
         move = self.cenv['account.move'].create({
             'move_type': 'out_invoice',
@@ -247,6 +245,8 @@ class TestMasjid(TransactionCase):
         self.assertIn("Kuitansi Penerimaan", html)
         self.assertIn("Jazakumullahu khairan", html)
         self.assertIn("Tanggal Penerimaan", html)
+        self.assertIn("Kuantitas", html)
+        self.assertNotIn("[", html.split("Keterangan", 1)[1].split("Total", 1)[0])
 
         template = move._get_mail_template()
         self.assertEqual(template, self.env.ref('dkm_masjid.mail_template_receipt'))

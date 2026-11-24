@@ -40,6 +40,9 @@
         <xpath expr="//th[@name='th_description']/span" position="replace">
             <span>Keterangan</span>
         </xpath>
+        <xpath expr="//th[@name='th_quantity']/span" position="replace">
+            <span>Kuantitas</span>
+        </xpath>
         <xpath expr="//th[@name='th_priceunit']/span" position="replace">
             <span>Nominal</span>
         </xpath>
