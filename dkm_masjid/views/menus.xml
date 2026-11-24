@@ -12,4 +12,20 @@
     <record id="account.product_product_menu_sellable" model="ir.ui.menu">
         <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
     </record>
+
+    <!-- Not used by a mosque day to day: dunning letters to donors, recurring
+         customer invoices, recurring entry templates and purchasable
+         products (bills use a description and an expense account). -->
+    <record id="base_accounting_kit.customer_statements_menu" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
+    </record>
+    <record id="base_accounting_kit.menu_account_recurring_invoice" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
+    </record>
+    <record id="base_accounting_kit.account_recurring_payments_child1" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
+    </record>
+    <record id="account.product_product_menu_purchasable" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
+    </record>
 </odoo>

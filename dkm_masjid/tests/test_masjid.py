@@ -79,7 +79,11 @@ class TestMasjid(TransactionCase):
         manager = self.env.ref('account.group_account_manager')
         for xmlid in ('account.menu_action_move_out_invoice_type',
                       'account.menu_action_move_out_refund_type',
-                      'account.product_product_menu_sellable'):
+                      'account.product_product_menu_sellable',
+                      'account.product_product_menu_purchasable',
+                      'base_accounting_kit.customer_statements_menu',
+                      'base_accounting_kit.menu_account_recurring_invoice',
+                      'base_accounting_kit.account_recurring_payments_child1'):
             self.assertEqual(self.env.ref(xmlid).group_ids, manager, xmlid)
 
     def test_balance_sheet_with_indonesian_labels(self):
@@ -141,6 +145,13 @@ class TestMasjid(TransactionCase):
         })
         visible = self.env['ir.ui.menu'].with_user(bendahara)._visible_menu_ids()
         self.assertIn(self.env.ref('account.menu_finance').id, visible)
+        for xmlid in ('account.menu_action_account_payments_receivable',
+                      'account.menu_account_customer',
+                      'account.menu_action_move_in_invoice_type'):
+            self.assertIn(self.env.ref(xmlid).id, visible, xmlid)
+        for xmlid in ('base_accounting_kit.customer_statements_menu',
+                      'account.product_product_menu_purchasable'):
+            self.assertNotIn(self.env.ref(xmlid).id, visible, xmlid)
         contacts = self.env.ref('contacts.menu_contacts', raise_if_not_found=False)
         if contacts:
             self.assertNotIn(contacts.id, visible)

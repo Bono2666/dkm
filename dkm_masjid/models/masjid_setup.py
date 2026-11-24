@@ -15,6 +15,11 @@ LABELS = {
     'account.menu_account_customer': "Donatur",
     'account.res_partner_action_customer': "Donatur",
     'account.menu_finance_payables': "Pengeluaran",
+    'base_accounting_kit.customer_statements_menu': "Laporan Penagihan",
+    'base_accounting_kit.menu_account_recurring_invoice': "Faktur Berulang",
+    'base_accounting_kit.account_recurring_payments_child1':
+        "Template Jurnal Berulang",
+    'base_accounting_kit.menu_account_bulk_payment': "Pembayaran Massal",
     # Company -> Masjid
     'base.menu_users': "Pengguna & Masjid",
     'base.menu_action_res_company_form': "Masjid",
