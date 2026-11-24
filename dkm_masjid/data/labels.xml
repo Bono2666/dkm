@@ -3,4 +3,6 @@
     <!-- Re-applied on every install/upgrade: Indonesian (id_ID) labels for
          menus, actions and report lines. -->
     <function model="dkm.masjid.setup" name="_apply_labels"/>
+    <!-- Contacts, Dashboards and Apps: admin only. -->
+    <function model="dkm.masjid.setup" name="_apply_menu_restrictions"/>
 </odoo>

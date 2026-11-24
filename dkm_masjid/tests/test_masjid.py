@@ -123,3 +123,24 @@ class TestMasjid(TransactionCase):
         self.assertNotIn("electronic invoices", arch)
         self.assertEqual(
             self._name_id(self.env.ref('account.menu_finance')), "Keuangan")
+
+    def test_admin_only_apps(self):
+        admin = self.env.ref('base.group_system')
+        for xmlid in ('contacts.menu_contacts',
+                      'spreadsheet_dashboard.spreadsheet_dashboard_menu_root',
+                      'base.menu_management'):
+            menu = self.env.ref(xmlid, raise_if_not_found=False)
+            if menu:
+                self.assertEqual(menu.group_ids, admin, xmlid)
+        bendahara = self.env['res.users'].create({
+            'name': "Bendahara Uji", 'login': 'bendahara_uji',
+            'group_ids': [(6, 0, [
+                self.env.ref('base.group_user').id,
+                self.env.ref('account.group_account_user').id,
+            ])],
+        })
+        visible = self.env['ir.ui.menu'].with_user(bendahara)._visible_menu_ids()
+        self.assertIn(self.env.ref('account.menu_finance').id, visible)
+        contacts = self.env.ref('contacts.menu_contacts', raise_if_not_found=False)
+        if contacts:
+            self.assertNotIn(contacts.id, visible)

@@ -51,6 +51,15 @@ LABELS = {
         "Surplus (Defisit) Tahun Berjalan",
 }
 
+# Top-level apps the treasurer and chairman do not need: donors and vendors
+# are under Keuangan > Penerimaan / Pengeluaran. Admin (Settings) only. These
+# modules are not dependencies, so the menus are looked up softly.
+ADMIN_ONLY_MENUS = [
+    'contacts.menu_contacts',
+    'spreadsheet_dashboard.spreadsheet_dashboard_menu_root',
+    'base.menu_management',
+]
+
 # Chart template journal ids -> name, None = archive.
 JOURNALS = {
     'sale': "Penerimaan Dana",
@@ -103,6 +112,15 @@ class DkmMasjidSetup(models.AbstractModel):
             record = self.env.ref(xmlid, raise_if_not_found=False)
             if record:
                 self._set_name(record.sudo(), label, langs=['id_ID'])
+
+    @api.model
+    def _apply_menu_restrictions(self):
+        """Called from data/labels.xml on every install and upgrade."""
+        admin = self.env.ref('base.group_system')
+        for xmlid in ADMIN_ONLY_MENUS:
+            menu = self.env.ref(xmlid, raise_if_not_found=False)
+            if menu:
+                menu.sudo().group_ids = admin
 
     @api.model
     def _setup_accounting(self, companies):
