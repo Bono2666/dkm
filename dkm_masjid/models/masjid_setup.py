@@ -15,6 +15,8 @@ LABELS = {
     'account.menu_account_customer': "Donatur",
     'account.res_partner_action_customer': "Donatur",
     'account.menu_finance_payables': "Pengeluaran",
+    'account.menu_account_supplier': "Pemasok",
+    'account.res_partner_action_supplier': "Pemasok",
     'base_accounting_kit.customer_statements_menu': "Laporan Penagihan",
     'base_accounting_kit.menu_account_recurring_invoice': "Faktur Berulang",
     'base_accounting_kit.account_recurring_payments_child1':

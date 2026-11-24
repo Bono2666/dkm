@@ -69,6 +69,9 @@ class TestMasjid(TransactionCase):
         menu = self.env.ref('account.menu_finance_receivables')
         self.assertEqual(self._name_id(menu), "Penerimaan")
         self.assertEqual(
+            self._name_id(self.env.ref('account.menu_account_supplier')),
+            "Pemasok")
+        self.assertEqual(
             self._name_id(self.env.ref('base.menu_action_res_company_form')),
             "Masjid")
         assets = self.env.ref(
