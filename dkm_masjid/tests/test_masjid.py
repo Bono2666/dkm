@@ -700,3 +700,15 @@ class TestMasjid(TransactionCase):
         nodiv = bill(300000.0, division=self.env['dkm.division'])
         with self.assertRaises(UserError):
             nodiv.action_eh_request_approval()
+
+    def test_donor_vendor_not_users(self):
+        from odoo.tools.safe_eval import safe_eval
+        donor = self.cenv['res.partner'].create({'name': "Hamba Allah"})
+        user = self._bendahara('bendahara_kontak')
+        for model in ('account.move', 'account.payment'):
+            domain = safe_eval(self.env[model]._fields['partner_id'].domain)
+            found = self.env['res.partner'].search(domain)
+            self.assertIn(donor, found, model)
+            self.assertNotIn(user.partner_id, found, model)
+            self.assertNotIn(self.env.ref('base.partner_admin'), found, model)
+            self.assertNotIn(self.company.partner_id, found, model)

@@ -27,8 +27,15 @@ RECEIPT_UNTRACKED = {'name', 'payment_reference', 'payment_state', 'status_in_pa
 RECEIPT_LINE_UNTRACKED = {'name', 'label', 'date_maturity'}
 
 
+# Donors and vendors are outside people: never the app's own user accounts
+# (treasurer, division heads) or the masjid company itself.
+DONOR_VENDOR_DOMAIN = "[('user_ids', '=', False), ('ref_company_ids', '=', False)]"
+
+
 class AccountMove(models.Model):
     _inherit = 'account.move'
+
+    partner_id = fields.Many2one(domain=DONOR_VENDOR_DOMAIN)
 
     dkm_receipt_journal_id = fields.Many2one(
         'account.journal', string="Diterima di",
@@ -151,6 +158,8 @@ class AccountMove(models.Model):
 
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
+
+    partner_id = fields.Many2one(domain=DONOR_VENDOR_DOMAIN)
 
     dkm_auto_receipt = fields.Boolean(
         copy=False, readonly=True,
