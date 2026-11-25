@@ -26,6 +26,18 @@ LABELS = {
     'account.res_partner_action_supplier': "Vendor",
     'account.account_invoices': "Kuitansi / Faktur PDF",
     'account.action_account_payments': "Pembayaran Masuk",
+    # Akuntansi menu
+    'account.account_closing_menu': "Tutup Buku",
+    'account.menu_action_analytic_lines_tree': "Item Analitik",
+    'analytic.account_analytic_line_action_entries': "Item Analitik",
+    'base_account_budget.menu_act_budget_view': "Anggaran",
+    'base_account_budget.act_budget_view': "Anggaran",
+    'base_accounting_kit.management_menu': "Aset",
+    'base_accounting_kit.menu_action_account_asset_asset_form': "Aset Tetap",
+    'base_accounting_kit.action_account_asset_asset_form': "Aset Tetap",
+    'base_accounting_kit.actions_menu': "Tindakan",
+    'base_accounting_kit.menu_lock_dates': "Tanggal Kunci",
+    'base_accounting_kit.account_update_lock_date_act_window': "Tanggal Kunci",
     'account.action_account_payments_payable': "Pembayaran Keluar",
     'base_accounting_kit.customer_statements_menu': "Laporan Penagihan",
     'base_accounting_kit.menu_account_recurring_invoice': "Faktur Berulang",
@@ -113,10 +125,24 @@ ACTION_HELPS = {
         "Simpan data donatur agar penerimaan dari mereka mudah dicatat dan "
         "dilacak. Donatur yang tidak ingin disebut namanya bisa dicatat "
         "sebagai \"Hamba Allah\"."),
+    'base_account_budget.act_budget_view': (
+        "Buat anggaran masjid",
+        "Anggaran berisi rencana penerimaan dan pengeluaran masjid untuk satu "
+        "periode, misalnya satu tahun (RAPB).",
+        "Bandingkan rencana dengan realisasinya agar pengeluaran tetap "
+        "terkendali dan program masjid berjalan sesuai rencana."),
     'account.res_partner_action_supplier': _help(
         "Tambahkan vendor",
         "Simpan data vendor (toko, penyedia jasa, PLN, PDAM, dan lainnya) agar "
         "tagihan dan pembayarannya mudah dicatat."),
+}
+
+# Actions that ship without any help text: Indonesian HTML, set once.
+ACTION_HELPS_NEW = {
+    'base_accounting_kit.action_account_asset_asset_form':
+        '<p class="o_view_nocontent_smiling_face">Catat aset tetap masjid</p>'
+        '<p>Catat aset seperti sound system, karpet, AC, atau kendaraan agar '
+        'nilai dan penyusutannya tercatat.</p>',
 }
 
 # Default filters that would add "atau Penerimaan" (sale/purchase receipts,
@@ -130,6 +156,28 @@ ACTION_DEFAULT_FILTERS_DROPPED = {
 
 # Other translated texts: xmlid -> {field: Indonesian text}.
 FIELD_TEXTS = {
+    # Budgets (base_account_budget, English only).
+    'base_account_budget.field_budget_budget__name': {'field_description': "Nama Anggaran"},
+    'base_account_budget.field_budget_budget__date_from': {'field_description': "Tanggal Mulai"},
+    'base_account_budget.field_budget_budget__date_to': {'field_description': "Tanggal Selesai"},
+    'base_account_budget.field_budget_budget__creating_user_id': {'field_description': "Penanggung Jawab"},
+    'base_account_budget.selection__budget_budget__state__draft': {'name': "Draf"},
+    'base_account_budget.selection__budget_budget__state__cancel': {'name': "Dibatalkan"},
+    'base_account_budget.selection__budget_budget__state__confirm': {'name': "Dikonfirmasi"},
+    'base_account_budget.selection__budget_budget__state__validate': {'name': "Disetujui"},
+    'base_account_budget.selection__budget_budget__state__done': {'name': "Selesai"},
+    # Fixed assets (base_accounting_kit, English only).
+    'base_accounting_kit.field_account_asset_asset__name': {'field_description': "Nama Aset"},
+    'base_accounting_kit.field_account_asset_asset__category_id': {'field_description': "Kategori Aset"},
+    'base_accounting_kit.field_account_asset_asset__date': {'field_description': "Tanggal"},
+    'base_accounting_kit.field_account_asset_asset__value': {'field_description': "Nilai Perolehan"},
+    'base_accounting_kit.field_account_asset_asset__value_residual': {'field_description': "Nilai Sisa"},
+    'base_accounting_kit.field_account_asset_asset__currency_id': {'field_description': "Mata Uang"},
+    'base_accounting_kit.selection__account_asset_asset__state__draft': {'name': "Draf"},
+    'base_accounting_kit.selection__account_asset_asset__state__open': {'name': "Berjalan"},
+    'base_accounting_kit.selection__account_asset_asset__state__paused': {'name': "Dijeda"},
+    'base_accounting_kit.selection__account_asset_asset__state__close': {'name': "Selesai"},
+    'base_accounting_kit.selection__account_asset_asset__state__cancelled': {'name': "Dibatalkan"},
     # Chatter line on a new Nota Penerimaan ("Faktur Dibuat").
     'account.mt_invoice_created': {
         'name': "Nota Penerimaan Dibuat",
@@ -243,6 +291,10 @@ class DkmMasjidSetup(models.AbstractModel):
                 continue
             mapping = dict(zip(terms, texts))
             action.sudo().update_field_translations('help', {'id_ID': mapping})
+        for xmlid, html in ACTION_HELPS_NEW.items():
+            action = self.env.ref(xmlid, raise_if_not_found=False)
+            if action and not action.help:
+                action.sudo().with_context(lang='id_ID').help = html
         for xmlid, texts in FIELD_TEXTS.items():
             record = self.env.ref(xmlid, raise_if_not_found=False)
             if record:

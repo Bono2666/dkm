@@ -317,6 +317,25 @@ class TestMasjid(TransactionCase):
         bulk = self.env.ref('base_accounting_kit.menu_account_bulk_payment')
         self.assertEqual(bulk.group_ids, self.env.ref('account.group_account_manager'))
 
+    def test_accounting_menu_pages(self):
+        def label(xmlid):
+            return self.env.ref(xmlid).with_context(lang='id_ID').name
+        self.assertEqual(label('base_accounting_kit.action_account_asset_asset_form'), "Aset Tetap")
+        self.assertEqual(label('base_accounting_kit.management_menu'), "Aset")
+        self.assertEqual(label('base_accounting_kit.menu_lock_dates'), "Tanggal Kunci")
+        Asset = self.env['account.asset.asset'].with_context(lang='id_ID')
+        fields = Asset.fields_get(['name', 'value', 'value_residual', 'state'],
+                                  ['string', 'selection'])
+        self.assertEqual(fields['name']['string'], "Nama Aset")
+        self.assertEqual(fields['value']['string'], "Nilai Perolehan")
+        self.assertEqual(dict(fields['state']['selection'])['open'], "Berjalan")
+        action = self.env.ref('base_accounting_kit.action_account_asset_asset_form')
+        self.assertIn("Catat aset tetap masjid", action.with_context(lang='id_ID').help)
+        from lxml import etree
+        arch = etree.fromstring(self.env['account.move'].with_context(lang='id_ID').get_view(
+            self.env.ref('account.view_move_tree').id, 'list')['arch'])
+        self.assertTrue(arch.xpath("//field[@name='partner_id'][@string='Donatur/Vendor']"))
+
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
         self.assertEqual(sale.code, 'PNR')
