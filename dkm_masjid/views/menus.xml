@@ -30,6 +30,14 @@
     <record id="base_accounting_kit.menu_account_bulk_payment" model="ir.ui.menu">
         <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
     </record>
+    <!-- No taxes and one currency: Tax Report and Currency Revaluation are
+         admin only. -->
+    <record id="base_accounting_kit.menu_tax_report" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
+    </record>
+    <record id="base_accounting_kit.menu_account_fx_revaluation" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
+    </record>
     <record id="account.product_product_menu_purchasable" model="ir.ui.menu">
         <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
     </record>

@@ -336,6 +336,31 @@ class TestMasjid(TransactionCase):
             self.env.ref('account.view_move_tree').id, 'list')['arch'])
         self.assertTrue(arch.xpath("//field[@name='partner_id'][@string='Donatur/Vendor']"))
 
+    def test_review_and_report_pages(self):
+        from lxml import etree
+        def label(xmlid):
+            return self.env.ref(xmlid).with_context(lang='id_ID').name
+        self.assertEqual(label('base_accounting_kit.menu_general_ledger'), "Buku Besar")
+        self.assertEqual(label('base_accounting_kit.menu_Balance_report'), "Neraca Saldo")
+        self.assertEqual(label('account.action_account_invoice_report_all'),
+                         "Analisis Penerimaan & Tagihan")
+        manager = self.env.ref('account.group_account_manager')
+        self.assertEqual(self.env.ref('base_accounting_kit.menu_tax_report').group_ids, manager)
+        Report = self.env['account.invoice.report'].with_context(lang='id_ID')
+        search = etree.fromstring(Report.get_views([(False, 'search')])['views']['search']['arch'])
+        self.assertTrue(search.xpath("//filter[@name='customer'][@string='Donatur']"))
+        graph = etree.fromstring(Report.get_views([(False, 'graph')])['views']['graph']['arch'])
+        self.assertTrue(graph.xpath("//field[@name='product_id']"))
+        self.assertEqual(Report.fields_get(['price_subtotal'], ['string'])['price_subtotal']['string'],
+                         "Jumlah")
+        Line = self.env['account.move.line'].with_context(lang='id_ID')
+        lst = etree.fromstring(Line.get_view(self.env.ref('account.view_move_line_tree').id,
+                                             'list')['arch'])
+        self.assertTrue(lst.xpath("//field[@name='partner_id'][@string='Donatur/Vendor']"))
+        AssetReport = self.env['asset.asset.report'].with_context(lang='id_ID')
+        self.assertEqual(AssetReport.fields_get(['unposted_value'], ['string'])
+                         ['unposted_value']['string'], "Belum Dibukukan")
+
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
         self.assertEqual(sale.code, 'PNR')

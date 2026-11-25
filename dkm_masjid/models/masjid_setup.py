@@ -38,6 +38,43 @@ LABELS = {
     'base_accounting_kit.actions_menu': "Tindakan",
     'base_accounting_kit.menu_lock_dates': "Tanggal Kunci",
     'base_accounting_kit.account_update_lock_date_act_window': "Tanggal Kunci",
+    'analytic.analytic_plan_projects': "Program",
+    # Tinjauan menu
+    'account.account_audit_trail_menu': "Jejak Audit",
+    'account.action_account_audit_trail_report': "Jejak Audit",
+    # Laporan menu
+    'base_accounting_kit.account_reports_generic_statements': "Laporan Keuangan",
+    'base_accounting_kit.menu_account_cash_flow_report': "Laporan Arus Kas",
+    'base_accounting_kit.action_cash_flow_report': "Laporan Arus Kas",
+    'base_accounting_kit.account_reports_daily_reports': "Laporan Harian",
+    'base_accounting_kit.account_bank_book_menu': "Buku Bank",
+    'base_accounting_kit.action_account_bank_book_view': "Buku Bank",
+    'base_accounting_kit.account_cash_book_menu': "Buku Kas",
+    'base_accounting_kit.action_account_cash_book_view': "Buku Kas",
+    'base_accounting_kit.account_day_book_menu': "Buku Harian",
+    'base_accounting_kit.action_account_day_book_view': "Buku Harian",
+    'base_accounting_kit.menu_aged_trial_balance': "Umur Piutang & Utang",
+    'base_accounting_kit.action_account_aged_balance_view': "Umur Piutang & Utang",
+    'base_accounting_kit.account_reports_partner': "Laporan Donatur & Vendor",
+    'base_accounting_kit.menu_partner_ledger': "Buku Besar Donatur & Vendor",
+    'base_accounting_kit.action_partner_leadger': "Buku Besar Donatur & Vendor",
+    'base_accounting_kit.account_reports_audit': "Laporan Audit",
+    'base_accounting_kit.menu_general_ledger': "Buku Besar",
+    'base_accounting_kit.action_account_general_ledger_menu': "Buku Besar",
+    'base_accounting_kit.menu_Balance_report': "Neraca Saldo",
+    'base_accounting_kit.action_account_balance_menu': "Neraca Saldo",
+    'base_accounting_kit.menu_tax_report': "Laporan Pajak",
+    'base_accounting_kit.action_account_tax_report': "Laporan Pajak",
+    'base_accounting_kit.menu_print_journal': "Audit Jurnal",
+    'base_accounting_kit.action_account_print_journal_menu': "Audit Jurnal",
+    'base_accounting_kit.menu_account_fx_revaluation': "Revaluasi Mata Uang",
+    'base_accounting_kit.action_account_fx_revaluation': "Revaluasi Mata Uang",
+    'account.menu_action_account_invoice_report_all': "Analisis Penerimaan & Tagihan",
+    'account.action_account_invoice_report_all': "Analisis Penerimaan & Tagihan",
+    'base_account_budget.menu_act_crossovered_budget_lines_view': "Realisasi Anggaran",
+    'base_account_budget.act_budget_lines_view': "Realisasi Anggaran",
+    'base_accounting_kit.menu_action_asset_asset_report': "Analisis Aset",
+    'base_accounting_kit.action_asset_asset_report': "Analisis Aset",
     'account.action_account_payments_payable': "Pembayaran Keluar",
     'base_accounting_kit.customer_statements_menu': "Laporan Penagihan",
     'base_accounting_kit.menu_account_recurring_invoice': "Faktur Berulang",
@@ -131,6 +168,19 @@ ACTION_HELPS = {
         "periode, misalnya satu tahun (RAPB).",
         "Bandingkan rencana dengan realisasinya agar pengeluaran tetap "
         "terkendali dan program masjid berjalan sesuai rencana."),
+    'account.action_account_invoice_report_all': (
+        "Dari laporan ini terlihat jumlah penerimaan dari donatur dan tagihan "
+        "dari vendor per bulan dan per kategori. Gunakan filter dan "
+        "pengelompokan untuk menyesuaikan analisis.",),
+    'account.action_account_audit_trail_report': ("Jejak Audit",),
+    'eh_account_approval.action_eh_approval_request': (
+        "Belum ada permintaan persetujuan",
+        "Di sini tampil tagihan yang menunggu persetujuan Bendahara atau Ketua. "
+        "Permintaan dibuat otomatis saat tagihan diajukan dengan tombol Minta "
+        "Persetujuan."),
+    'base_accounting_kit.action_asset_asset_report': (
+        "Dari laporan ini terlihat nilai perolehan serta penyusutan yang sudah "
+        "dan belum dibukukan untuk seluruh aset tetap masjid.",),
     'account.res_partner_action_supplier': _help(
         "Tambahkan vendor",
         "Simpan data vendor (toko, penyedia jasa, PLN, PDAM, dan lainnya) agar "
@@ -143,6 +193,10 @@ ACTION_HELPS_NEW = {
         '<p class="o_view_nocontent_smiling_face">Catat aset tetap masjid</p>'
         '<p>Catat aset seperti sound system, karpet, AC, atau kendaraan agar '
         'nilai dan penyusutannya tercatat.</p>',
+    'base_account_budget.act_budget_lines_view':
+        '<p class="o_view_nocontent_smiling_face">Belum ada realisasi anggaran</p>'
+        '<p>Baris anggaran dari menu Akuntansi &gt; Anggaran tampil di sini, '
+        'lengkap dengan rencana, realisasi, dan persentase pencapaiannya.</p>',
 }
 
 # Default filters that would add "atau Penerimaan" (sale/purchase receipts,
@@ -166,6 +220,30 @@ FIELD_TEXTS = {
     'base_account_budget.selection__budget_budget__state__confirm': {'name': "Dikonfirmasi"},
     'base_account_budget.selection__budget_budget__state__validate': {'name': "Disetujui"},
     'base_account_budget.selection__budget_budget__state__done': {'name': "Selesai"},
+    'base_account_budget.field_budget_lines__budget_id': {'field_description': "Anggaran"},
+    'base_account_budget.field_budget_lines__general_budget_id': {'field_description': "Pos Anggaran"},
+    'base_account_budget.field_budget_lines__analytic_account_id': {'field_description': "Akun Analitik"},
+    'base_account_budget.field_budget_lines__date_from': {'field_description': "Tanggal Mulai"},
+    'base_account_budget.field_budget_lines__date_to': {'field_description': "Tanggal Selesai"},
+    'base_account_budget.field_budget_lines__planned_amount': {'field_description': "Rencana"},
+    'base_account_budget.field_budget_lines__practical_amount': {'field_description': "Realisasi"},
+    'base_account_budget.field_budget_lines__theoretical_amount': {'field_description': "Target s.d. Hari Ini"},
+    'base_account_budget.field_budget_lines__percentage': {'field_description': "Pencapaian"},
+    # Asset analysis (base_accounting_kit, English only).
+    'base_accounting_kit.field_asset_asset_report__name': {'field_description': "Tahun"},
+    'base_accounting_kit.field_asset_asset_report__asset_id': {'field_description': "Aset"},
+    'base_accounting_kit.field_asset_asset_report__asset_category_id': {'field_description': "Kategori Aset"},
+    'base_accounting_kit.field_asset_asset_report__depreciation_date': {'field_description': "Tanggal Penyusutan"},
+    'base_accounting_kit.field_asset_asset_report__partner_id': {'field_description': "Vendor"},
+    'base_accounting_kit.field_asset_asset_report__depreciation_value': {'field_description': "Nilai Penyusutan"},
+    'base_accounting_kit.field_asset_asset_report__gross_value': {'field_description': "Nilai Perolehan"},
+    'base_accounting_kit.field_asset_asset_report__posted_value': {'field_description': "Sudah Dibukukan"},
+    'base_accounting_kit.field_asset_asset_report__unposted_value': {'field_description': "Belum Dibukukan"},
+    'base_accounting_kit.selection__asset_asset_report__state__draft': {'name': "Draf"},
+    'base_accounting_kit.selection__asset_asset_report__state__open': {'name': "Berjalan"},
+    'base_accounting_kit.selection__asset_asset_report__state__close': {'name': "Selesai"},
+    # Invoice analysis: no taxes, so the untaxed amount is the amount.
+    'account.field_account_invoice_report__price_subtotal': {'field_description': "Jumlah"},
     # Fixed assets (base_accounting_kit, English only).
     'base_accounting_kit.field_account_asset_asset__name': {'field_description': "Nama Aset"},
     'base_accounting_kit.field_account_asset_asset__category_id': {'field_description': "Kategori Aset"},

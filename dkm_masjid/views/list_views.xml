@@ -73,4 +73,87 @@
             </field>
         </field>
     </record>
+
+    <!-- Tinjauan > Item Jurnal -->
+    <record id="view_move_line_tree" model="ir.ui.view">
+        <field name="name">account.move.line.list.dkm.masjid</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="string">Donatur/Vendor</attribute>
+            </xpath>
+            <!-- Newer Odoo 20 builds show "label" there and hide "name". -->
+            <xpath expr="//field[@name='label'] | //field[@name='name'][not(../field[@name='label'])]" position="attributes">
+                <attribute name="string">Keterangan</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Laporan > Analisis Penerimaan & Tagihan -->
+    <record id="view_account_invoice_report_search" model="ir.ui.view">
+        <field name="name">account.invoice.report.search.dkm.masjid</field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
+        <field name="arch" type="xml">
+            <filter name="my_invoice" position="attributes">
+                <attribute name="string">Catatan Saya</attribute>
+            </filter>
+            <filter name="toinvoice" position="attributes">
+                <attribute name="string">Draf</attribute>
+            </filter>
+            <filter name="current" position="attributes">
+                <attribute name="string">Terekam</attribute>
+            </filter>
+            <filter name="customer" position="attributes">
+                <attribute name="string">Donatur</attribute>
+            </filter>
+            <filter name="invoice" position="attributes">
+                <attribute name="string">Nota Penerimaan &amp; Tagihan</attribute>
+            </filter>
+            <filter name="creditnote" position="attributes">
+                <attribute name="string">Pengembalian</attribute>
+            </filter>
+            <filter name="user" position="attributes">
+                <attribute name="string">Petugas</attribute>
+            </filter>
+            <filter name="sales_channel" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </filter>
+            <filter name="partner_id" position="attributes">
+                <attribute name="string">Donatur/Vendor</attribute>
+            </filter>
+            <filter name="category_product" position="attributes">
+                <attribute name="string">Kategori</attribute>
+                <attribute name="context">{'group_by': 'product_id'}</attribute>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Group by receipt category (Infaq, Zakat, ...), not product category. -->
+    <record id="view_account_invoice_report_graph" model="ir.ui.view">
+        <field name="name">account.invoice.report.graph.dkm.masjid</field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id" ref="account.view_account_invoice_report_graph"/>
+        <field name="arch" type="xml">
+            <graph position="attributes">
+                <attribute name="string">Analisis Penerimaan &amp; Tagihan</attribute>
+            </graph>
+            <field name="product_categ_id" position="replace">
+                <field name="product_id"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Laporan > Analisis Aset -->
+    <record id="asset_asset_report_view_search" model="ir.ui.view">
+        <field name="name">asset.asset.report.search.dkm.masjid</field>
+        <field name="model">asset.asset.report</field>
+        <field name="inherit_id" ref="base_accounting_kit.asset_asset_report_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="only_active" position="attributes">
+                <attribute name="string">Aktif</attribute>
+            </filter>
+        </field>
+    </record>
 </odoo>
