@@ -394,6 +394,29 @@ class TestMasjid(TransactionCase):
         self.assertIn("Neraca Saldo", arch)
         self.assertIn("Sampai tanggal", arch)
 
+    def test_xlsx_export_translated(self):
+        import json
+        wizard = self.env['account.balance.report'].with_context(lang='id_ID').create({})
+        table = {
+            'title': 'Trial Balance',
+            'meta': [['Company', 'Masjid Uji'], ['Target Moves', 'All Posted Entries']],
+            'columns': [{'label': 'Code'}, {'label': 'Account'}, {'label': 'Debit', 'num': True},
+                        {'label': 'Credit', 'num': True}, {'label': 'Balance', 'num': True}],
+            'rows': [{'cells': ['', 'Total', 1.0, 1.0, 0.0], 'bold': True}],
+        }
+        action = wizard._xlsx_action('Trial Balance', table)
+        self.assertEqual(action['data']['report_name'], "Neraca Saldo")
+        data = json.loads(action['data']['options'])
+        self.assertEqual(data['title'], "Neraca Saldo")
+        self.assertEqual(data['meta'], [["Masjid", "Masjid Uji"],
+                                        ["Entri yang Disertakan", "Semua Entri Terekam"]])
+        self.assertEqual([c['label'] for c in data['columns']],
+                         ["Kode", "Akun", "Debit", "Kredit", "Saldo"])
+        self.assertEqual(data['rows'][0]['cells'][1], "Total")
+        english = self.env['account.balance.report'].with_context(lang='en_US').create({})
+        self.assertEqual(english._xlsx_action('Trial Balance', table)['data']['report_name'],
+                         "Trial Balance")
+
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
         self.assertEqual(sale.code, 'PNR')
