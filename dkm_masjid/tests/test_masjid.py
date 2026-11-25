@@ -361,6 +361,27 @@ class TestMasjid(TransactionCase):
         self.assertEqual(AssetReport.fields_get(['unposted_value'], ['string'])
                          ['unposted_value']['string'], "Belum Dibukukan")
 
+    def test_configuration_pages(self):
+        def label(xmlid):
+            return self.env.ref(xmlid).with_context(lang='id_ID').name
+        self.assertEqual(label('base_accounting_kit.menu_action_account_asset_asset_list_normal_purchase'),
+                         "Kategori Aset")
+        self.assertEqual(label('base_accounting_kit.account_financial_report_operation0'),
+                         "Aktivitas Operasi")
+        Journal = self.env['account.journal'].with_context(lang='id_ID')
+        types = dict(Journal.fields_get(['type'], ['selection'])['type']['selection'])
+        self.assertEqual(types['sale'], "Penerimaan")
+        self.assertEqual(types['purchase'], "Pengeluaran")
+        Category = self.env['account.asset.category'].with_context(lang='id_ID')
+        fields = Category.fields_get(['method'], ['string', 'selection'])['method']
+        self.assertEqual(fields['string'], "Metode Penyusutan")
+        self.assertEqual(dict(fields['selection'])['linear'], "Garis Lurus")
+        self.env['dkm.masjid.setup']._apply_labels()
+        caba = self.env['account.journal'].with_context(lang='id_ID', active_test=False).search(
+            [('code', '=', 'CABA'), ('company_id', '=', self.company.id)])
+        if caba:
+            self.assertEqual(caba.name, "Pajak Basis Kas")
+
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
         self.assertEqual(sale.code, 'PNR')

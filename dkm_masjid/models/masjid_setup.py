@@ -75,6 +75,29 @@ LABELS = {
     'base_account_budget.act_budget_lines_view': "Realisasi Anggaran",
     'base_accounting_kit.menu_action_asset_asset_report': "Analisis Aset",
     'base_accounting_kit.action_asset_asset_report': "Analisis Aset",
+    # Konfigurasi menu
+    'account_payment.payment_provider_menu': "Pembayaran Online",
+    'account.account_invoicing_menu': "Penerimaan & Tagihan",
+    'base_accounting_kit.account_followup_menu': "Tingkat Pengingat",
+    'base_accounting_kit.action_account_followup_definition_form': "Pengingat Pembayaran",
+    'base_account_budget.menu_budget_post_form': "Pos Anggaran",
+    'base_account_budget.open_budget_post_form': "Pos Anggaran",
+    'base_accounting_kit.menu_finance_config_assets': "Aset",
+    'base_accounting_kit.menu_action_account_asset_asset_list_normal_purchase': "Kategori Aset",
+    'base_accounting_kit.action_account_asset_asset_list_normal_purchase': "Kategori Aset",
+    'base_accounting_kit.menu_account_financial_reports_tree': "Struktur Laporan",
+    'base_accounting_kit.action_account_financial_report_tree': "Struktur Laporan Keuangan",
+    # Cash flow statement lines (also printed on the report)
+    'base_accounting_kit.account_financial_report_cash_flow0': "Laporan Arus Kas",
+    'base_accounting_kit.account_financial_report_operation0': "Aktivitas Operasi",
+    'base_accounting_kit.account_financial_report_investing_activity0': "Aktivitas Investasi",
+    'base_accounting_kit.account_financial_report_financing_activity1': "Aktivitas Pendanaan",
+    'base_accounting_kit.cash_in_from_operation0': "Kas Masuk",
+    'base_accounting_kit.cash_out_operation1': "Kas Keluar",
+    'base_accounting_kit.cash_in_investing0': "Kas Masuk",
+    'base_accounting_kit.cash_out_investing1': "Kas Keluar",
+    'base_accounting_kit.cash_in_financial0': "Kas Masuk",
+    'base_accounting_kit.cash_out_financial1': "Kas Keluar",
     'account.action_account_payments_payable': "Pembayaran Keluar",
     'base_accounting_kit.customer_statements_menu': "Laporan Penagihan",
     'base_accounting_kit.menu_account_recurring_invoice': "Faktur Berulang",
@@ -242,6 +265,27 @@ FIELD_TEXTS = {
     'base_accounting_kit.selection__asset_asset_report__state__draft': {'name': "Draf"},
     'base_accounting_kit.selection__asset_asset_report__state__open': {'name': "Berjalan"},
     'base_accounting_kit.selection__asset_asset_report__state__close': {'name': "Selesai"},
+    # Konfigurasi lists (English-only modules and leftovers).
+    'base_accounting_kit.field_account_financial_report__name': {'field_description': "Nama Laporan"},
+    'base_accounting_kit.field_account_financial_report__parent_id': {'field_description': "Induk"},
+    'base_accounting_kit.field_account_financial_report__type': {'field_description': "Jenis"},
+    'base_accounting_kit.field_account_financial_report__account_report_id': {'field_description': "Nilai Laporan"},
+    'base_accounting_kit.selection__account_financial_report__type__sum': {'name': "Tampilan"},
+    'base_accounting_kit.selection__account_financial_report__type__accounts': {'name': "Akun"},
+    'base_accounting_kit.selection__account_financial_report__type__account_type': {'name': "Jenis Akun"},
+    'base_accounting_kit.selection__account_financial_report__type__account_report': {'name': "Nilai Laporan"},
+    'base_accounting_kit.field_account_asset_category__name': {'field_description': "Kategori Aset"},
+    'base_accounting_kit.field_account_asset_category__journal_id': {'field_description': "Jurnal"},
+    'base_accounting_kit.field_account_asset_category__method': {'field_description': "Metode Penyusutan"},
+    'base_accounting_kit.selection__account_asset_category__method__linear': {'name': "Garis Lurus"},
+    'base_accounting_kit.selection__account_asset_category__method__degressive': {'name': "Saldo Menurun"},
+    'base_accounting_kit.field_account_followup__company_id': {'field_description': "Masjid"},
+    'base_account_budget.field_account_budget_post__name': {'field_description': "Nama"},
+    'account.field_account_journal_group__name': {'field_description': "Kelompok Ledger"},
+    'analytic.field_account_analytic_account__partner_id': {'field_description': "Donatur/Vendor"},
+    # Journal types: the sale/purchase journals are receipts and spending.
+    'account.selection__account_journal__type__sale': {'name': "Penerimaan"},
+    'account.selection__account_journal__type__purchase': {'name': "Pengeluaran"},
     # Invoice analysis: no taxes, so the untaxed amount is the amount.
     'account.field_account_invoice_report__price_subtotal': {'field_description': "Jumlah"},
     # Fixed assets (base_accounting_kit, English only).
@@ -357,6 +401,11 @@ class DkmMasjidSetup(models.AbstractModel):
             record = self.env.ref(xmlid, raise_if_not_found=False)
             if record:
                 self._set_name(record.sudo(), label, langs=['id_ID'])
+        # The chart's cash-basis tax journal keeps its English name.
+        caba = self.env['account.journal'].sudo().with_context(active_test=False).search(
+            [('code', '=', 'CABA'), ('name', '=', "Cash Basis Taxes")])
+        if caba:
+            self._set_name(caba, "Pajak Basis Kas", langs=['id_ID'])
         help_field = self.env['ir.actions.act_window']._fields['help']
         for xmlid, texts in ACTION_HELPS.items():
             action = self.env.ref(xmlid, raise_if_not_found=False)
