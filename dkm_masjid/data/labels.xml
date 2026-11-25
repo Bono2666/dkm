@@ -4,6 +4,7 @@
          menus, actions and report lines. -->
     <function model="dkm.masjid.setup" name="_apply_labels"/>
     <function model="dkm.masjid.setup" name="_apply_vendor_wording"/>
+    <function model="dkm.masjid.setup" name="_apply_list_defaults"/>
     <!-- Contacts, Dashboards and Apps: admin only. -->
     <function model="dkm.masjid.setup" name="_apply_menu_restrictions"/>
 </odoo>

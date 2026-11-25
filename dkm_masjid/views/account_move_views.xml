@@ -212,6 +212,60 @@
             <xpath expr="//field[@name='invoice_user_id'][contains(@column_invisible, 'out_invoice')]" position="attributes">
                 <attribute name="string">Petugas</attribute>
             </xpath>
+            <!-- No taxes anywhere; receipts are paid on the spot, so no due
+                 date or amount due on the receipt lists. -->
+            <xpath expr="//field[@name='amount_untaxed_in_currency_signed']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_tax_signed']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_date_due']" position="attributes">
+                <attribute name="column_invisible">context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount_residual_signed']" position="attributes">
+                <attribute name="string">Belum Dibayar</attribute>
+                <attribute name="sum">Belum Dibayar</attribute>
+                <attribute name="column_invisible">context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Search filters: no "Faktur", "Nota Kredit" or purchase receipts. -->
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.dkm.masjid</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <filter name="out_invoice" position="attributes">
+                <attribute name="string">Nota Penerimaan</attribute>
+            </filter>
+            <filter name="out_receipt" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </filter>
+            <filter name="out_refund" position="attributes">
+                <attribute name="string">Pengembalian Dana</attribute>
+            </filter>
+            <filter name="salesperson" position="attributes">
+                <attribute name="string">Petugas</attribute>
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_account_bill_filter" model="ir.ui.view">
+        <field name="name">account.bill.select.dkm.masjid</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_bill_filter"/>
+        <field name="arch" type="xml">
+            <filter name="in_invoice" position="attributes">
+                <attribute name="string">Tagihan Vendor</attribute>
+            </filter>
+            <filter name="in_receipt" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </filter>
+            <filter name="in_refund" position="attributes">
+                <attribute name="string">Pengembalian dari Vendor</attribute>
+            </filter>
         </field>
     </record>
 </odoo>

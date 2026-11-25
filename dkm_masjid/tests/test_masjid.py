@@ -285,6 +285,38 @@ class TestMasjid(TransactionCase):
         self.assertEqual(bill.amount_total, 450000.0)
         self.assertEqual(bill.date, bill.invoice_date)
 
+    def test_list_pages(self):
+        from lxml import etree
+        Move = self.env['account.move'].with_context(lang='id_ID')
+        out = Move.with_context(default_move_type='out_invoice')
+        lst = etree.fromstring(out.get_views([(False, 'list')])['views']['list']['arch'])
+        self.assertEqual(lst.xpath("//field[@name='amount_untaxed_in_currency_signed']")[0]
+                         .get('column_invisible'), 'True')
+        self.assertIn('out_invoice', lst.xpath("//field[@name='invoice_date_due']")[0]
+                      .get('column_invisible'))
+        search = etree.fromstring(out.get_views([(False, 'search')])['views']['search']['arch'])
+        self.assertTrue(search.xpath("//filter[@name='out_invoice'][@string='Nota Penerimaan']"))
+        self.assertTrue(search.xpath("//filter[@name='out_receipt'][@invisible='1']"))
+        bill_search = self.env.ref('account.view_account_bill_filter')
+        arch = etree.fromstring(Move.get_view(bill_search.id, 'search')['arch'])
+        self.assertTrue(arch.xpath("//filter[@name='in_invoice'][@string='Tagihan Vendor']"))
+
+        action = self.env.ref('account.action_move_out_invoice')
+        self.assertNotIn('search_default_out_receipt', action.context)
+        self.assertIn('search_default_out_invoice', action.context)
+        self.assertIn("Catat penerimaan dana",
+                      action.with_context(lang='id_ID').help)
+        self.assertNotIn("Catat penerimaan dana",
+                         action.with_context(lang='en_US').help)
+        donors = self.env.ref('account.res_partner_action_customer')
+        self.assertIn("Hamba Allah", donors.with_context(lang='id_ID').help)
+
+        Payment = self.env['account.payment'].with_context(lang='id_ID')
+        plist = etree.fromstring(Payment.get_views([(False, 'list')])['views']['list']['arch'])
+        self.assertTrue(plist.xpath("//field[@name='partner_id'][@string='Donatur']"))
+        bulk = self.env.ref('base_accounting_kit.menu_account_bulk_payment')
+        self.assertEqual(bulk.group_ids, self.env.ref('account.group_account_manager'))
+
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
         self.assertEqual(sale.code, 'PNR')

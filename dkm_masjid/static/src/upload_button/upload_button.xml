@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Receipts are typed in, not uploaded: no "Unggah" button on the
+         Nota Penerimaan / Pengembalian Dana lists. Bills keep it (scans). -->
+    <t t-inherit="account.AccountMoveListView.Buttons" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='account.AccountViewUploadButton']" position="attributes">
+            <attribute name="t-if">this.showUploadButton and !['out_invoice', 'out_refund'].includes(this.props.context.default_move_type)</attribute>
+        </xpath>
+    </t>
+    <t t-inherit="account.AccountMoveKanbanView.Buttons" t-inherit-mode="extension">
+        <xpath expr="//t[@t-call='account.AccountViewUploadButton']" position="attributes">
+            <attribute name="t-if">this.showUploadButton and !['out_invoice', 'out_refund'].includes(this.props.context.default_move_type)</attribute>
+        </xpath>
+    </t>
+</templates>

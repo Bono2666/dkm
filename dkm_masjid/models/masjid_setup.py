@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import re
 
 from odoo import api, models
 
@@ -24,6 +25,8 @@ LABELS = {
     'account.menu_account_supplier': "Vendor",
     'account.res_partner_action_supplier': "Vendor",
     'account.account_invoices': "Kuitansi / Faktur PDF",
+    'account.action_account_payments': "Pembayaran Masuk",
+    'account.action_account_payments_payable': "Pembayaran Keluar",
     'base_accounting_kit.customer_statements_menu': "Laporan Penagihan",
     'base_accounting_kit.menu_account_recurring_invoice': "Faktur Berulang",
     'base_accounting_kit.account_recurring_payments_child1':
@@ -63,6 +66,66 @@ LABELS = {
         "Liabilitas & Aset Neto",
     'base_accounting_kit.account_financial_report_profitloss_toreport0':
         "Surplus (Defisit) Tahun Berjalan",
+}
+
+# Empty-list help of the receipt, bill, payment and contact lists: Indonesian
+# for the help's terms in order (title, then explanation).
+def _help(title, text):
+    return (title, text)
+
+
+RECEIPT_HELP = _help(
+    "Catat penerimaan dana",
+    "Buat Nota Penerimaan untuk setiap infaq, sedekah, zakat, wakaf, atau "
+    "sewa fasilitas yang diterima masjid. Kuitansinya bisa langsung dicetak "
+    "atau dikirim ke donatur.")
+BILL_HELP = _help(
+    "Catat tagihan vendor",
+    "Catat tagihan dari toko, penyedia jasa, PLN, PDAM, dan lainnya, lalu "
+    "ajukan persetujuan sebelum dibayar.")
+ACTION_HELPS = {
+    'account.action_move_out_invoice': RECEIPT_HELP,
+    'account.action_move_out_invoice_type': RECEIPT_HELP,
+    'account.action_move_out_refund_type': _help(
+        "Belum ada pengembalian dana",
+        "Pengembalian dana paling mudah dibuat langsung dari Nota Penerimaan "
+        "yang bersangkutan."),
+    'account.action_move_out_refund_type_non_legacy': _help(
+        "Belum ada pengembalian dana",
+        "Pengembalian dana paling mudah dibuat langsung dari Nota Penerimaan "
+        "yang bersangkutan."),
+    'account.action_move_in_invoice': BILL_HELP,
+    'account.action_move_in_invoice_type': BILL_HELP,
+    'account.action_move_in_refund_type': _help(
+        "Belum ada pengembalian dari vendor",
+        "Pengembalian dari vendor paling mudah dibuat langsung dari Tagihan "
+        "Vendor yang bersangkutan."),
+    'account.action_account_payments': _help(
+        "Belum ada pembayaran masuk",
+        "Pembayaran masuk tercatat saat Nota Penerimaan dibayar, atau bisa "
+        "dicatat langsung di sini."),
+    'account.action_account_payments_payable': _help(
+        "Belum ada pembayaran keluar",
+        "Pembayaran ke vendor tercatat saat Tagihan Vendor dibayar, atau bisa "
+        "dicatat langsung di sini."),
+    'account.res_partner_action_customer': _help(
+        "Tambahkan donatur",
+        "Simpan data donatur agar penerimaan dari mereka mudah dicatat dan "
+        "dilacak. Donatur yang tidak ingin disebut namanya bisa dicatat "
+        "sebagai \"Hamba Allah\"."),
+    'account.res_partner_action_supplier': _help(
+        "Tambahkan vendor",
+        "Simpan data vendor (toko, penyedia jasa, PLN, PDAM, dan lainnya) agar "
+        "tagihan dan pembayarannya mudah dicatat."),
+}
+
+# Default filters that would add "atau Penerimaan" (sale/purchase receipts,
+# which mosques do not use) to the receipt and bill lists.
+ACTION_DEFAULT_FILTERS_DROPPED = {
+    'account.action_move_out_invoice': 'search_default_out_receipt',
+    'account.action_move_out_invoice_type': 'search_default_out_receipt',
+    'account.action_move_in_invoice': 'search_default_in_receipt',
+    'account.action_move_in_invoice_type': 'search_default_in_receipt',
 }
 
 # Other translated texts: xmlid -> {field: Indonesian text}.
@@ -168,6 +231,18 @@ class DkmMasjidSetup(models.AbstractModel):
             record = self.env.ref(xmlid, raise_if_not_found=False)
             if record:
                 self._set_name(record.sudo(), label, langs=['id_ID'])
+        help_field = self.env['ir.actions.act_window']._fields['help']
+        for xmlid, texts in ACTION_HELPS.items():
+            action = self.env.ref(xmlid, raise_if_not_found=False)
+            if not action:
+                continue
+            source = action.with_context(lang='en_US').help or ''
+            terms = []
+            help_field.translate(lambda term: terms.append(term) or term, source)
+            if len(terms) < len(texts):
+                continue
+            mapping = dict(zip(terms, texts))
+            action.sudo().update_field_translations('help', {'id_ID': mapping})
         for xmlid, texts in FIELD_TEXTS.items():
             record = self.env.ref(xmlid, raise_if_not_found=False)
             if record:
@@ -187,6 +262,17 @@ class DkmMasjidSetup(models.AbstractModel):
             view = self.env.ref(xmlid, raise_if_not_found=False)
             if view:
                 view.sudo().update_field_translations('arch_db', {'id_ID': terms})
+
+    @api.model
+    def _apply_list_defaults(self):
+        """Called from data/labels.xml on every install and upgrade (an
+        upgrade of account restores the original contexts)."""
+        for xmlid, key in ACTION_DEFAULT_FILTERS_DROPPED.items():
+            action = self.env.ref(xmlid, raise_if_not_found=False)
+            if not action or key not in (action.context or ''):
+                continue
+            action.sudo().context = re.sub(
+                r"\s*'%s'\s*:\s*1\s*,?" % key, '', action.context)
 
     @api.model
     def _apply_menu_restrictions(self):

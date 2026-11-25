@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payment lists: donors and vendors, one currency. -->
+    <record id="view_account_payment_tree" model="ir.ui.view">
+        <field name="name">account.payment.list.dkm.masjid</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="string">Donatur</attribute>
+            </field>
+            <xpath expr="//field[@name='amount_signed'][@optional='show']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_search" model="ir.ui.view">
+        <field name="name">account.payment.search.dkm.masjid</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <filter name="inbound_filter" position="attributes">
+                <attribute name="string">Pembayaran Masuk</attribute>
+            </filter>
+            <filter name="outbound_filter" position="attributes">
+                <attribute name="string">Pembayaran Keluar</attribute>
+            </filter>
+            <field name="partner_id" position="attributes">
+                <attribute name="string">Donatur/Vendor</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- Donor and vendor lists. -->
+    <record id="res_partner_view_search" model="ir.ui.view">
+        <field name="name">res.partner.search.dkm.masjid</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.res_partner_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="customer" position="attributes">
+                <attribute name="string">Donatur</attribute>
+            </filter>
+            <filter name="supplier" position="attributes">
+                <attribute name="string">Vendor</attribute>
+            </filter>
+        </field>
+    </record>
+</odoo>

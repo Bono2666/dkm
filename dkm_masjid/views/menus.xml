@@ -26,6 +26,10 @@
     <record id="base_accounting_kit.account_recurring_payments_child1" model="ir.ui.menu">
         <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
     </record>
+    <!-- Bulk Payments (English-only screen): admin only. -->
+    <record id="base_accounting_kit.menu_account_bulk_payment" model="ir.ui.menu">
+        <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
+    </record>
     <record id="account.product_product_menu_purchasable" model="ir.ui.menu">
         <field name="group_ids" eval="[Command.set([ref('account.group_account_manager')])]"/>
     </record>
