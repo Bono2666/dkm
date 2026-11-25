@@ -49,7 +49,10 @@ LABELS = {
     'account.menu_account_supplier': "Vendor",
     'account.res_partner_action_supplier': "Vendor",
     'account.account_invoices': "Kuitansi / Faktur PDF",
-    'account.action_account_payments': "Pembayaran Masuk",
+    # Penerimaan > Dana Masuk: money received from the jamaah (the cash/bank
+    # side of confirmed receipts), not payments for something sold.
+    'account.menu_action_account_payments_receivable': "Dana Masuk",
+    'account.action_account_payments': "Dana Masuk",
     # Akuntansi menu
     'account.account_closing_menu': "Tutup Buku",
     'account.menu_action_analytic_lines_tree': "Item Analitik",
@@ -197,9 +200,9 @@ ACTION_HELPS = {
         "Pengembalian dari vendor paling mudah dibuat langsung dari Tagihan "
         "Vendor yang bersangkutan."),
     'account.action_account_payments': _help(
-        "Belum ada pembayaran masuk",
-        "Pembayaran masuk tercatat otomatis saat Nota Penerimaan "
-        "dikonfirmasi. Halaman ini adalah riwayatnya."),
+        "Belum ada dana masuk",
+        "Dana masuk tercatat otomatis saat Nota Penerimaan dikonfirmasi. "
+        "Halaman ini adalah riwayatnya."),
     'account.action_account_payments_payable': _help(
         "Belum ada pembayaran keluar",
         "Pembayaran ke vendor tercatat otomatis saat Tagihan Vendor dibayar "

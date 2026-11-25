@@ -21,7 +21,7 @@
         <field name="inherit_id" ref="account.view_account_payment_search"/>
         <field name="arch" type="xml">
             <filter name="inbound_filter" position="attributes">
-                <attribute name="string">Pembayaran Masuk</attribute>
+                <attribute name="string">Dana Masuk</attribute>
             </filter>
             <filter name="outbound_filter" position="attributes">
                 <attribute name="string">Pembayaran Keluar</attribute>

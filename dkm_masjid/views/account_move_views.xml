@@ -145,6 +145,10 @@
                 </div>
             </xpath>
 
+            <!-- Refunds ("Nota Kredit") are an admin correction. -->
+            <xpath expr="//button[@name='action_reverse']" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
             <!-- Receipts and refunds are received/returned when confirmed:
                  where the money went, no "Bayar", no paid ribbons. -->
             <xpath expr="//group[@id='header_right_group']/field[@name='date']" position="before">

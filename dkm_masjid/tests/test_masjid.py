@@ -166,9 +166,13 @@ class TestMasjid(TransactionCase):
         from lxml import etree
         bendahara = self._bendahara('bendahara_nota')
         visible = self.env['ir.ui.menu'].with_user(bendahara)._visible_menu_ids()
-        for xmlid in ('account.menu_action_move_out_invoice_type',
-                      'account.menu_action_move_out_refund_type'):
-            self.assertIn(self.env.ref(xmlid).id, visible, xmlid)
+        self.assertIn(self.env.ref('account.menu_action_move_out_invoice_type').id, visible)
+        # Refunds are an admin correction; payments received are "Dana Masuk".
+        for xmlid in ('account.menu_action_move_out_refund_type',
+                      'account.menu_action_move_in_refund_type'):
+            self.assertNotIn(self.env.ref(xmlid).id, visible, xmlid)
+        self.assertEqual(self._name_id(self.env.ref(
+            'account.menu_action_account_payments_receivable')), "Dana Masuk")
         self.assertEqual(self._name_id(self.env.ref(
             'account.menu_action_move_out_invoice_type')), "Nota Penerimaan")
         view = self.env.ref('account.account_journal_dashboard_kanban_view')
