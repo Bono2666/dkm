@@ -351,6 +351,11 @@ FIELD_TEXTS = {
     'base_accounting_kit.field_account_payment_register__cheque_reference': {'field_description': "No. Cek"},
     'base_accounting_kit.field_account_payment__bank_reference': {'field_description': "No. Referensi Bank"},
     'base_accounting_kit.field_account_payment__cheque_reference': {'field_description': "No. Cek"},
+    # Approval steps: the "requester's manager" is the bill's division head.
+    'eh_account_approval.field_eh_approval_policy_rule_step__inject_manager': {
+        'field_description': "Kepala Divisi transaksi",
+        'help': "Kepala divisi yang dipilih pada tagihan ikut berhak menyetujui langkah ini.",
+    },
     # Chatter: receipts are confirmed (not "validated"); only bills get paid.
     'account.mt_invoice_validated': {
         'name': "Nota Penerimaan Dikonfirmasi",

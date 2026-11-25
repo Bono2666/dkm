@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dkm_division_list" model="ir.ui.view">
+        <field name="name">dkm.division.list</field>
+        <field name="model">dkm.division</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="head_id" options="{'no_create': True}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_dkm_division" model="ir.actions.act_window">
+        <field name="name">Divisi</field>
+        <field name="res_model">dkm.division</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tambahkan divisi DKM</p>
+            <p>Setiap divisi punya kepala divisi yang menyetujui tagihan divisinya.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dkm_division" name="Divisi"
+              parent="account.account_account_menu"
+              action="action_dkm_division" sequence="90"
+              groups="account.group_account_manager"/>
+
+    <!-- Vendor bills: which division spends the money (routes approval). -->
+    <record id="view_move_form_division" model="ir.ui.view">
+        <field name="name">account.move.form.division.dkm.masjid</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field name="eh_active_approval_request_id" invisible="1"/>
+                <field name="dkm_division_id"
+                       invisible="move_type not in ('in_invoice', 'in_refund')"
+                       required="move_type in ('in_invoice', 'in_refund') and state == 'draft'"
+                       readonly="state != 'draft' or eh_active_approval_request_id"
+                       options="{'no_create': True, 'no_open': True}"
+                       placeholder="Pilih divisi"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_division" model="ir.ui.view">
+        <field name="name">account.invoice.list.division.dkm.masjid</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_date'][contains(@column_invisible, 'out_invoice')]" position="before">
+                <field name="dkm_division_id" optional="show"
+                       column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_bill_filter_division" model="ir.ui.view">
+        <field name="name">account.bill.select.division.dkm.masjid</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_bill_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="dkm_division_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter name="group_by_division" string="Divisi" context="{'group_by': 'dkm_division_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

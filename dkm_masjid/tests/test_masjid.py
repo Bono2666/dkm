@@ -641,3 +641,58 @@ class TestMasjid(TransactionCase):
         self.assertFalse(refund._track_log_get_default_subtype({'state': 'draft'}))
         self.assertEqual(refund._track_log_get_default_body({'state': 'draft'}),
                          "Pengembalian Dana dikonfirmasi")
+
+    def test_division_approval(self):
+        from odoo.exceptions import UserError
+        Users = self.env['res.users'].with_context(no_reset_password=True)
+        groups = (self.env.ref('account.group_account_invoice')
+                  | self.env.ref('eh_account_base.group_eh_user'))
+        common = {'company_ids': [(6, 0, self.company.ids)], 'company_id': self.company.id,
+                  'group_ids': [(6, 0, groups.ids)]}
+        treasurer = Users.create({'name': "Bendahara Uji", 'login': 'bdh_uji', **common})
+        head = Users.create({'name': "Kadiv Uji", 'login': 'kadiv_uji', **common})
+        other = Users.create({'name': "Kadiv Lain", 'login': 'kadiv_lain', **common})
+        dakwah = self.env['dkm.division'].create({'name': "Dakwah Uji", 'head_id': head.id})
+        self.env['dkm.division'].create({'name': "Media Uji", 'head_id': other.id})
+        self.env['eh.approval.policy'].create({
+            'name': "Persetujuan Tagihan", 'company_id': self.company.id,
+            'document_type': 'in_invoice',
+            'rule_ids': [(0, 0, {
+                'name': "Di atas Rp 250.000", 'min_amount': 250000.01, 'max_amount': 0.0,
+                'step_ids': [(0, 0, {'inject_manager': True})],
+            })],
+        })
+        vendor = self.cenv['res.partner'].create({'name': "Toko Uji"})
+
+        def bill(amount, division=dakwah):
+            return self.cenv['account.move'].with_user(treasurer).create({
+                'move_type': 'in_invoice', 'partner_id': vendor.id,
+                'invoice_date': '2026-11-25', 'dkm_division_id': division.id,
+                'invoice_line_ids': [(0, 0, {'name': "Belanja", 'price_unit': amount})],
+            })
+
+        # Up to Rp 250.000: posts without approval.
+        small = bill(250000.0)
+        self.assertFalse(small.eh_requires_approval)
+        small.action_post()
+        self.assertEqual(small.state, 'posted')
+
+        # Above: blocked until the division head approves.
+        big = bill(300000.0)
+        self.assertTrue(big.eh_requires_approval)
+        with self.assertRaises(UserError):
+            big.action_post()
+        big.action_eh_request_approval()
+        request = big.eh_active_approval_request_id
+        self.assertEqual(request._eh_step_eligible_users(0), head)
+        with self.assertRaises(Exception):
+            request.with_user(other).action_approve("Setuju")
+        request.with_user(head).action_approve("Setuju")
+        self.assertEqual(request.state, 'approved')
+        big.with_user(treasurer).action_post()
+        self.assertEqual(big.state, 'posted')
+
+        # No division: ask for it before requesting approval.
+        nodiv = bill(300000.0, division=self.env['dkm.division'])
+        with self.assertRaises(UserError):
+            nodiv.action_eh_request_approval()
