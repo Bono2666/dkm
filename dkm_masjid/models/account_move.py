@@ -20,6 +20,11 @@ DRAFT_SOURCES = {
 # Receipts and refunds are money that changes hands on the spot: posting
 # one also records the cash or bank movement (no separate "Bayar" step).
 RECEIPT_TYPES = ('out_invoice', 'out_refund')
+# Chatter of a receipt: no payment status ("Faktur lunas", Belum Lunas ->
+# Lunas), no number/reference lines; the confirmation message names it.
+RECEIPT_UNTRACKED = {'name', 'payment_reference', 'payment_state', 'status_in_payment'}
+# Journal item fields Odoo fills in by itself when a receipt is posted.
+RECEIPT_LINE_UNTRACKED = {'name', 'label', 'date_maturity'}
 
 
 class AccountMove(models.Model):
@@ -61,6 +66,31 @@ class AccountMove(models.Model):
             })._create_payments()
             payments.dkm_auto_receipt = True
         return posted
+
+    def _mail_track(self, tracked_fields_get, initial_values):
+        changes, tracking_values = super()._mail_track(tracked_fields_get, initial_values)
+        if self.move_type in RECEIPT_TYPES:
+            changes = {fname for fname in changes if fname not in RECEIPT_UNTRACKED}
+            tracking_values = [vals for vals in tracking_values
+                               if vals.get('field_name') not in RECEIPT_UNTRACKED]
+        return changes, tracking_values
+
+    def _track_log_get_default_body(self, track_init_values):
+        if (self.move_type in RECEIPT_TYPES and 'state' in track_init_values
+                and self.state == 'posted'):
+            return f"{TYPE_NAMES[self.move_type]} {self.name} dikonfirmasi"
+        return super()._track_log_get_default_body(track_init_values)
+
+    def _track_record(self, records, track_fnames, initial_values=None,
+                      end_values=None, author=None, body=None):
+        if records._name == 'account.move.line' and self and all(
+                move.move_type in RECEIPT_TYPES for move in self):
+            track_fnames = [fname for fname in track_fnames
+                            if fname not in RECEIPT_LINE_UNTRACKED]
+            if not track_fnames:
+                return
+        return super()._track_record(records, track_fnames, initial_values=initial_values,
+                                     end_values=end_values, author=author, body=body)
 
     def button_draft(self):
         # A receipt back in draft has not received anything yet: cancel the

@@ -351,6 +351,15 @@ FIELD_TEXTS = {
     'base_accounting_kit.field_account_payment_register__cheque_reference': {'field_description': "No. Cek"},
     'base_accounting_kit.field_account_payment__bank_reference': {'field_description': "No. Referensi Bank"},
     'base_accounting_kit.field_account_payment__cheque_reference': {'field_description': "No. Cek"},
+    # Chatter: receipts are confirmed (not "validated"); only bills get paid.
+    'account.mt_invoice_validated': {
+        'name': "Nota Penerimaan Dikonfirmasi",
+        'description': "Nota Penerimaan dikonfirmasi",
+    },
+    'account.mt_invoice_paid': {
+        'name': "Tagihan Lunas",
+        'description': "Tagihan lunas",
+    },
     # Chatter line on a new Nota Penerimaan ("Faktur Dibuat").
     'account.mt_invoice_created': {
         'name': "Nota Penerimaan Dibuat",

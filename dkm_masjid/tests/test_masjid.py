@@ -607,6 +607,14 @@ class TestMasjid(TransactionCase):
         self.assertEqual((payment.journal_id, payment.amount, payment.payment_type, str(payment.date)),
                          (cash, 125000.0, 'inbound', '2026-11-20'))
 
+        # Chatter: the confirmation names the receipt; no payment status.
+        self.assertEqual(receipt._track_log_get_default_body({'state': 'draft'}),
+                         f"Nota Penerimaan {receipt.name} dikonfirmasi")
+        info = receipt._track_get_fields_info(['payment_state', 'state'])
+        changes, values = receipt._mail_track(info, {'payment_state': 'not_paid', 'state': 'draft'})
+        self.assertEqual(changes, {'state'})
+        self.assertEqual([v['field_name'] for v in values], ['state'])
+
         html = str(self.cenv['ir.actions.report'].with_context(lang='id_ID')
                    ._render_qweb_html('account.account_invoices', receipt.ids)[0])
         self.assertNotIn("Dibayar pada", html)
