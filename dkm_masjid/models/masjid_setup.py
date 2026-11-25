@@ -15,6 +15,16 @@ RANCANGAN = re.compile(r'\bRancangan (Tagihan|Faktur|Pembayaran)\b')
 DRAF_SQL = r'\m[Dd]raft\M|\mRancangan (Tagihan|Faktur|Pembayaran)\M'
 
 
+def is_indonesian(env):
+    """The language code translations use: the context's, else the request's
+    (RPC calls without a context still get Indonesian messages)."""
+    lang = env.lang
+    if not lang:
+        from odoo.http import request
+        lang = request and request.env and request.env.lang
+    return (lang or '').startswith('id')
+
+
 def draf_wording(text):
     if not text:
         return text

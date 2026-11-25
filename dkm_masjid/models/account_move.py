@@ -2,7 +2,7 @@
 from odoo import api, models
 from odoo.tools.translate import code_translations
 
-from .masjid_setup import draf_wording
+from .masjid_setup import draf_wording, is_indonesian
 
 # Customer invoices are used to record mosque receipts.
 TYPE_NAMES = {
@@ -42,7 +42,7 @@ class AccountMove(models.Model):
                 'account', self.env.lang or 'en_US').get(source, source)
             if name.startswith(translated):
                 name = f"{TYPE_NAMES[self.move_type]} Draf{name[len(translated):]}"
-        if (self.env.lang or '').startswith('id'):
+        if is_indonesian(self.env):
             # "Draft Entry", "Rancangan Tagihan", ... come from account's code.
             name = draf_wording(name)
         return name
@@ -53,6 +53,6 @@ class AccountPayment(models.Model):
 
     def _compute_display_name(self):
         super()._compute_display_name()
-        if (self.env.lang or '').startswith('id'):
+        if is_indonesian(self.env):
             for payment in self:
                 payment.display_name = draf_wording(payment.display_name)
