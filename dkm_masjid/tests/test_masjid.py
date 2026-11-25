@@ -213,15 +213,19 @@ class TestMasjid(TransactionCase):
         self.assertTrue(arch.xpath("//page[@id='invoice_tab'][@string='Rincian']"))
         out = "parent.move_type in ('out_invoice', 'out_refund')"
         lines = arch.xpath("//field[@name='invoice_line_ids']/list")[0]
-        for fname in ('quantity', 'discount', 'tax_ids'):
+        self.assertEqual(lines.xpath("field[@name='quantity']")[0]
+                         .get('column_invisible'), out)
+        inv = "parent.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')"
+        for fname in ('discount', 'tax_ids'):
             self.assertEqual(lines.xpath(f"field[@name='{fname}']")[0]
-                             .get('column_invisible'), out, fname)
+                             .get('column_invisible'), inv, fname)
         self.assertTrue(lines.xpath("field[@name='price_unit'][@string='Nominal']"))
         self.assertTrue(arch.xpath("//span[text()='Nota Penerimaan']"))
         self.assertTrue(arch.xpath("//div[@name='dkm_receipt_total']/field[@name='amount_total']"))
         out_only = "move_type in ('out_invoice', 'out_refund')"
         self.assertEqual(arch.xpath("//div[label[@for='amount_residual']]")[0]
-                         .get('invisible'), out_only)
+                         .get('invisible'),
+                         "move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')")
         self.assertEqual(arch.xpath("//group[@name='accounting_info_group']")[0]
                          .get('invisible'), out_only)
         sale_info = arch.xpath("//group[@name='sale_info_group']")[0]
@@ -249,6 +253,39 @@ class TestMasjid(TransactionCase):
         self.assertEqual(
             self.env.ref('account.mt_invoice_created').with_context(
                 lang='id_ID').description, "Nota Penerimaan Dibuat")
+
+    def test_bill_form(self):
+        from lxml import etree
+        Move = self.cenv['account.move'].with_context(
+            lang='id_ID', default_move_type='in_invoice')
+        arch = etree.fromstring(Move.get_views([(False, 'form')])
+                                ['views']['form']['arch'])
+        self.assertTrue(arch.xpath("//span[text()='Tagihan Vendor']"))
+        self.assertTrue(arch.xpath("//div[@name='dkm_bill_total']/field[@name='amount_total']"))
+        self.assertTrue(arch.xpath("//div[@name='dkm_bill_residual']/field[@name='amount_residual']"))
+        lines = arch.xpath("//field[@name='invoice_line_ids']/list")[0]
+        self.assertTrue(lines.xpath("field[@name='price_unit'][@string='Harga Satuan']"))
+        self.assertEqual(lines.xpath("field[@name='asset_category_id']")[0]
+                         .get('optional'), 'hide')
+        header = arch.xpath("//group[@id='header_right_group']")[0]
+        for fname in ('payment_reference', 'partner_bank_id'):
+            self.assertEqual(header.xpath(f"field[@name='{fname}']")[0]
+                             .get('invisible'), '1', fname)
+        self.assertIn('in_invoice', arch.xpath("//page[@id='other_tab']")[0]
+                      .get('invisible'))
+
+        vendor = self.cenv['res.partner'].create({'name': "PLN"})
+        bill = self.cenv['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': vendor.id,
+            'invoice_date': '2026-11-25',
+            'invoice_line_ids': [(0, 0, {'name': "Listrik November",
+                                         'quantity': 1,
+                                         'price_unit': 450000.0})],
+        })
+        self.assertEqual(bill.invoice_line_ids.account_id.code, '61200010')
+        self.assertEqual(bill.amount_total, 450000.0)
+        self.assertEqual(bill.date, bill.invoice_date)
 
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
