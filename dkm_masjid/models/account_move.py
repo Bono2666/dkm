@@ -75,10 +75,18 @@ class AccountMove(models.Model):
                                if vals.get('field_name') not in RECEIPT_UNTRACKED]
         return changes, tracking_values
 
-    def _track_log_get_default_body(self, track_init_values):
-        if (self.move_type in RECEIPT_TYPES and 'state' in track_init_values
+    # A confirmed receipt shows its subtype, "Nota Penerimaan dikonfirmasi".
+    # Refunds share that sale subtype, so they log their own line instead.
+    def _track_log_get_default_subtype(self, track_init_values):
+        if (self.move_type == 'out_refund' and 'state' in track_init_values
                 and self.state == 'posted'):
-            return f"{TYPE_NAMES[self.move_type]} {self.name} dikonfirmasi"
+            return self.env['mail.message.subtype']
+        return super()._track_log_get_default_subtype(track_init_values)
+
+    def _track_log_get_default_body(self, track_init_values):
+        if (self.move_type == 'out_refund' and 'state' in track_init_values
+                and self.state == 'posted'):
+            return "Pengembalian Dana dikonfirmasi"
         return super()._track_log_get_default_body(track_init_values)
 
     def _track_record(self, records, track_fnames, initial_values=None,

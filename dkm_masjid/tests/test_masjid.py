@@ -608,8 +608,9 @@ class TestMasjid(TransactionCase):
                          (cash, 125000.0, 'inbound', '2026-11-20'))
 
         # Chatter: the confirmation names the receipt; no payment status.
-        self.assertEqual(receipt._track_log_get_default_body({'state': 'draft'}),
-                         f"Nota Penerimaan {receipt.name} dikonfirmasi")
+        self.assertEqual(receipt._track_log_get_default_subtype({'state': 'draft'}),
+                         self.env.ref('account.mt_invoice_validated'))
+        self.assertFalse(receipt._track_log_get_default_body({'state': 'draft'}))
         info = receipt._track_get_fields_info(['payment_state', 'state'])
         changes, values = receipt._mail_track(info, {'payment_state': 'not_paid', 'state': 'draft'})
         self.assertEqual(changes, {'state'})
@@ -636,3 +637,6 @@ class TestMasjid(TransactionCase):
         refund.action_post()
         self.assertIn(refund.payment_state, ('paid', 'in_payment'))
         self.assertEqual(refund._get_reconciled_payments().payment_type, 'outbound')
+        self.assertFalse(refund._track_log_get_default_subtype({'state': 'draft'}))
+        self.assertEqual(refund._track_log_get_default_body({'state': 'draft'}),
+                         "Pengembalian Dana dikonfirmasi")
