@@ -145,6 +145,39 @@
                 </div>
             </xpath>
 
+            <!-- Receipts and refunds are received/returned when confirmed:
+                 where the money went, no "Bayar", no paid ribbons. -->
+            <xpath expr="//group[@id='header_right_group']/field[@name='date']" position="before">
+                <field name="dkm_receipt_journal_id" string="Diterima di"
+                       invisible="move_type != 'out_invoice'"
+                       required="move_type == 'out_invoice' and state == 'draft'"
+                       readonly="state != 'draft'"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="dkm_receipt_journal_id" string="Dikembalikan dari"
+                       invisible="move_type != 'out_refund'"
+                       required="move_type == 'out_refund' and state == 'draft'"
+                       readonly="state != 'draft'"
+                       options="{'no_create': True, 'no_open': True}"/>
+            </xpath>
+            <xpath expr="//button[@id='account_invoice_payment_btn']" position="attributes">
+                <attribute name="invisible" add="(move_type in ('out_invoice', 'out_refund') and dkm_receipt_journal_id)" separator=" or "/>
+            </xpath>
+            <xpath expr="//button[@id='account_invoice_payment_secondary_btn']" position="attributes">
+                <attribute name="invisible" add="(move_type in ('out_invoice', 'out_refund') and dkm_receipt_journal_id)" separator=" or "/>
+            </xpath>
+            <xpath expr="//widget[@name='web_ribbon'][contains(@invisible, &quot;payment_state != 'paid'&quot;)]" position="attributes">
+                <attribute name="invisible" add="move_type in ('out_invoice', 'out_refund')" separator=" or "/>
+            </xpath>
+            <xpath expr="//widget[@name='web_ribbon'][contains(@invisible, &quot;payment_state != 'in_payment'&quot;)]" position="attributes">
+                <attribute name="invisible" add="move_type in ('out_invoice', 'out_refund')" separator=" or "/>
+            </xpath>
+            <xpath expr="//widget[@name='web_ribbon'][contains(@invisible, &quot;payment_state != 'partial'&quot;)]" position="attributes">
+                <attribute name="invisible" add="move_type in ('out_invoice', 'out_refund')" separator=" or "/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_payments_widget']" position="attributes">
+                <attribute name="invisible" add="move_type in ('out_invoice', 'out_refund')" separator=" or "/>
+            </xpath>
+
             <!-- Journal Items tab: no tax grids or early-payment discounts
                  (mosques are not PKP); no taxes or due dates on receipts. -->
             <!-- Newer Odoo 20 builds show "label" there and hide "name". -->
@@ -223,6 +256,18 @@
             <xpath expr="//field[@name='invoice_date_due']" position="attributes">
                 <attribute name="column_invisible">context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')</attribute>
             </xpath>
+            <xpath expr="//button[@name='action_force_register_payment']" position="attributes">
+                <attribute name="invisible">context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='status_in_payment']" position="attributes">
+                <attribute name="column_invisible">context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')</attribute>
+            </xpath>
+            <xpath expr="//field[@name='status_in_payment']" position="after">
+                <field name="state" string="Status" widget="badge"
+                       decoration-info="state == 'draft'" decoration-success="state == 'posted'"
+                       decoration-danger="state == 'cancel'"
+                       column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')"/>
+            </xpath>
             <xpath expr="//field[@name='amount_residual_signed']" position="attributes">
                 <attribute name="string">Belum Dibayar</attribute>
                 <attribute name="sum">Belum Dibayar</attribute>
@@ -245,6 +290,18 @@
             </filter>
             <filter name="out_refund" position="attributes">
                 <attribute name="string">Pengembalian Dana</attribute>
+            </filter>
+            <filter name="open" position="attributes">
+                <attribute name="invisible">context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')</attribute>
+            </filter>
+            <filter name="in_payment" position="attributes">
+                <attribute name="invisible">context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')</attribute>
+            </filter>
+            <filter name="late" position="attributes">
+                <attribute name="invisible">context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')</attribute>
+            </filter>
+            <filter name="due_date" position="attributes">
+                <attribute name="invisible">context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')</attribute>
             </filter>
             <filter name="salesperson" position="attributes">
                 <attribute name="string">Petugas</attribute>

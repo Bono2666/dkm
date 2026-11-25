@@ -571,14 +571,60 @@ class TestMasjid(TransactionCase):
             self.assertEqual(arch.get('create'), '0', view_type)
         admin_arch = etree.fromstring(self.cenv['account.payment'].get_view(view_type='list')['arch'])
         self.assertNotEqual(admin_arch.get('create'), '0')
-        # The "Bayar" button still records the payment for the treasurer.
+        # Confirming a receipt still records the payment for the treasurer.
         donor = self.cenv['res.partner'].create({'name': "Hamba Allah"})
-        receipt = self.cenv['account.move'].create({
+        receipt = self.cenv['account.move'].with_user(treasurer).create({
             'move_type': 'out_invoice', 'partner_id': donor.id,
             'invoice_line_ids': [(0, 0, {'name': "Infaq", 'price_unit': 75000.0})],
         })
         receipt.action_post()
-        self.cenv['account.payment.register'].with_user(treasurer).with_context(
-            active_model='account.move', active_ids=receipt.ids,
-        ).create({})._create_payments()
         self.assertIn(receipt.payment_state, ('paid', 'in_payment'))
+
+    def test_receipt_received_on_confirm(self):
+        from lxml import etree
+        Move = self.cenv['account.move'].with_context(lang='id_ID', default_move_type='out_invoice')
+        arch = etree.fromstring(Move.get_views([(False, 'form')])['views']['form']['arch'])
+        self.assertTrue(arch.xpath("//field[@name='dkm_receipt_journal_id'][@string='Diterima di']"))
+        self.assertIn('dkm_receipt_journal_id', arch.xpath(
+            "//button[@id='account_invoice_payment_btn']")[0].get('invisible'))
+
+        cash = self.cenv['account.journal'].search([
+            ('company_id', '=', self.company.id), ('type', '=', 'cash')], limit=1)
+        bank = self.cenv['account.journal'].search([
+            ('company_id', '=', self.company.id), ('type', '=', 'bank')], limit=1)
+        donor = self.cenv['res.partner'].create({'name': "Hamba Allah"})
+        receipt = self.cenv['account.move'].create({
+            'move_type': 'out_invoice', 'partner_id': donor.id,
+            'invoice_date': '2026-11-20',
+            'invoice_line_ids': [(0, 0, {'name': "Infaq Jumat", 'price_unit': 125000.0})],
+        })
+        self.assertEqual(receipt.dkm_receipt_journal_id, cash)
+        receipt.action_post()
+        self.assertIn(receipt.payment_state, ('paid', 'in_payment'))
+        payment = receipt._get_reconciled_payments()
+        self.assertEqual(len(payment), 1)
+        self.assertTrue(payment.dkm_auto_receipt)
+        self.assertEqual((payment.journal_id, payment.amount, payment.payment_type, str(payment.date)),
+                         (cash, 125000.0, 'inbound', '2026-11-20'))
+
+        html = str(self.cenv['ir.actions.report'].with_context(lang='id_ID')
+                   ._render_qweb_html('account.account_invoices', receipt.ids)[0])
+        self.assertNotIn("Dibayar pada", html)
+        self.assertNotIn("Paid on", html)
+
+        # Back to draft: nothing received yet; confirming again counts once.
+        receipt.button_draft()
+        self.assertEqual(payment.state, 'canceled')
+        receipt.dkm_receipt_journal_id = bank
+        receipt.action_post()
+        active = receipt._get_reconciled_payments().filtered(lambda p: p.state != 'canceled')
+        self.assertEqual(len(active), 1)
+        self.assertEqual(active.journal_id, bank)
+
+        refund = self.cenv['account.move'].create({
+            'move_type': 'out_refund', 'partner_id': donor.id,
+            'invoice_line_ids': [(0, 0, {'name': "Salah catat", 'price_unit': 25000.0})],
+        })
+        refund.action_post()
+        self.assertIn(refund.payment_state, ('paid', 'in_payment'))
+        self.assertEqual(refund._get_reconciled_payments().payment_type, 'outbound')

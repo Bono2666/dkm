@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from lxml import etree
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.tools.translate import code_translations
 
 from .masjid_setup import draf_wording, is_indonesian
@@ -17,8 +17,61 @@ DRAFT_SOURCES = {
 }
 
 
+# Receipts and refunds are money that changes hands on the spot: posting
+# one also records the cash or bank movement (no separate "Bayar" step).
+RECEIPT_TYPES = ('out_invoice', 'out_refund')
+
+
 class AccountMove(models.Model):
     _inherit = 'account.move'
+
+    dkm_receipt_journal_id = fields.Many2one(
+        'account.journal', string="Diterima di",
+        compute='_compute_dkm_receipt_journal_id', store=True, readonly=False,
+        check_company=True,
+        domain="[('type', 'in', ('cash', 'bank'))]",
+        help="Kas atau rekening bank tempat uang diterima (atau dikembalikan). "
+             "Uangnya tercatat saat nota dikonfirmasi.")
+
+    @api.depends('move_type', 'company_id')
+    def _compute_dkm_receipt_journal_id(self):
+        for move in self:
+            if move.move_type not in RECEIPT_TYPES:
+                move.dkm_receipt_journal_id = False
+            elif move.dkm_receipt_journal_id.company_id != move.company_id:
+                journals = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(move.company_id),
+                    ('type', 'in', ('cash', 'bank')),
+                ])
+                move.dkm_receipt_journal_id = (
+                    journals.filtered(lambda j: j.type == 'cash')[:1] or journals[:1])
+
+    def _post(self, soft=True):
+        posted = super()._post(soft=soft)
+        for move in posted.filtered(lambda m: (
+                m.move_type in RECEIPT_TYPES and m.dkm_receipt_journal_id
+                and m.payment_state == 'not_paid'
+                and not m.currency_id.is_zero(m.amount_residual))):
+            payments = self.env['account.payment.register'].with_context(
+                active_model='account.move', active_ids=move.ids,
+                dont_redirect_to_payments=True,
+            ).create({
+                'journal_id': move.dkm_receipt_journal_id.id,
+                'payment_date': move.invoice_date or move.date,
+            })._create_payments()
+            payments.dkm_auto_receipt = True
+        return posted
+
+    def button_draft(self):
+        # A receipt back in draft has not received anything yet: cancel the
+        # payment its posting made, so posting again does not count it twice.
+        receipts = self.filtered(lambda m: m.move_type in RECEIPT_TYPES and m.state == 'posted')
+        auto = receipts._get_reconciled_payments().filtered(
+            lambda p: p.dkm_auto_receipt and p.state != 'canceled')
+        for payment in auto:
+            payment.action_draft()
+            payment.action_cancel()
+        return super().button_draft()
 
     @api.depends('move_type')
     def _compute_type_name(self):
@@ -53,6 +106,10 @@ class AccountMove(models.Model):
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
 
+    dkm_auto_receipt = fields.Boolean(
+        copy=False, readonly=True,
+        help="Made when its Nota Penerimaan or Pengembalian Dana was confirmed.")
+
     def _compute_display_name(self):
         super()._compute_display_name()
         if is_indonesian(self.env):
@@ -61,9 +118,10 @@ class AccountPayment(models.Model):
 
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):
-        """Pembayaran Masuk/Keluar are a history: payments come from the
-        "Bayar" button of a Nota Penerimaan or Tagihan, which also records the
-        income or expense. Only the admin creates payments directly."""
+        """Pembayaran Masuk/Keluar are a history: payments come from
+        confirming a Nota Penerimaan or the "Bayar" button of a Tagihan, which
+        also record the income or expense. Only the admin creates payments
+        directly."""
         result = super().get_view(view_id, view_type, **options)
         if (view_type in ('list', 'kanban', 'form')
                 and not self.env.user.has_group('account.group_account_manager')):

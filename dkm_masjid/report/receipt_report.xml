@@ -81,14 +81,18 @@
             <t t-set="is_receipt" t-value="o.move_type in ('out_invoice', 'out_refund')"/>
         </xpath>
 
-        <!-- A receipt is already paid: no payment instructions. -->
+        <!-- A receipt is received when confirmed: no payment instructions... -->
         <xpath expr="//p[@name='payment_communication']" position="replace">
-            <p name="payment_communication" t-if="o.payment_state not in ('paid', 'in_payment')">
+            <p name="payment_communication" t-if="o.move_type not in ('out_invoice', 'out_refund') and o.payment_state not in ('paid', 'in_payment')">
                 Referensi pembayaran: <span class="fw-bold" t-field="o.payment_reference"/>
                 <t t-if="o.partner_bank_id">
                     <br/>ke rekening: <span t-field="o.partner_bank_id" class="fw-bold"/>
                 </t>
             </p>
+        </xpath>
+        <!-- ... and no "Dibayar pada" / amount-due lines. -->
+        <xpath expr="//t[@t-if='print_with_payments']" position="attributes">
+            <attribute name="t-if">print_with_payments and o.move_type not in ('out_invoice', 'out_refund')</attribute>
         </xpath>
         <xpath expr="//div[p[@name='payment_communication']]" position="after">
             <div t-if="o.move_type == 'out_invoice'" name="dkm_receipt_footer" class="mt-4 avoid-page-break-inside">

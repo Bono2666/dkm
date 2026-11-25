@@ -198,8 +198,8 @@ ACTION_HELPS = {
         "Vendor yang bersangkutan."),
     'account.action_account_payments': _help(
         "Belum ada pembayaran masuk",
-        "Pembayaran masuk tercatat otomatis saat Nota Penerimaan dibayar "
-        "dengan tombol Bayar. Halaman ini adalah riwayatnya."),
+        "Pembayaran masuk tercatat otomatis saat Nota Penerimaan "
+        "dikonfirmasi. Halaman ini adalah riwayatnya."),
     'account.action_account_payments_payable': _help(
         "Belum ada pembayaran keluar",
         "Pembayaran ke vendor tercatat otomatis saat Tagihan Vendor dibayar "
