@@ -417,6 +417,16 @@ class TestMasjid(TransactionCase):
         self.assertEqual(english._xlsx_action('Trial Balance', table)['data']['report_name'],
                          "Trial Balance")
 
+    def test_aged_balance_xlsx_without_entries(self):
+        import json
+        wizard = self.env['account.aged.trial.balance'].with_company(self.company).with_context(
+            lang='id_ID', allowed_company_ids=self.company.ids).create({})
+        action = wizard.action_print_xlsx()
+        self.assertEqual(action['data']['report_name'], "Umur Piutang & Utang")
+        data = json.loads(action['data']['options'])
+        self.assertEqual(data['rows'][-1]['cells'][0], "Total Akun")
+        self.assertEqual(data['columns'][0]['label'], "Donatur/Vendor")
+
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
         self.assertEqual(sale.code, 'PNR')

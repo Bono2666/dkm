@@ -48,6 +48,7 @@ XLSX_TERMS_ID = {
     "Total": "Total",
     "Variance": "Selisih",
     # Row labels
+    "Account Total": "Total Akun",
     "Purchases": "Pembelian",
     "Sales": "Penjualan",
 }
@@ -74,3 +75,14 @@ class ReportXlsxMixin(models.AbstractModel):
             table['rows'] = [dict(row, cells=[_translate(c) for c in row.get('cells', [])])
                              for row in table.get('rows', [])]
         return super()._xlsx_action(report_name, table)
+
+
+class AgedPartnerBalanceReport(models.AbstractModel):
+    _inherit = 'report.base_accounting_kit.report_agedpartnerbalance'
+
+    def _get_partner_move_lines(self, *args, **kwargs):
+        # Without any open receivable/payable the kit returns an empty total
+        # list, which made its XLSX export crash on total[6]. The PDF only
+        # prints totals when there are partner lines, so zeros are safe.
+        res, total, lines = super()._get_partner_move_lines(*args, **kwargs)
+        return res, total or [0.0] * 7, lines
