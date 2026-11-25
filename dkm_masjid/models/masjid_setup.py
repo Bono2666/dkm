@@ -245,6 +245,12 @@ ACTION_DEFAULT_FILTERS_DROPPED = {
     'account.action_move_in_invoice_type': 'search_default_in_receipt',
 }
 
+PAYMENT_METHOD_HELP = (
+    "Tunai/Transfer: uang diterima atau dibayarkan tunai atau lewat transfer bank.\n"
+    "Cek: pembayaran dengan cek. Cek Mundur: cek yang baru bisa dicairkan "
+    "pada tanggal efektifnya."
+)
+
 # Other translated texts: xmlid -> {field: Indonesian text}.
 FIELD_TEXTS = {
     # Budgets (base_account_budget, English only).
@@ -314,12 +320,42 @@ FIELD_TEXTS = {
     'base_accounting_kit.selection__account_asset_asset__state__paused': {'name': "Dijeda"},
     'base_accounting_kit.selection__account_asset_asset__state__close': {'name': "Selesai"},
     'base_accounting_kit.selection__account_asset_asset__state__cancelled': {'name': "Dibatalkan"},
+    # Payments: donors/vendors, money in/out, a note instead of a memo.
+    'account.field_account_payment__partner_id': {'field_description': "Donatur/Vendor"},
+    'account.field_account_payment__payment_type': {'field_description': "Jenis Pembayaran"},
+    'account.selection__account_payment__payment_type__inbound': {'name': "Masuk"},
+    'account.selection__account_payment__payment_type__outbound': {'name': "Keluar"},
+    'account.field_account_payment__memo': {'field_description': "Keterangan"},
+    'account.field_account_payment_register__communication': {'field_description': "Keterangan"},
+    'account.field_account_payment__payment_method_line_id': {'help': PAYMENT_METHOD_HELP},
+    'account.field_account_payment_register__payment_method_line_id': {'help': PAYMENT_METHOD_HELP},
+    'account.field_account_payment_register__group_payment': {
+        'field_description': "Gabungkan Pembayaran",
+        'help': "Satu pembayaran per donatur/vendor, bukan satu per tagihan."},
+    'base_accounting_kit.field_account_payment__effective_date': {
+        'field_description': "Tanggal Efektif", 'help': "Tanggal cek mundur bisa dicairkan."},
+    'base_accounting_kit.field_account_payment_register__effective_date': {
+        'field_description': "Tanggal Efektif", 'help': "Tanggal cek mundur bisa dicairkan."},
+    'account.field_account_payment_register__partner_bank_id': {'field_description': "Rekening Penerima"},
+    'base_accounting_kit.field_account_payment_register__bank_reference': {'field_description': "No. Referensi Bank"},
+    'base_accounting_kit.field_account_payment_register__cheque_reference': {'field_description': "No. Cek"},
+    'base_accounting_kit.field_account_payment__bank_reference': {'field_description': "No. Referensi Bank"},
+    'base_accounting_kit.field_account_payment__cheque_reference': {'field_description': "No. Cek"},
     # Chatter line on a new Nota Penerimaan ("Faktur Dibuat").
     'account.mt_invoice_created': {
         'name': "Nota Penerimaan Dibuat",
         'description': "Nota Penerimaan Dibuat",
     },
 }
+
+# Payment methods by code: the method itself (translated name) and the
+# journal lines already created from it (plain copies of the English name).
+PAYMENT_METHOD_NAMES = {
+    'manual': "Tunai/Transfer",
+    'check_printing': "Cek",
+    'pdc': "Cek Mundur",
+}
+PAYMENT_METHOD_OLD_NAMES = ["Manual Payment", "Pembayaran Manual", "Checks", "PDC"]
 
 # Vendored modules that ship an i18n/id.po added for the mosque (PDF reports
 # and their print wizards). Reloaded with overwrite on every upgrade, before
@@ -457,6 +493,14 @@ class DkmMasjidSetup(models.AbstractModel):
             if record:
                 for fname, text in texts.items():
                     record.sudo().update_field_translations(fname, {'id_ID': text})
+        for code, name in PAYMENT_METHOD_NAMES.items():
+            methods = self.env['account.payment.method'].sudo().search([('code', '=', code)])
+            for method in methods:
+                method.update_field_translations('name', {'id_ID': name})
+            self.env['account.payment.method.line'].sudo().search([
+                ('payment_method_id', 'in', methods.ids),
+                ('name', 'in', PAYMENT_METHOD_OLD_NAMES),
+            ]).write({'name': name})
 
     @api.model
     def _apply_vendor_wording(self):

@@ -5,3 +5,4 @@ from . import financial_report
 from . import account_journal
 from . import account_move
 from . import report_xlsx
+from . import account_payment_method

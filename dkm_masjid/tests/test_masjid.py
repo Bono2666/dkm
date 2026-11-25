@@ -517,3 +517,42 @@ class TestMasjid(TransactionCase):
             lang='id_ID').fields_get(['debit'], ['help'])['debit']['help']
         self.assertIn("vendor", help_text)
         self.assertNotIn("pemasok", help_text)
+
+    def test_payment_form(self):
+        from lxml import etree
+        self.env['dkm.masjid.setup']._apply_labels()
+        Pay = self.cenv['account.payment'].with_context(lang='id_ID')
+        arch = etree.fromstring(Pay.get_views([(False, 'form')])['views']['form']['arch'])
+        self.assertTrue(arch.xpath("//field[@name='partner_id'][@string='Donatur']"))
+        self.assertTrue(arch.xpath("//field[@name='memo'][@string='Keterangan']"))
+        self.assertEqual(arch.xpath("//button[@name='mark_as_sent']")[0].get('invisible'), '1')
+        self.assertIn('pdc', arch.xpath("//field[@name='cheque_reference']")[0].get('invisible'))
+        self.assertIn('partner_bank_id', arch.xpath(
+            "//field[@name='partner_bank_id'][@string='Rekening Masjid']")[0].get('invisible'))
+        fields = Pay.fields_get(['payment_type', 'memo'], ['string', 'selection'])
+        self.assertEqual(dict(fields['payment_type']['selection']),
+                         {'inbound': "Masuk", 'outbound': "Keluar"})
+        self.assertEqual(fields['memo']['string'], "Keterangan")
+
+        Reg = self.cenv['account.payment.register'].with_context(lang='id_ID')
+        reg = etree.fromstring(Reg.get_views([(False, 'form')])['views']['form']['arch'])
+        self.assertTrue(reg.xpath("//button[@string='Catat Pembayaran']"))
+        self.assertEqual(reg.xpath("//field[@name='effective_date']")[0].get('invisible'),
+                         "payment_method_code != 'pdc'")
+
+        # Journals of the new company, made in English: Indonesian method names.
+        bank = self.cenv['account.journal'].search([
+            ('company_id', '=', self.company.id), ('type', '=', 'bank')], limit=1)
+        manual = bank.inbound_payment_method_line_ids.filtered(
+            lambda l: l.payment_method_id.code == 'manual')
+        self.assertEqual(manual.name, "Tunai/Transfer")
+
+        donor = self.cenv['res.partner'].create({'name': "Hamba Allah"})
+        pay = self.cenv['account.payment'].create({
+            'payment_type': 'inbound', 'partner_type': 'customer',
+            'partner_id': donor.id, 'amount': 50000.0, 'journal_id': bank.id,
+            'memo': "Infaq Jumat",
+        })
+        pay.action_post()
+        self.assertEqual(pay.payment_method_line_id.name, "Tunai/Transfer")
+        self.assertEqual(pay.state, 'paid')

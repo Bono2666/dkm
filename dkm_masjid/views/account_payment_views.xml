@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payment form: donors and vendors, cash or transfer, one currency.
+         Cheque fields only show for the cheque payment methods; empty bank
+         fields are hidden once the payment is confirmed. -->
+    <record id="view_account_payment_form" model="ir.ui.view">
+        <field name="name">account.payment.form.dkm.masjid</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <!-- "Mark as Sent" is for posted cheques/transfers to send out. -->
+            <button name="mark_as_sent" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </button>
+            <xpath expr="//button[@name='unmark_as_sent'][contains(@invisible, 'manual')]" position="attributes">
+                <attribute name="string">Batalkan Tanda Terkirim</attribute>
+            </xpath>
+            <xpath expr="//div[field[@name='duplicate_payment_ids']]/span" position="replace">
+                <span>Pembayaran ini memiliki donatur/vendor, jumlah, dan tanggal yang sama dengan </span>
+            </xpath>
+
+            <xpath expr="//button[@name='button_open_invoices']//span[contains(@invisible, '!=')]" position="replace">
+                <span invisible="reconciled_invoices_type != 'invoice'"> Nota Penerimaan</span>
+            </xpath>
+            <xpath expr="//button[@name='button_open_invoices']//span[contains(@invisible, '==')]" position="replace">
+                <span invisible="reconciled_invoices_type == 'invoice'"> Pengembalian</span>
+            </xpath>
+
+            <field name="payment_type" position="attributes">
+                <attribute name="string">Jenis</attribute>
+            </field>
+            <xpath expr="//field[@name='partner_id'][contains(@invisible, 'customer')]" position="attributes">
+                <attribute name="string">Donatur</attribute>
+            </xpath>
+            <field name="memo" position="attributes">
+                <attribute name="string">Keterangan</attribute>
+                <attribute name="placeholder">mis. Infaq Jumat, honor imam bulan November</attribute>
+            </field>
+
+            <xpath expr="//field[@name='partner_bank_id'][contains(@invisible, 'customer')]" position="attributes">
+                <attribute name="string">Rekening Donatur</attribute>
+                <attribute name="invisible" add="(state != 'draft' and not partner_bank_id)" separator=" or "/>
+            </xpath>
+            <xpath expr="//field[@name='partner_bank_id'][contains(@invisible, 'supplier')]" position="attributes">
+                <attribute name="string">Rekening Vendor</attribute>
+                <attribute name="invisible" add="(state != 'draft' and not partner_bank_id)" separator=" or "/>
+            </xpath>
+            <xpath expr="//field[@name='partner_bank_id'][contains(@invisible, 'outbound')][not(contains(@invisible, 'partner_type'))]" position="attributes">
+                <attribute name="string">Rekening Masjid</attribute>
+                <attribute name="invisible" add="(state != 'draft' and not partner_bank_id)" separator=" or "/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Accounting kit additions: cheque reference and the "Sent" ribbon. -->
+    <record id="view_account_payment_form_kit" model="ir.ui.view">
+        <field name="name">account.payment.form.kit.dkm.masjid</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="base_accounting_kit.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//widget[@name='web_ribbon'][contains(@invisible, 'is_sent')]" position="attributes">
+                <attribute name="title">Terkirim</attribute>
+            </xpath>
+            <xpath expr="//button[@name='unmark_as_sent'][contains(@invisible, 'pdc')]" position="attributes">
+                <attribute name="string">Batalkan Tanda Terkirim</attribute>
+            </xpath>
+            <xpath expr="//button[@name='print_checks'][contains(@invisible, 'pdc')]" position="attributes">
+                <attribute name="string">Cetak Cek</attribute>
+            </xpath>
+            <field name="bank_reference" position="attributes">
+                <attribute name="invisible">state != 'draft' and not bank_reference</attribute>
+            </field>
+            <field name="cheque_reference" position="attributes">
+                <attribute name="invisible">payment_method_code not in ('check_printing', 'pdc')</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- "Bayar" dialog on receipts and bills. -->
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form.dkm.masjid</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[field[@name='duplicate_payment_ids']]/span" position="replace">
+                <span>Pembayaran ini memiliki donatur/vendor, jumlah, dan tanggal yang sama dengan </span>
+            </xpath>
+            <field name="communication" position="attributes">
+                <attribute name="placeholder">mis. Infaq Jumat, honor imam bulan November</attribute>
+            </field>
+            <xpath expr="//button[@name='action_create_payments'][contains(@invisible, '== 1')]" position="attributes">
+                <attribute name="string">Catat Semua Pembayaran</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_create_payments'][contains(@invisible, '!= 1')]" position="attributes">
+                <attribute name="string">Catat Pembayaran</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Accounting kit additions to the dialog: cheque fields for cheques only. -->
+    <record id="view_account_payment_register_form_kit" model="ir.ui.view">
+        <field name="name">account.payment.register.form.kit.dkm.masjid</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="base_accounting_kit.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <field name="effective_date" position="attributes">
+                <attribute name="invisible">payment_method_code != 'pdc'</attribute>
+                <attribute name="required">payment_method_code == 'pdc'</attribute>
+            </field>
+            <field name="effective_date" position="before">
+                <field name="payment_method_code" invisible="1"/>
+            </field>
+            <field name="cheque_reference" position="attributes">
+                <attribute name="invisible">payment_method_code not in ('check_printing', 'pdc')</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
