@@ -126,25 +126,11 @@
                 <attribute name="column_invisible">parent.document_tax_mode == 'tax_excluded' or parent.move_type in ('out_invoice', 'out_refund')</attribute>
             </xpath>
 
-            <!-- Totals: one "Total Penerimaan" / "Total Tagihan" instead of
-                 untaxed/tax/total. -->
+            <!-- Totals: static/src/tax_totals shows one "Total Penerimaan" /
+                 "Total Tagihan" line (amount_total itself is not recomputed
+                 in the form before saving). -->
             <xpath expr="//field[@name='narration']" position="attributes">
                 <attribute name="placeholder">Catatan</attribute>
-            </xpath>
-            <xpath expr="//field[@name='tax_totals']" position="attributes">
-                <attribute name="invisible">move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')</attribute>
-            </xpath>
-            <xpath expr="//field[@name='tax_totals']" position="after">
-                <div class="d-flex justify-content-end align-items-baseline gap-3 mb-3 text-nowrap" colspan="2"
-                     name="dkm_receipt_total" invisible="move_type not in ('out_invoice', 'out_refund')">
-                    <span class="fw-bold flex-shrink-0">Total Penerimaan</span>
-                    <field name="amount_total" class="fs-5 fw-bold flex-shrink-0"/>
-                </div>
-                <div class="d-flex justify-content-end align-items-baseline gap-3 mb-3 text-nowrap" colspan="2"
-                     name="dkm_bill_total" invisible="move_type not in ('in_invoice', 'in_refund')">
-                    <span class="fw-bold flex-shrink-0">Total Tagihan</span>
-                    <field name="amount_total" class="fs-5 fw-bold flex-shrink-0"/>
-                </div>
             </xpath>
             <!-- A receipt records money already received: no amount due.
                  Bills show what is left to pay, without overlapping. -->

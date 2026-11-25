@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Mosques charge no tax: drop the "Jumlah Sebelum Pajak" row when there
+         is no tax, and name the total after the document. -->
+    <t t-inherit="account.TaxTotalsField" t-inherit-mode="extension">
+        <xpath expr="//t[@t-foreach='totals.subtotals']/tr" position="attributes">
+            <attribute name="t-if">totals.has_tax_groups</attribute>
+        </xpath>
+        <xpath expr="//span[@name='amount_total']/../../td[hasclass('o_td_label')]/label" position="replace">
+            <t t-set="dkm_move_type" t-value="this.props.record.data.move_type"/>
+            <label class="o_form_label o_tax_total_label"
+                   t-out="['out_invoice', 'out_refund'].includes(dkm_move_type) ? 'Total Penerimaan'
+                          : ['in_invoice', 'in_refund'].includes(dkm_move_type) ? 'Total Tagihan' : 'Total'"/>
+        </xpath>
+    </t>
+</templates>

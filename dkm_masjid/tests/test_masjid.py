@@ -221,7 +221,6 @@ class TestMasjid(TransactionCase):
                              .get('column_invisible'), inv, fname)
         self.assertTrue(lines.xpath("field[@name='price_unit'][@string='Nominal']"))
         self.assertTrue(arch.xpath("//span[text()='Nota Penerimaan']"))
-        self.assertTrue(arch.xpath("//div[@name='dkm_receipt_total']/field[@name='amount_total']"))
         out_only = "move_type in ('out_invoice', 'out_refund')"
         self.assertEqual(arch.xpath("//div[label[@for='amount_residual']]")[0]
                          .get('invisible'),
@@ -261,7 +260,6 @@ class TestMasjid(TransactionCase):
         arch = etree.fromstring(Move.get_views([(False, 'form')])
                                 ['views']['form']['arch'])
         self.assertTrue(arch.xpath("//span[text()='Tagihan Vendor']"))
-        self.assertTrue(arch.xpath("//div[@name='dkm_bill_total']/field[@name='amount_total']"))
         self.assertTrue(arch.xpath("//div[@name='dkm_bill_residual']/field[@name='amount_residual']"))
         lines = arch.xpath("//field[@name='invoice_line_ids']/list")[0]
         self.assertTrue(lines.xpath("field[@name='price_unit'][@string='Harga Satuan']"))
