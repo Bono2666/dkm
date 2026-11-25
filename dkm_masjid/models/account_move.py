@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+
 from odoo import api, models
 from odoo.tools.translate import code_translations
 
@@ -7,6 +9,8 @@ TYPE_NAMES = {
     'out_invoice': "Nota Penerimaan",
     'out_refund': "Pengembalian Dana",
 }
+# The committee writes "Draf" (KBBI), not "Draft".
+DRAFT_WORD = re.compile(r'\b([Dd])raft\b')
 DRAFT_SOURCES = {
     'out_invoice': 'Draft Invoice',
     'out_refund': 'Draft Credit Note',
@@ -39,5 +43,8 @@ class AccountMove(models.Model):
             translated = code_translations.get_python_translations(
                 'account', self.env.lang or 'en_US').get(source, source)
             if name.startswith(translated):
-                name = f"{TYPE_NAMES[self.move_type]} Draft{name[len(translated):]}"
+                name = f"{TYPE_NAMES[self.move_type]} Draf{name[len(translated):]}"
+        if (self.env.lang or '').startswith('id'):
+            # "Draft Entry", "Draft Nota Kredit", ... come from account's code.
+            name = DRAFT_WORD.sub(r"\1raf", name)
         return name

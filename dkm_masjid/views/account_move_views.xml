@@ -268,4 +268,11 @@
             </filter>
         </field>
     </record>
+
+    <!-- ERP Heritage journal entry PDF: title of an unnumbered entry. -->
+    <template id="eh_report_account_move" inherit_id="eh_account_base.report_eh_account_move">
+        <xpath expr="//h1[hasclass('eh_pdf_title')]/t" position="attributes">
+            <attribute name="t-out">move.name or 'Draf'</attribute>
+        </xpath>
+    </template>
 </odoo>

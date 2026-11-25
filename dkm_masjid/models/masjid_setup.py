@@ -3,6 +3,7 @@ import logging
 import re
 
 from odoo import api, models
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -457,6 +458,57 @@ class DkmMasjidSetup(models.AbstractModel):
             view = self.env.ref(xmlid, raise_if_not_found=False)
             if view:
                 view.sudo().update_field_translations('arch_db', {'id_ID': terms})
+
+    @api.model
+    def _apply_draf_wording(self):
+        """Called from data/labels.xml on every install and upgrade: write
+        "Draf"/"draf" (KBBI) instead of "Draft"/"draft" in every Indonesian translation
+        stored in the database (states, filters, buttons, views, ...)."""
+        if 'id_ID' not in dict(self.env['res.lang'].get_installed()):
+            return
+        word = re.compile(r'\b([Dd])raft\b')
+        cr = self.env.cr
+        for model_name in list(self.env.registry):
+            Model = self.env[model_name]
+            if Model._abstract or Model._transient or not Model._auto:
+                continue
+            for fname, field in Model._fields.items():
+                if not (field.translate and field.store and field.column_type) \
+                        or field.model_name != model_name:
+                    continue
+                column = SQL.identifier(Model._table, fname)
+                if field.translate is True:
+                    condition = SQL("%s->>'id_ID' ~ %s OR (NOT %s ? 'id_ID' AND %s->>'en_US' = 'Draft')",
+                                    column, r'\m[Dd]raft\M', column, column)
+                else:
+                    condition = SQL("%s->>'id_ID' ~ %s OR %s->>'en_US' ~ %s",
+                                    column, r'\m[Dd]raft\M', column, r'\mDraft\M')
+                cr.execute(SQL("SELECT id FROM %s WHERE %s",
+                               SQL.identifier(Model._table), condition))
+                ids = [row[0] for row in cr.fetchall()]
+                if not ids:
+                    continue
+                records = Model.browse(ids).sudo().with_context(
+                    lang='id_ID', active_test=False)
+                for record in records:
+                    if field.translate is True:
+                        value = record[fname] or ''
+                        if word.search(value):
+                            record.update_field_translations(
+                                fname, {'id_ID': word.sub(r"\1raf", value)})
+                        continue
+                    translations, _context = record.get_field_translations(
+                        fname, langs=['id_ID'])
+                    mapping = {}
+                    for term in translations:
+                        value = term['value'] or ''
+                        # Untranslated terms stay English, except a bare "Draft".
+                        if not value and term['source'].strip() == 'Draft':
+                            value = term['source']
+                        if word.search(value):
+                            mapping[term['source']] = word.sub(r"\1raf", value)
+                    if mapping:
+                        record.update_field_translations(fname, {'id_ID': mapping})
 
     @api.model
     def _apply_list_defaults(self):

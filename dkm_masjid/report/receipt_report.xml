@@ -6,7 +6,7 @@
             <t name="invoice_title">Kuitansi Penerimaan</t>
         </xpath>
         <xpath expr="//t[@name='draft_invoice_title']" position="replace">
-            <t name="draft_invoice_title">Kuitansi Penerimaan (Draft)</t>
+            <t name="draft_invoice_title">Kuitansi Penerimaan (Draf)</t>
         </xpath>
         <xpath expr="//t[@name='cancelled_invoice_title']" position="replace">
             <t name="cancelled_invoice_title">Kuitansi Penerimaan (Dibatalkan)</t>
@@ -15,7 +15,7 @@
             <t name="credit_note_title">Bukti Pengembalian Dana</t>
         </xpath>
         <xpath expr="//t[@name='draft_credit_note_title']" position="replace">
-            <t name="draft_credit_note_title">Bukti Pengembalian Dana (Draft)</t>
+            <t name="draft_credit_note_title">Bukti Pengembalian Dana (Draf)</t>
         </xpath>
         <xpath expr="//t[@name='cancelled_credit_note_title']" position="replace">
             <t name="cancelled_credit_note_title">Bukti Pengembalian Dana (Dibatalkan)</t>

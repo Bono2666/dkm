@@ -248,7 +248,7 @@ class TestMasjid(TransactionCase):
         self.assertEqual(move.amount_total, 2500000.0)
         self.assertEqual(move.type_name, "Nota Penerimaan")
         self.assertTrue(move.with_context(lang='id_ID').display_name
-                        .startswith("Nota Penerimaan Draft"))
+                        .startswith("Nota Penerimaan Draf"))
         self.assertEqual(
             self.env.ref('account.mt_invoice_created').with_context(
                 lang='id_ID').description, "Nota Penerimaan Dibuat")
@@ -441,6 +441,32 @@ class TestMasjid(TransactionCase):
         self.assertIn(">Status<", arch)
         self.assertNotIn("Statu<", arch)
         self.assertNotIn("Rekanan", arch)
+
+    def test_draf_everywhere(self):
+        setup = self.env['dkm.masjid.setup']
+        setup._apply_labels()
+        setup._apply_vendor_wording()
+        setup._apply_draf_wording()
+        Move = self.env['account.move'].with_context(lang='id_ID')
+        states = dict(Move.fields_get(['state'], ['selection'])['state']['selection'])
+        self.assertEqual(states['draft'], "Draf")
+        cron = self.env['ir.actions.server'].with_context(lang='id_ID').search(
+            [('name', 'ilike', 'raf')])
+        self.assertFalse([n for n in cron.mapped('name') if 'draft' in n.lower()])
+        from lxml import etree
+        search = Move.get_views([(False, 'search')])['views']['search']['arch']
+        self.assertNotIn('"Draft"', search)
+        entry = self.cenv['account.move'].with_context(lang='id_ID').create({
+            'move_type': 'entry',
+            'line_ids': [(0, 0, {'name': 'a', 'account_id': self._category("Zakat").property_account_income_id.id,
+                                 'debit': 10.0}),
+                         (0, 0, {'name': 'b', 'account_id': self._category("Zakat").property_account_income_id.id,
+                                 'credit': 10.0})],
+        })
+        self.assertNotIn("Draft", entry.with_context(lang='id_ID').display_name)
+        pdf_view = self.env.ref('eh_account_base.report_eh_account_move')
+        arch = etree.tostring(pdf_view._get_combined_arch(), encoding='unicode')
+        self.assertIn("move.name or 'Draf'", arch)
 
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
