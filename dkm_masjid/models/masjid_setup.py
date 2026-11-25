@@ -65,6 +65,15 @@ LABELS = {
         "Surplus (Defisit) Tahun Berjalan",
 }
 
+# Other translated texts: xmlid -> {field: Indonesian text}.
+FIELD_TEXTS = {
+    # Chatter line on a new Nota Penerimaan ("Faktur Dibuat").
+    'account.mt_invoice_created': {
+        'name': "Nota Penerimaan Dibuat",
+        'description': "Nota Penerimaan Dibuat",
+    },
+}
+
 # Top-level apps the treasurer and chairman do not need: donors and vendors
 # are under Keuangan > Penerimaan / Pengeluaran. Admin (Settings) only. These
 # modules are not dependencies, so the menus are looked up softly.
@@ -159,6 +168,11 @@ class DkmMasjidSetup(models.AbstractModel):
             record = self.env.ref(xmlid, raise_if_not_found=False)
             if record:
                 self._set_name(record.sudo(), label, langs=['id_ID'])
+        for xmlid, texts in FIELD_TEXTS.items():
+            record = self.env.ref(xmlid, raise_if_not_found=False)
+            if record:
+                for fname, text in texts.items():
+                    record.sudo().update_field_translations(fname, {'id_ID': text})
 
     @api.model
     def _apply_vendor_wording(self):

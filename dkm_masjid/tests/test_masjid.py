@@ -219,6 +219,19 @@ class TestMasjid(TransactionCase):
         self.assertTrue(lines.xpath("field[@name='price_unit'][@string='Nominal']"))
         self.assertTrue(arch.xpath("//span[text()='Nota Penerimaan']"))
         self.assertTrue(arch.xpath("//div[@name='dkm_receipt_total']/field[@name='amount_total']"))
+        out_only = "move_type in ('out_invoice', 'out_refund')"
+        self.assertEqual(arch.xpath("//div[label[@for='amount_residual']]")[0]
+                         .get('invisible'), out_only)
+        self.assertEqual(arch.xpath("//group[@name='accounting_info_group']")[0]
+                         .get('invisible'), out_only)
+        sale_info = arch.xpath("//group[@name='sale_info_group']")[0]
+        shown = [f.get('name') for f in sale_info.xpath('field')
+                 if f.get('invisible') not in ('1', 'True')]
+        self.assertEqual(shown, ['ref', 'invoice_user_id'])
+        self.assertTrue(arch.xpath(
+            "//group[field[@name='l10n_id_coretax_document']][@invisible='1']"))
+        self.assertTrue(arch.xpath(
+            "//field[@name='line_ids']/list/field[@name='tax_tag_ids'][@column_invisible='True']"))
 
         zakat = self._category("Zakat").product_variant_id
         donor = self.cenv['res.partner'].create({'name': "Donatur Uji"})
@@ -233,6 +246,9 @@ class TestMasjid(TransactionCase):
         self.assertEqual(move.type_name, "Nota Penerimaan")
         self.assertTrue(move.with_context(lang='id_ID').display_name
                         .startswith("Nota Penerimaan Draft"))
+        self.assertEqual(
+            self.env.ref('account.mt_invoice_created').with_context(
+                lang='id_ID').description, "Nota Penerimaan Dibuat")
 
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
