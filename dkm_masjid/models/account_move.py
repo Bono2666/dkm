@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
+
 from odoo import api, models
 from odoo.tools.translate import code_translations
 
@@ -56,3 +58,16 @@ class AccountPayment(models.Model):
         if is_indonesian(self.env):
             for payment in self:
                 payment.display_name = draf_wording(payment.display_name)
+
+    @api.model
+    def get_view(self, view_id=None, view_type='form', **options):
+        """Pembayaran Masuk/Keluar are a history: payments come from the
+        "Bayar" button of a Nota Penerimaan or Tagihan, which also records the
+        income or expense. Only the admin creates payments directly."""
+        result = super().get_view(view_id, view_type, **options)
+        if (view_type in ('list', 'kanban', 'form')
+                and not self.env.user.has_group('account.group_account_manager')):
+            node = etree.fromstring(result['arch'])
+            node.set('create', '0')
+            result['arch'] = etree.tostring(node, encoding='unicode')
+        return result

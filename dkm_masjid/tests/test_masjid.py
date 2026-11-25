@@ -556,3 +556,29 @@ class TestMasjid(TransactionCase):
         pay.action_post()
         self.assertEqual(pay.payment_method_line_id.name, "Tunai/Transfer")
         self.assertEqual(pay.state, 'paid')
+
+    def test_payment_lists_are_history(self):
+        from lxml import etree
+        treasurer = self.env['res.users'].create({
+            'name': "Bendahara Uji", 'login': 'bendahara_uji',
+            'group_ids': [(6, 0, [self.env.ref('account.group_account_user').id])],
+            'company_ids': [(6, 0, self.company.ids)], 'company_id': self.company.id,
+        })
+        self.assertFalse(treasurer.has_group('account.group_account_manager'))
+        Pay = self.cenv['account.payment'].with_user(treasurer)
+        for view_type in ('list', 'kanban', 'form'):
+            arch = etree.fromstring(Pay.get_view(view_type=view_type)['arch'])
+            self.assertEqual(arch.get('create'), '0', view_type)
+        admin_arch = etree.fromstring(self.cenv['account.payment'].get_view(view_type='list')['arch'])
+        self.assertNotEqual(admin_arch.get('create'), '0')
+        # The "Bayar" button still records the payment for the treasurer.
+        donor = self.cenv['res.partner'].create({'name': "Hamba Allah"})
+        receipt = self.cenv['account.move'].create({
+            'move_type': 'out_invoice', 'partner_id': donor.id,
+            'invoice_line_ids': [(0, 0, {'name': "Infaq", 'price_unit': 75000.0})],
+        })
+        receipt.action_post()
+        self.cenv['account.payment.register'].with_user(treasurer).with_context(
+            active_model='account.move', active_ids=receipt.ids,
+        ).create({})._create_payments()
+        self.assertIn(receipt.payment_state, ('paid', 'in_payment'))

@@ -14,6 +14,10 @@
             <xpath expr="//span[@t-if=&quot;journal_type == 'bank'&quot;]" position="replace">
                 <span class="text-muted" t-if="journal_type == 'bank'">Hubungkan rekening bank masjid dan cocokkan transaksinya.</span>
             </xpath>
+            <!-- New payments come from the "Bayar" button; admin only here. -->
+            <xpath expr="//div[@name='kanban_manage_new'][div[@name='bank_customer_payment']]" position="attributes">
+                <attribute name="groups">account.group_account_manager</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
