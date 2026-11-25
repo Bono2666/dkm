@@ -464,6 +464,17 @@ class TestMasjid(TransactionCase):
                                  'credit': 10.0})],
         })
         self.assertNotIn("Draft", entry.with_context(lang='id_ID').display_name)
+        from odoo.addons.dkm_masjid.models.masjid_setup import draf_wording
+        self.assertEqual(draf_wording("Rancangan Tagihan (INV/1)"), "Tagihan Draf (INV/1)")
+        self.assertEqual(draf_wording("Rancangan Pembayaran"), "Pembayaran Draf")
+        self.assertEqual(draf_wording("Reset ke Draft"), "Reset ke Draf")
+        vendor = self.cenv['res.partner'].create({'name': "Vendor"})
+        bill = self.cenv['account.move'].with_context(lang='id_ID').create({
+            'move_type': 'in_invoice', 'partner_id': vendor.id, 'invoice_date': '2026-11-25',
+            'invoice_line_ids': [(0, 0, {'name': 'Listrik', 'price_unit': 10.0})],
+        })
+        self.assertTrue(bill.with_context(lang='id_ID').display_name.startswith("Tagihan Draf"),
+                        bill.with_context(lang='id_ID').display_name)
         pdf_view = self.env.ref('eh_account_base.report_eh_account_move')
         arch = etree.tostring(pdf_view._get_combined_arch(), encoding='unicode')
         self.assertIn("move.name or 'Draf'", arch)

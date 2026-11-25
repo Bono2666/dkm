@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
-import re
-
 from odoo import api, models
 from odoo.tools.translate import code_translations
+
+from .masjid_setup import draf_wording
 
 # Customer invoices are used to record mosque receipts.
 TYPE_NAMES = {
     'out_invoice': "Nota Penerimaan",
     'out_refund': "Pengembalian Dana",
 }
-# The committee writes "Draf" (KBBI), not "Draft".
-DRAFT_WORD = re.compile(r'\b([Dd])raft\b')
 DRAFT_SOURCES = {
     'out_invoice': 'Draft Invoice',
     'out_refund': 'Draft Credit Note',
@@ -45,6 +43,16 @@ class AccountMove(models.Model):
             if name.startswith(translated):
                 name = f"{TYPE_NAMES[self.move_type]} Draf{name[len(translated):]}"
         if (self.env.lang or '').startswith('id'):
-            # "Draft Entry", "Draft Nota Kredit", ... come from account's code.
-            name = DRAFT_WORD.sub(r"\1raf", name)
+            # "Draft Entry", "Rancangan Tagihan", ... come from account's code.
+            name = draf_wording(name)
         return name
+
+
+class AccountPayment(models.Model):
+    _inherit = 'account.payment'
+
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        if (self.env.lang or '').startswith('id'):
+            for payment in self:
+                payment.display_name = draf_wording(payment.display_name)

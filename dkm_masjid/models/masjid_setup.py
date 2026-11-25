@@ -7,6 +7,19 @@ from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
+# The committee writes "Draf" (KBBI): Draft/draft -> Draf/draf, and Odoo's
+# "Rancangan Tagihan/Faktur/Pembayaran" (Draft Bill/Invoice/Payment) ->
+# "Tagihan/Faktur/Pembayaran Draf".
+DRAFT_WORD = re.compile(r'\b([Dd])raft\b')
+RANCANGAN = re.compile(r'\bRancangan (Tagihan|Faktur|Pembayaran)\b')
+DRAF_SQL = r'\m[Dd]raft\M|\mRancangan (Tagihan|Faktur|Pembayaran)\M'
+
+
+def draf_wording(text):
+    if not text:
+        return text
+    return RANCANGAN.sub(r'\1 Draf', DRAFT_WORD.sub(r'\1raf', text))
+
 # Indonesian UI labels, written for id_ID. On a database where en_US is not
 # installed Odoo also stores them as the source term, which is why
 # models/financial_report.py no longer relies on the English line names.
@@ -466,7 +479,6 @@ class DkmMasjidSetup(models.AbstractModel):
         stored in the database (states, filters, buttons, views, ...)."""
         if 'id_ID' not in dict(self.env['res.lang'].get_installed()):
             return
-        word = re.compile(r'\b([Dd])raft\b')
         cr = self.env.cr
         for model_name in list(self.env.registry):
             Model = self.env[model_name]
@@ -479,10 +491,10 @@ class DkmMasjidSetup(models.AbstractModel):
                 column = SQL.identifier(Model._table, fname)
                 if field.translate is True:
                     condition = SQL("%s->>'id_ID' ~ %s OR (NOT %s ? 'id_ID' AND %s->>'en_US' = 'Draft')",
-                                    column, r'\m[Dd]raft\M', column, column)
+                                    column, DRAF_SQL, column, column)
                 else:
                     condition = SQL("%s->>'id_ID' ~ %s OR %s->>'en_US' ~ %s",
-                                    column, r'\m[Dd]raft\M', column, r'\mDraft\M')
+                                    column, DRAF_SQL, column, r'\mDraft\M')
                 cr.execute(SQL("SELECT id FROM %s WHERE %s",
                                SQL.identifier(Model._table), condition))
                 ids = [row[0] for row in cr.fetchall()]
@@ -493,9 +505,9 @@ class DkmMasjidSetup(models.AbstractModel):
                 for record in records:
                     if field.translate is True:
                         value = record[fname] or ''
-                        if word.search(value):
+                        if draf_wording(value) != value:
                             record.update_field_translations(
-                                fname, {'id_ID': word.sub(r"\1raf", value)})
+                                fname, {'id_ID': draf_wording(value)})
                         continue
                     translations, _context = record.get_field_translations(
                         fname, langs=['id_ID'])
@@ -505,8 +517,8 @@ class DkmMasjidSetup(models.AbstractModel):
                         # Untranslated terms stay English, except a bare "Draft".
                         if not value and term['source'].strip() == 'Draft':
                             value = term['source']
-                        if word.search(value):
-                            mapping[term['source']] = word.sub(r"\1raf", value)
+                        if draf_wording(value) != value:
+                            mapping[term['source']] = draf_wording(value)
                     if mapping:
                         record.update_field_translations(fname, {'id_ID': mapping})
 
