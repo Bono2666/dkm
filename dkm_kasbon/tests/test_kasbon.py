@@ -112,3 +112,43 @@ class TestKasbon(TransactionCase):
         self.assertEqual(request.state, 'approved')
         kasbon.action_disburse()
         self.assertEqual(kasbon.state, 'active')
+
+    def test_salary_bill_skips_approval(self):
+        self.env['eh.approval.policy'].create({
+            'name': "Persetujuan Tagihan", 'company_id': self.company.id,
+            'document_type': 'in_invoice',
+            'rule_ids': [(0, 0, {
+                'name': "Di atas Rp 250.000", 'min_amount': 250000.01, 'max_amount': 0.0,
+                'step_ids': [(0, 0, {'inject_manager': True})],
+            })],
+        })
+        Account = self.env['account.account'].with_company(self.company)
+        domain = Account._check_company_domain(self.company)
+        salary = Account.search([*domain, ('code', '=', '61100010')], limit=1)
+        supplies = Account.search([*domain, ('code', '=', '66110000')], limit=1)
+        self.assertTrue(salary and supplies)
+
+        # Salary (with the kasbon deduction) posts without approval.
+        kasbon = self._kasbon(1000000.0, 2)
+        kasbon.action_submit()
+        kasbon.action_disburse()
+        bill = self._salary_bill()
+        bill.invoice_line_ids.account_id = salary
+        bill.action_dkm_add_kasbon_deduction()
+        self.assertFalse(bill.eh_requires_approval)
+        bill.action_post()
+        self.assertEqual(bill.state, 'posted')
+
+        # Other expenses paid to an employee still need approval.
+        other = self._salary_bill()
+        other.invoice_line_ids.account_id = supplies
+        self.assertTrue(other.eh_requires_approval)
+        with self.assertRaises(UserError):
+            other.action_post()
+
+        # So does a salary account billed to a non-employee vendor.
+        vendor = self.env['res.partner'].create({'name': "Toko Uji"})
+        third = self._salary_bill()
+        third.write({'partner_id': vendor.id})
+        third.invoice_line_ids.account_id = salary
+        self.assertTrue(third.eh_requires_approval)

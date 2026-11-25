@@ -4,6 +4,9 @@ from odoo.exceptions import UserError
 
 from .kasbon import line_label_field
 
+# Gaji, Bonus/Tunjangan, Lembur and Kompensasi Karyawan (Indonesian chart).
+SALARY_ACCOUNT_CODES = ('61100010', '61100020', '61100030', '61100040')
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
@@ -33,6 +36,33 @@ class AccountMove(models.Model):
             move.dkm_kasbon_available = bool(
                 move.move_type == 'in_invoice' and move.state == 'draft'
                 and (move._dkm_open_kasbons() - move.invoice_line_ids.dkm_kasbon_id))
+
+    def _dkm_is_salary_bill(self):
+        """A bill to an employee whose lines are only salary accounts (plus the
+        kasbon deduction). Salaries are fixed, so they skip the bill approval."""
+        self.ensure_one()
+        if self.move_type != 'in_invoice' or not self.partner_id:
+            return False
+        lines = self.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        if not lines:
+            return False
+        employee = self.env['hr.employee'].sudo().with_context(active_test=False).search([
+            ('work_contact_id', '=', self.partner_id.commercial_partner_id.id),
+            ('company_id', 'in', (self.company_id.id, False)),
+        ], limit=1)
+        if not employee:
+            return False
+        kasbon_account = self.company_id._dkm_kasbon_account()
+        return all(line.account_id.code in SALARY_ACCOUNT_CODES
+                   or (line.dkm_kasbon_id and line.account_id == kasbon_account)
+                   for line in lines)
+
+    def _dkm_approval_exempt(self, policy):
+        return self._dkm_is_salary_bill() or super()._dkm_approval_exempt(policy)
+
+    @api.depends('partner_id', 'invoice_line_ids.account_id')
+    def _compute_requires_approval(self):
+        return super()._compute_requires_approval()
 
     def action_dkm_add_kasbon_deduction(self):
         """Salary bill: deduct this month's installment of the employee's
