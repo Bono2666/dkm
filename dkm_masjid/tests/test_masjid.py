@@ -637,6 +637,7 @@ class TestMasjid(TransactionCase):
         refund.action_post()
         self.assertIn(refund.payment_state, ('paid', 'in_payment'))
         self.assertEqual(refund._get_reconciled_payments().payment_type, 'outbound')
+        self.assertEqual(refund._creation_message(), "Pengembalian Dana Dibuat")
         self.assertFalse(refund._track_log_get_default_subtype({'state': 'draft'}))
         self.assertEqual(refund._track_log_get_default_body({'state': 'draft'}),
                          "Pengembalian Dana dikonfirmasi")

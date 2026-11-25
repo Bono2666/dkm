@@ -75,6 +75,14 @@ class AccountMove(models.Model):
                                if vals.get('field_name') not in RECEIPT_UNTRACKED]
         return changes, tracking_values
 
+    def _creation_message(self):
+        # "Credit Note Created" has no Indonesian translation.
+        if self.move_type == 'out_refund':
+            return "Pengembalian Dana Dibuat"
+        if self.move_type == 'in_refund':
+            return "Pengembalian dari Vendor Dibuat"
+        return super()._creation_message()
+
     # A confirmed receipt shows its subtype, "Nota Penerimaan dikonfirmasi".
     # Refunds share that sale subtype, so they log their own line instead.
     def _track_log_get_default_subtype(self, track_init_values):
