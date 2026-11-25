@@ -25,10 +25,15 @@ def is_indonesian(env):
     return (lang or '').startswith('id')
 
 
+DRAF_ENTRY = re.compile(r'\bDraf Entry\b')
+
+
 def draf_wording(text):
     if not text:
         return text
-    return RANCANGAN.sub(r'\1 Draf', DRAFT_WORD.sub(r'\1raf', text))
+    text = RANCANGAN.sub(r'\1 Draf', DRAFT_WORD.sub(r'\1raf', text))
+    # account's untranslated "Draft Entry" (a draft journal entry).
+    return DRAF_ENTRY.sub("Entri Draf", text)
 
 # Indonesian UI labels, written for id_ID. On a database where en_US is not
 # installed Odoo also stores them as the source term, which is why

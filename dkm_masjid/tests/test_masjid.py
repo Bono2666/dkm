@@ -472,6 +472,7 @@ class TestMasjid(TransactionCase):
         self.assertEqual(draf_wording("Rancangan Tagihan (INV/1)"), "Tagihan Draf (INV/1)")
         self.assertEqual(draf_wording("Rancangan Pembayaran"), "Pembayaran Draf")
         self.assertEqual(draf_wording("Reset ke Draft"), "Reset ke Draf")
+        self.assertEqual(draf_wording("Draft Entry"), "Entri Draf")
         vendor = self.cenv['res.partner'].create({'name': "Vendor"})
         bill = self.cenv['account.move'].with_context(lang='id_ID').create({
             'move_type': 'in_invoice', 'partner_id': vendor.id, 'invoice_date': '2026-11-25',
