@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Salary bill of an employee with a running kasbon: deduct it. -->
+    <record id="view_move_form_kasbon" model="ir.ui.view">
+        <field name="name">account.move.form.dkm.kasbon</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="dkm_kasbon_available" invisible="1"/>
+                <button name="action_dkm_add_kasbon_deduction" type="object"
+                        string="Potong Kasbon" invisible="not dkm_kasbon_available"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

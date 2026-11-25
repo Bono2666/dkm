@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dkm_kasbon_list" model="ir.ui.view">
+        <field name="name">dkm.kasbon.list</field>
+        <field name="model">dkm.kasbon</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state in ('draft', 'to_approve')"
+                  decoration-muted="state in ('paid', 'cancel')">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="amount" sum="Total"/>
+                <field name="installments" string="Cicilan"/>
+                <field name="installment_amount"/>
+                <field name="residual" sum="Sisa"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ('draft', 'to_approve')"
+                       decoration-warning="state == 'active'"
+                       decoration-success="state == 'paid'"
+                       decoration-danger="state == 'cancel'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dkm_kasbon_form" model="ir.ui.view">
+        <field name="name">dkm.kasbon.form</field>
+        <field name="model">dkm.kasbon</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object" string="Ajukan Kasbon"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_disburse" type="object" string="Cairkan"
+                            class="oe_highlight"
+                            invisible="state != 'to_approve' or requires_approval"/>
+                    <button name="action_view_approval" type="object" string="Lihat Persetujuan"
+                            invisible="state != 'to_approve' or not approval_state"/>
+                    <button name="action_cancel" type="object" string="Batalkan"
+                            invisible="state not in ('draft', 'to_approve')"
+                            confirm="Batalkan kasbon ini?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,active,paid"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info mb-3" role="alert"
+                         invisible="state != 'to_approve' or not requires_approval">
+                        Menunggu persetujuan seluruh Kepala Divisi dan Ketua DKM.
+                        Tombol <b>Cairkan</b> muncul setelah semua menyetujui.
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" readonly="state != 'draft'"
+                                   options="{'no_create': True}"/>
+                            <field name="amount" readonly="state != 'draft'"/>
+                            <field name="installments" readonly="state != 'draft'"/>
+                            <field name="installment_amount"/>
+                        </group>
+                        <group>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="journal_id" readonly="state != 'draft'"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                            <field name="approval_state" invisible="not approval_state"/>
+                            <field name="residual" invisible="state not in ('active', 'paid')"/>
+                            <field name="paid_count" invisible="state not in ('active', 'paid')"/>
+                            <field name="move_id" invisible="not move_id" groups="account.group_account_readonly,account.group_account_invoice"/>
+                            <field name="requires_approval" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Keperluan kasbon..." readonly="state != 'draft'"/>
+                    <separator string="Potongan Gaji" invisible="not deduction_line_ids"/>
+                    <field name="deduction_line_ids" invisible="not deduction_line_ids">
+                        <list>
+                            <field name="date"/>
+                            <field name="move_id" string="Tagihan Gaji"/>
+                            <field name="parent_state" string="Status"/>
+                            <field name="credit" string="Potongan" sum="Total"/>
+                        </list>
+                    </field>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dkm_kasbon_search" model="ir.ui.view">
+        <field name="name">dkm.kasbon.search</field>
+        <field name="model">dkm.kasbon</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="name"/>
+                <filter name="open" string="Belum Lunas" domain="[('state', 'in', ('draft', 'to_approve', 'active'))]"/>
+                <filter name="paid" string="Lunas" domain="[('state', '=', 'paid')]"/>
+                <group>
+                    <filter name="group_employee" string="Pegawai" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dkm_kasbon" model="ir.actions.act_window">
+        <field name="name">Kasbon Pegawai</field>
+        <field name="res_model">dkm.kasbon</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada kasbon pegawai</p>
+            <p>Catat kasbon pegawai, ajukan persetujuan, lalu cairkan. Cicilannya
+               dipotong dari tagihan gaji dengan tombol <b>Potong Kasbon</b>.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dkm_kasbon" name="Kasbon Pegawai"
+              parent="account.menu_finance_payables"
+              action="action_dkm_kasbon" sequence="25"/>
+</odoo>
