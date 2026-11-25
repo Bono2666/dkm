@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- The treasurer adds new donors and vendors straight from a receipt or
+         bill (and from the Donatur / Vendor lists): accounting users may
+         create contacts. -->
+    <record id="account.group_account_invoice" model="res.groups">
+        <field name="implied_ids" eval="[Command.link(ref('base.group_partner_manager'))]"/>
+    </record>
+</odoo>

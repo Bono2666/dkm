@@ -712,3 +712,16 @@ class TestMasjid(TransactionCase):
             self.assertNotIn(user.partner_id, found, model)
             self.assertNotIn(self.env.ref('base.partner_admin'), found, model)
             self.assertNotIn(self.company.partner_id, found, model)
+
+    def test_treasurer_adds_donor_from_receipt(self):
+        from lxml import etree
+        treasurer = self._bendahara('bendahara_donatur')
+        self.assertTrue(treasurer.has_group('base.group_partner_manager'))
+        Move = self.env['account.move'].with_user(treasurer).with_context(
+            default_move_type='out_invoice', res_partner_search_mode='customer')
+        arch = etree.fromstring(Move.get_views([(False, 'form')])['views']['form']['arch'])
+        field = arch.xpath("//field[@name='partner_id'][@widget='res_partner_many2one']")[0]
+        self.assertIn("'no_quick_create': False", field.get('options'))
+        donor_id, _name = self.env['res.partner'].with_user(treasurer).with_context(
+            res_partner_search_mode='customer').name_create("Hamba Allah")
+        self.assertTrue(donor_id)

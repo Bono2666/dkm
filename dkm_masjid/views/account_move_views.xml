@@ -10,8 +10,10 @@
             <xpath expr="//group[@id='header_left_group']/label[@for='partner_id'][1]" position="attributes">
                 <attribute name="string">Donatur</attribute>
             </xpath>
+            <!-- Type a new donor's or vendor's name to add them on the spot. -->
             <xpath expr="//field[@name='partner_id'][@widget='res_partner_many2one']" position="attributes">
-                <attribute name="placeholder">Cari nama...</attribute>
+                <attribute name="placeholder">Cari atau ketik nama baru...</attribute>
+                <attribute name="options">{'no_quick_create': False}</attribute>
             </xpath>
             <xpath expr="//group[@id='header_right_group']/label[@for='invoice_date'][1]" position="attributes">
                 <attribute name="string">Tanggal Penerimaan</attribute>
