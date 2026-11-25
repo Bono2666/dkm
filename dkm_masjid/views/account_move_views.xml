@@ -99,10 +99,10 @@
                 <attribute name="invisible">move_type in ('out_invoice', 'out_refund')</attribute>
             </xpath>
             <xpath expr="//field[@name='tax_totals']" position="after">
-                <div class="d-flex justify-content-end align-items-baseline gap-3 mb-3" colspan="2"
+                <div class="d-flex justify-content-end align-items-baseline gap-3 mb-3 text-nowrap" colspan="2"
                      name="dkm_receipt_total" invisible="move_type not in ('out_invoice', 'out_refund')">
-                    <span class="o_form_label">Total Penerimaan</span>
-                    <field name="amount_total" class="fs-4 fw-bold w-auto"/>
+                    <span class="fw-bold flex-shrink-0">Total Penerimaan</span>
+                    <field name="amount_total" class="fs-5 fw-bold flex-shrink-0"/>
                 </div>
             </xpath>
             <!-- A receipt records money already received: no amount due. -->
@@ -112,7 +112,8 @@
 
             <!-- Journal Items tab: no tax grids or early-payment discounts
                  (mosques are not PKP); no taxes or due dates on receipts. -->
-            <xpath expr="//field[@name='line_ids']/list/field[@name='name']" position="attributes">
+            <!-- Newer Odoo 20 builds show "label" there and hide "name". -->
+            <xpath expr="//field[@name='line_ids']/list/field[@name='label'] | //field[@name='line_ids']/list/field[@name='name'][not(../field[@name='label'])]" position="attributes">
                 <attribute name="string">Keterangan</attribute>
             </xpath>
             <xpath expr="//field[@name='line_ids']/list/field[@name='tax_tag_ids']" position="attributes">

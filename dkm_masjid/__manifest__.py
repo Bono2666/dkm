@@ -35,7 +35,7 @@ Penyesuaian Odoo untuk keuangan masjid
     'author': 'DKM',
     'license': 'LGPL-3',
     'category': 'Accounting/Accounting',
-    'version': '20.0.1.10.0',
+    'version': '20.0.1.10.1',
     'depends': ['account', 'l10n_id', 'l10n_id_efaktur_coretax', 'sale',
                 'base_accounting_kit'],
     'data': [
