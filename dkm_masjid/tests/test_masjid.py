@@ -427,6 +427,21 @@ class TestMasjid(TransactionCase):
         self.assertEqual(data['rows'][-1]['cells'][0], "Total Akun")
         self.assertEqual(data['columns'][0]['label'], "Donatur/Vendor")
 
+    def test_heritage_journal_entry_pdf(self):
+        view = self.env.ref('eh_account_base.report_eh_account_move', raise_if_not_found=False)
+        if not view:
+            self.skipTest("eh_account_base not installed")
+        # As on a module upgrade: reload the vendor id.po, then our wording.
+        setup = self.env['dkm.masjid.setup']
+        setup._apply_labels()
+        setup._apply_vendor_wording()
+        arch = view.with_context(lang='id_ID').arch_db
+        self.assertIn("Donatur/Vendor", arch)
+        self.assertIn("Keterangan", arch)
+        self.assertIn(">Status<", arch)
+        self.assertNotIn("Statu<", arch)
+        self.assertNotIn("Rekanan", arch)
+
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
         self.assertEqual(sale.code, 'PNR')

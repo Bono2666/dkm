@@ -310,7 +310,7 @@ FIELD_TEXTS = {
 # Vendored modules that ship an i18n/id.po added for the mosque (PDF reports
 # and their print wizards). Reloaded with overwrite on every upgrade, before
 # the labels below, because the module itself is rarely upgraded.
-TRANSLATED_MODULES = ['base_accounting_kit']
+TRANSLATED_MODULES = ['base_accounting_kit', 'eh_account_base']
 
 # Top-level apps the treasurer and chairman do not need: donors and vendors
 # are under Keuangan > Penerimaan / Pengeluaran. Admin (Settings) only. These
@@ -364,6 +364,14 @@ VENDOR_VIEW_TERMS = {
     'account.res_config_settings_view_form': {
         'Print checks to pay your vendors':
             "Cetak cek untuk membayar vendor Anda",
+    },
+    # ERP Heritage journal entry PDF: mosque wording on top of its own id.po.
+    'eh_account_base.report_eh_account_move': {
+        'Status': "Status",
+        'Ledger': "Buku",
+        '/ Document': "/ Dokumen",
+        'Partner': "Donatur/Vendor",
+        'Label': "Keterangan",
     },
 }
 

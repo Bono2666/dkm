@@ -1330,7 +1330,7 @@ msgstr "Status"
 #: model_terms:ir.ui.view,arch_db:eh_account_base.report_eh_account_move
 #: model_terms:ir.ui.view,arch_db:eh_account_base.view_eh_account_report_execution_search
 msgid "Status"
-msgstr "Statu"
+msgstr "Status"
 
 #. module: eh_account_base
 #: model:ir.model.fields,help:eh_account_base.field_eh_account_report_execution__move_version_at_start
