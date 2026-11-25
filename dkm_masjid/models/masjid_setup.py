@@ -307,6 +307,11 @@ FIELD_TEXTS = {
     },
 }
 
+# Vendored modules that ship an i18n/id.po added for the mosque (PDF reports
+# and their print wizards). Reloaded with overwrite on every upgrade, before
+# the labels below, because the module itself is rarely upgraded.
+TRANSLATED_MODULES = ['base_accounting_kit']
+
 # Top-level apps the treasurer and chairman do not need: donors and vendors
 # are under Keuangan > Penerimaan / Pengeluaran. Admin (Settings) only. These
 # modules are not dependencies, so the menus are looked up softly.
@@ -397,6 +402,9 @@ class DkmMasjidSetup(models.AbstractModel):
         """Called from data/labels.xml on every install and upgrade."""
         if 'id_ID' not in dict(self.env['res.lang'].get_installed()):
             return
+        self.env['ir.module.module'].sudo().search([
+            ('name', 'in', TRANSLATED_MODULES), ('state', '=', 'installed'),
+        ])._update_translations('id_ID', overwrite=True)
         for xmlid, label in LABELS.items():
             record = self.env.ref(xmlid, raise_if_not_found=False)
             if record:

@@ -1,0 +1,1441 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_accounting_kit
+#
+# Indonesian translation of the PDF reports and their print wizards
+# (added for DKM Masjid Al Ukhuwah).
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+msgid ": Bank Book Report"
+msgstr ": Laporan Buku Bank"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+msgid ": Cash Book Report"
+msgstr ": Laporan Buku Kas"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+msgid ": Day Book Report"
+msgstr ": Laporan Buku Harian"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+msgid ": General ledger"
+msgstr ": Buku Besar"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid ": Trial Balance"
+msgstr ": Neraca Saldo"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_flow
+msgid ""
+"<br/>\n"
+"                                    <strong>Date to :</strong>"
+msgstr "<br/> <strong>Sampai tanggal :</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_financial
+msgid "<span>Comp</span>"
+msgstr "<span>Pembanding</span>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+msgid "<span>Not due</span>"
+msgstr "<span>Belum jatuh tempo</span>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_flow
+msgid "<strong>Balance</strong>"
+msgstr "<strong>Saldo</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_tax
+msgid "<strong>Company:</strong>"
+msgstr "<strong>Masjid:</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_flow
+msgid "<strong>Credit</strong>"
+msgstr "<strong>Kredit</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_flow
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_financial
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_tax
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "<strong>Date from :</strong>"
+msgstr "<strong>Dari tanggal :</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_financial
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_tax
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "<strong>Date to :</strong>"
+msgstr "<strong>Sampai tanggal :</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_flow
+msgid "<strong>Debit</strong>"
+msgstr "<strong>Debit</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "<strong>Display Account:</strong>"
+msgstr "<strong>Akun yang Ditampilkan:</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+msgid "<strong>Display Account</strong>"
+msgstr "<strong>Akun yang Ditampilkan</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+msgid "<strong>Entries Sorted By:</strong>"
+msgstr "<strong>Entri Diurutkan Menurut:</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+msgid "<strong>Journal:</strong>"
+msgstr "<strong>Jurnal:</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+msgid "<strong>Journals:</strong>"
+msgstr "<strong>Jurnal:</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_flow
+msgid "<strong>Name</strong>"
+msgstr "<strong>Nama</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+msgid "<strong>Partner's:</strong>"
+msgstr "<strong>Donatur/Vendor:</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+msgid "<strong>Period Length (days)</strong>"
+msgstr "<strong>Panjang Periode (hari)</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_tax
+msgid "<strong>Purchase</strong>"
+msgstr "<strong>Pembelian</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+msgid "<strong>Sorted By:</strong>"
+msgstr "<strong>Diurutkan Menurut:</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+msgid "<strong>Start Date:</strong>"
+msgstr "<strong>Tanggal Mulai:</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_flow
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_financial
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "<strong>Target Moves:</strong>"
+msgstr "<strong>Entri yang Disertakan:</strong>"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.multiple_invoice_wizard_preview
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+msgid "<strong>Total</strong>"
+msgstr "<strong>Total</strong>"
+
+#. module: base_accounting_kit
+#. odoo-javascript
+#: code:addons/base_accounting_kit/static/src/js/bank_reconcile_form_lines_widget.js:0
+#: model:ir.model,name:base_accounting_kit.model_account_account
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_statement_line__account_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice_line__account_id
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.view_bank_reconcile_widget_form
+msgid "Account"
+msgstr "Akun"
+
+#. module: base_accounting_kit
+#: model:ir.model,name:base_accounting_kit.model_account_aged_trial_balance
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__name
+msgid "Account Aged Trial balance Report"
+msgstr "Laporan Umur Piutang & Utang"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__account_report_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__account_report_id
+#: model:ir.ui.menu,name:base_accounting_kit.menu_account_financial_reports_tree
+msgid "Account Reports"
+msgstr "Laporan Akun"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+msgid "Account Total"
+msgstr "Total Akun"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__account_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__account_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__account_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_financial_report__account_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_fx_revaluation__account_ids
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_financial_report__type__accounts
+msgid "Accounts"
+msgstr "Akun"
+
+#. module: base_accounting_kit
+#: model:ir.actions.act_window,name:base_accounting_kit.action_account_aged_balance_view
+#: model:ir.actions.report,name:base_accounting_kit.action_report_aged_partner_balance
+#: model:ir.ui.menu,name:base_accounting_kit.menu_aged_trial_balance
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+msgid "Aged Partner Balance"
+msgstr "Umur Piutang & Utang"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_balance_report__display_account__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_bank_book_report__display_account__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_cash_book_report__display_account__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_account_report__display_account__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_general_ledger__display_account__all
+msgid "All"
+msgstr "Semua"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid ""
+"All\n"
+"                                    Entries"
+msgstr "Semua Entri"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid ""
+"All\n"
+"                                    Posted Entries"
+msgstr "Semua Entri Terekam"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_aged_trial_balance__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_balance_report__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_bank_book_report__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_cash_book_report__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_account_report__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_journal_report__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_partner_report__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_report__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_day_book_report__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_print_journal__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_general_ledger__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_partner_ledger__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__cash_flow_report__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__financial_report__target_move__all
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__kit_account_tax_report__target_move__all
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_flow
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_financial
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+msgid "All Entries"
+msgstr "Semua Entri"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+msgid ""
+"All Posted\n"
+"                                Entries"
+msgstr "Semua Entri Terekam"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_aged_trial_balance__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_balance_report__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_bank_book_report__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_cash_book_report__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_account_report__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_journal_report__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_partner_report__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_report__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_day_book_report__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_print_journal__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_general_ledger__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_partner_ledger__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__cash_flow_report__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__financial_report__target_move__posted
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__kit_account_tax_report__target_move__posted
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_flow
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_financial
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+msgid "All Posted Entries"
+msgstr "Semua Entri Terekam"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "All accounts"
+msgstr "Semua akun"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+msgid "All accounts'"
+msgstr "Semua akun'"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_financial
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.res_partner_statement_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.view_partner_form
+msgid "Balance"
+msgstr "Saldo"
+
+#. module: base_accounting_kit
+#: model:ir.actions.act_window,name:base_accounting_kit.action_account_bank_book_view
+#: model:ir.actions.report,name:base_accounting_kit.action_report_bank_book
+#: model:ir.model,name:base_accounting_kit.model_report_base_accounting_kit_report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_bank_book_report_view_form
+msgid "Bank Book Report"
+msgstr "Laporan Buku Bank"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+msgid "Base Amount"
+msgstr "Jumlah Dasar"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/models/account_payment.py:0
+#: model:ir.actions.report,name:base_accounting_kit.action_report_bulk_payment
+#: model:ir.model,name:base_accounting_kit.model_account_bulk_payment
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_payment__bulk_payment_id
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_bulk_payment_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bulk_payment_document
+msgid "Bulk Payment"
+msgstr "Pembayaran Massal"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_aged_trial_balance_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_bank_book_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_cash_book_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_day_book_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_fx_revaluation_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_lock_date_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.asset_depreciation_confirmation_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.asset_dispose_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.asset_modify_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.asset_revaluation_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.multiple_invoice_layout_view_form
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: base_accounting_kit
+#: model:ir.actions.act_window,name:base_accounting_kit.action_account_cash_book_view
+#: model:ir.actions.report,name:base_accounting_kit.action_report_cash_book
+#: model:ir.model,name:base_accounting_kit.model_report_base_accounting_kit_report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_cash_book_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_day_book_report_view_form
+msgid "Cash Book Report"
+msgstr "Laporan Buku Kas"
+
+#. module: base_accounting_kit
+#: model:ir.model,name:base_accounting_kit.model_cash_flow_report
+#: model:ir.model,name:base_accounting_kit.model_report_base_accounting_kit_report_cash_flow
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__name
+msgid "Cash Flow Report"
+msgstr "Laporan Arus Kas"
+
+#. module: base_accounting_kit
+#: model:account.financial.report,name:base_accounting_kit.account_financial_report_cash_flow0
+#: model:ir.actions.act_window,name:base_accounting_kit.action_cash_flow_report
+#: model:ir.actions.report,name:base_accounting_kit.action_report_cash_flow
+#: model:ir.ui.menu,name:base_accounting_kit.menu_account_cash_flow_report
+msgid "Cash Flow Statement"
+msgstr "Laporan Arus Kas"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "Code"
+msgstr "Kode"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__label_filter
+msgid "Column Label"
+msgstr "Label Kolom"
+
+#. module: base_accounting_kit
+#: model:ir.model,name:base_accounting_kit.model_res_company
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_category__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bulk_payment__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_followup__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_lock_date__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice_line__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_payments__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_asset_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__company_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice_layout__company_id
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.asset_asset_report_view_search
+msgid "Company"
+msgstr "Masjid"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.cash_flow_report_view
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "Comparison"
+msgstr "Perbandingan"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__date_to_cmp
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__date_to_cmp
+msgid "Comparison End Date"
+msgstr "Tanggal Akhir Pembanding"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__date_from_cmp
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__date_from_cmp
+msgid "Comparison Start Date"
+msgstr "Tanggal Awal Pembanding"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_category__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_depreciation_line__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bulk_payment__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_financial_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_followup__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_fx_revaluation__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_lock_date__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_entries_line__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice_line__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_payments__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_depreciation_confirmation__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_dispose__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_modify__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_revaluation__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_followup_line__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_import_bank_statement__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice__create_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice_layout__create_uid
+msgid "Created by"
+msgstr "Dibuat oleh"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_category__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_depreciation_line__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bulk_payment__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_financial_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_followup__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_fx_revaluation__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_lock_date__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_entries_line__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice_line__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_payments__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_depreciation_confirmation__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_dispose__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_modify__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_revaluation__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_followup_line__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_import_bank_statement__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice__create_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice_layout__create_date
+msgid "Created on"
+msgstr "Dibuat pada"
+
+#. module: base_accounting_kit
+#. odoo-javascript
+#: code:addons/base_accounting_kit/static/src/js/bank_reconcile_form_lines_widget.js:0
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_financial
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "Credit"
+msgstr "Kredit"
+
+#. module: base_accounting_kit
+#. odoo-javascript
+#. odoo-python
+#: code:addons/base_accounting_kit/models/account_asset_depreciation_line.py:0
+#: code:addons/base_accounting_kit/static/src/js/bank_reconcile_form_lines_widget.js:0
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__currency_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_category__currency_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_statement_line__company_currency_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bulk_payment__currency_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__currency_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice_line__currency_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_dispose__currency_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_revaluation__currency_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_res_partner__currency_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_res_users__currency_id
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+msgid "Currency"
+msgstr "Mata Uang"
+
+#. module: base_accounting_kit
+#. odoo-javascript
+#: code:addons/base_accounting_kit/static/src/js/bank_reconcile_form_lines_widget.js:0
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bulk_payment__date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_entries_line__date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_asset_report__date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_revaluation__date
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_bank_book_report__sortby__sort_date
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_cash_book_report__sortby__sort_date
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_print_journal__sort_selection__date
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_general_ledger__sortby__sort_date
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__cash_flow_report__filter_cmp__filter_date
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_bank_statement_line_view_search
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bulk_payment_document
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_followup_letter_document
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.res_partner_statement_report_template
+msgid "Date"
+msgstr "Tanggal"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__date_to_cmp
+msgid "Date End"
+msgstr "Tanggal Akhir"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__date_from_cmp
+msgid "Date Start"
+msgstr "Tanggal Awal"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.cash_flow_report_view
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.financial_report_view_form
+msgid "Dates"
+msgstr "Tanggal"
+
+#. module: base_accounting_kit
+#: model:ir.actions.report,name:base_accounting_kit.day_book_pdf_report
+msgid "Day Book PDF Report"
+msgstr "Laporan Buku Harian"
+
+#. module: base_accounting_kit
+#. odoo-javascript
+#: code:addons/base_accounting_kit/static/src/js/bank_reconcile_form_lines_widget.js:0
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_financial
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "Debit"
+msgstr "Debit"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.financial_report_view_form
+msgid "Discard"
+msgstr "Buang"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__display_account
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__display_account
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__display_account
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__display_account
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__display_account
+msgid "Display Accounts"
+msgstr "Akun yang Ditampilkan"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__debit_credit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__debit_credit
+msgid "Display Debit/Credit Columns"
+msgstr "Tampilkan Kolom Debit/Kredit"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_account__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_category__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_depreciation_line__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_statement_line__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bulk_payment__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_financial_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_followup__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_fx_revaluation__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_journal__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_lock_date__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_move__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_payment__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_payment_method__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_payment_register__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_entries_line__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice_line__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_payments__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_xlsx_mixin__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_asset_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_depreciation_confirmation__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_dispose__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_modify__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_revaluation__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_followup_line__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_import_bank_statement__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice_layout__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_product_template__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_day_book_report_template__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_agedpartnerbalance__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_bank_book__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_cash_book__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_cash_flow__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_financial__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_general_ledger__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_journal_audit__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_multiple_invoice__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_partnerledger__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_tax__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_trial_balance__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_res_company__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_res_partner__display_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_sale_order__display_name
+msgid "Display Name"
+msgstr "Nama Tampilan"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__enable_filter
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__enable_filter
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__enable_filter
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__enable_filter
+msgid "Enable Comparison"
+msgstr "Aktifkan Perbandingan"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__date_end
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__date_to
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__date_to
+msgid "End Date"
+msgstr "Tanggal Akhir"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__sort_selection
+msgid "Entries Sorted by"
+msgstr "Entri Diurutkan Menurut"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+msgid "Entry Label"
+msgstr "Keterangan"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_aged_trial_balance_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_bank_book_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_cash_book_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_day_book_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.financial_report_view_form
+msgid "Export XLSX"
+msgstr "Ekspor XLSX"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_fx_revaluation.py:0
+msgid "FX Revaluation Entries"
+msgstr "Entri Revaluasi Valas"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_fx_revaluation.py:0
+msgid "FX revaluation"
+msgstr "Revaluasi valas"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_fx_revaluation.py:0
+msgid "FX revaluation - %s"
+msgstr "Revaluasi valas - %s"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__filter_cmp
+msgid "Filter by"
+msgstr "Filter berdasarkan"
+
+#. module: base_accounting_kit
+#: model:ir.model,name:base_accounting_kit.model_report_base_accounting_kit_report_financial
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__name
+msgid "Financial Report"
+msgstr "Laporan Keuangan"
+
+#. module: base_accounting_kit
+#: model:ir.actions.report,name:base_accounting_kit.financial_report_pdf
+msgid "Financial reports"
+msgstr "Laporan Keuangan"
+
+#. module: base_accounting_kit
+#: model:ir.actions.report,name:base_accounting_kit.action_report_followup_letter
+msgid "Follow-up Letter"
+msgstr "Surat Pengingat"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/report/account_bank_book.py:0
+#: code:addons/base_accounting_kit/report/account_cash_book.py:0
+#: code:addons/base_accounting_kit/report/account_day_book.py:0
+#: code:addons/base_accounting_kit/report/cash_flow_report.py:0
+#: code:addons/base_accounting_kit/report/general_ledger_report.py:0
+#: code:addons/base_accounting_kit/report/report_aged_partner.py:0
+#: code:addons/base_accounting_kit/report/report_journal_audit.py:0
+#: code:addons/base_accounting_kit/report/report_partner_ledger.py:0
+#: code:addons/base_accounting_kit/report/report_tax.py:0
+#: code:addons/base_accounting_kit/report/report_trial_balance.py:0
+msgid "Form content is missing, this report cannot be printed."
+msgstr "Isian formulir tidak lengkap, laporan ini tidak dapat dicetak."
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__view_format
+msgid "Format"
+msgstr "Format"
+
+#. module: base_accounting_kit
+#: model:ir.actions.act_window,name:base_accounting_kit.action_account_general_ledger_menu
+#: model:ir.actions.report,name:base_accounting_kit.action_report_general_ledger
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__name
+#: model:ir.ui.menu,name:base_accounting_kit.menu_general_ledger
+msgid "General Ledger"
+msgstr "Buku Besar"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__financial_report__view_format__horizontal
+msgid "Horizontal"
+msgstr "Horizontal"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_account__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_category__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_depreciation_line__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_statement_line__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bulk_payment__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_financial_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_followup__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_fx_revaluation__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_journal__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_lock_date__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_move__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_move_line__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_payment__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_payment_method__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_payment_register__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_entries_line__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice_line__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_payments__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_xlsx_mixin__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_asset_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_depreciation_confirmation__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_dispose__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_modify__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_revaluation__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_followup_line__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_import_bank_statement__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice_layout__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_product_template__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_day_book_report_template__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_agedpartnerbalance__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_bank_book__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_cash_book__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_cash_flow__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_financial__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_general_ledger__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_journal_audit__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_multiple_invoice__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_partnerledger__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_tax__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_report_base_accounting_kit_report_trial_balance__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_res_company__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_res_config_settings__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_res_partner__id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_sale_order__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__initial_balance
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__initial_balance
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__initial_balance
+msgid "Include Initial Balances"
+msgstr "Sertakan Saldo Awal"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+msgid "JRNL"
+msgstr "Jurnal"
+
+#. module: base_accounting_kit
+#: model:ir.model,name:base_accounting_kit.model_account_journal
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__journal_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_category__journal_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_fx_revaluation__journal_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__journal_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_payments__journal_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice__journal_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice_layout__journal_id
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+msgid "Journal"
+msgstr "Jurnal"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_bank_book_report__sortby__sort_journal_partner
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_cash_book_report__sortby__sort_journal_partner
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_general_ledger__sortby__sort_journal_partner
+msgid "Journal & Partner"
+msgstr "Jurnal & Donatur/Vendor"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__name
+msgid "Journal Audit"
+msgstr "Audit Jurnal"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_print_journal__sort_selection__move_name
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+msgid "Journal Entry Number"
+msgstr "Nomor Entri Jurnal"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+msgid "Journal and Partner"
+msgstr "Jurnal dan Donatur/Vendor"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__journal_ids
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__journal_ids
+msgid "Journals"
+msgstr "Jurnal"
+
+#. module: base_accounting_kit
+#: model:ir.actions.act_window,name:base_accounting_kit.action_account_print_journal_menu
+#: model:ir.actions.report,name:base_accounting_kit.action_report_journal
+#: model:ir.ui.menu,name:base_accounting_kit.menu_print_journal
+msgid "Journals Audit"
+msgstr "Audit Jurnal"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_bank_statement_line_view_tree
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_bank_statement_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.view_bank_reconcile_widget_form
+msgid "Label"
+msgstr "Keterangan"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_category__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_depreciation_line__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bulk_payment__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_financial_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_followup__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_fx_revaluation__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_lock_date__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_entries_line__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice_line__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_payments__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_depreciation_confirmation__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_dispose__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_modify__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_revaluation__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_followup_line__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_import_bank_statement__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice__write_uid
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice_layout__write_uid
+msgid "Last Updated by"
+msgstr "Terakhir Diperbarui oleh"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_category__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_depreciation_line__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bulk_payment__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_financial_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_followup__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_fx_revaluation__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_lock_date__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_entries_line__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice_line__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_payments__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_depreciation_confirmation__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_dispose__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_modify__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_revaluation__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_followup_line__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_import_bank_statement__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice__write_date
+#: model:ir.model.fields,field_description:base_accounting_kit.field_multiple_invoice_layout__write_date
+msgid "Last Updated on"
+msgstr "Terakhir Diperbarui pada"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+msgid "Move"
+msgstr "Entri"
+
+#. module: base_accounting_kit
+#: model:ir.actions.report,name:base_accounting_kit.report_multiple_invoice_copies
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.view_account_journal_form
+msgid "Multiple Invoice Copies"
+msgstr "Salinan Faktur Ganda"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_entries_line__template_name
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_payments__name
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_financial
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+msgid "Name"
+msgstr "Nama"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_tax
+msgid "Net"
+msgstr "Neto"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__cash_flow_report__filter_cmp__filter_no
+msgid "No Filters"
+msgstr "Tanpa Filter"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_fx_revaluation.py:0
+msgid "No open foreign-currency balances to revalue on %s."
+msgstr "Tidak ada saldo valas terbuka untuk direvaluasi pada %s."
+
+#. module: base_accounting_kit
+#. odoo-javascript
+#. odoo-python
+#: code:addons/base_accounting_kit/models/account_asset_depreciation_line.py:0
+#: code:addons/base_accounting_kit/static/src/js/bank_reconcile_form_lines_widget.js:0
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__partner_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__partner_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_payments__partner_id
+#: model:ir.model.fields,field_description:base_accounting_kit.field_asset_asset_report__partner_id
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_bank_statement_line_view_tree
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_recurring_invoice_view_search
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bulk_payment_document
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.view_bank_reconcile_widget_form
+msgid "Partner"
+msgstr "Donatur/Vendor"
+
+#. module: base_accounting_kit
+#: model:ir.actions.act_window,name:base_accounting_kit.action_partner_leadger
+#: model:ir.actions.report,name:base_accounting_kit.action_report_partnerledger
+#: model:ir.ui.menu,name:base_accounting_kit.menu_partner_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+msgid "Partner Ledger"
+msgstr "Buku Besar Donatur & Vendor"
+
+#. module: base_accounting_kit
+#: model:ir.model,name:base_accounting_kit.model_report_base_accounting_kit_report_partnerledger
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__name
+msgid "Partner Ledger Report"
+msgstr "Laporan Buku Besar Donatur & Vendor"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__result_selection
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__result_selection
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__result_selection
+msgid "Partner's"
+msgstr "Donatur/Vendor"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+msgid "Partners"
+msgstr "Donatur/Vendor"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_aged_trial_balance__result_selection__supplier
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_partner_report__result_selection__supplier
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_partner_ledger__result_selection__supplier
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+msgid "Payable Accounts"
+msgstr "Akun Utang"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__period_length
+msgid "Period Length (days)"
+msgstr "Panjang Periode (hari)"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_aged_trial_balance_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_bank_book_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_bulk_payment_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_cash_book_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_day_book_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_report_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.financial_report_view_form
+msgid "Print"
+msgstr "Cetak"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_aged_trial_balance__result_selection__customer
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_partner_report__result_selection__customer
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_partner_ledger__result_selection__customer
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+msgid "Receivable Accounts"
+msgstr "Akun Piutang"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_aged_trial_balance__result_selection__customer_supplier
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_partner_report__result_selection__customer_supplier
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_partner_ledger__result_selection__customer_supplier
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+msgid "Receivable and Payable Accounts"
+msgstr "Akun Piutang dan Utang"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__reconciled
+msgid "Reconciled Entries"
+msgstr "Entri Terekonsiliasi"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.day_book_report_template
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_partnerledger
+msgid "Ref"
+msgstr "Ref"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_aged_trial_balance_view_form
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_report_view_form
+msgid "Report Options"
+msgstr "Opsi Laporan"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_fx_revaluation.py:0
+msgid "Reversal of FX revaluation - %s"
+msgstr "Pembalikan revaluasi valas - %s"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__asset_dispose__disposal_type__sale
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_tax
+msgid "Sale"
+msgstr "Penjualan"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__sortby
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__sortby
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__sortby
+msgid "Sort by"
+msgstr "Urutkan menurut"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_invoice__date_start
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__date_from
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__date_from
+msgid "Start Date"
+msgstr "Tanggal Mulai"
+
+#. module: base_accounting_kit
+#: model:ir.actions.report,name:base_accounting_kit.res_partner_action
+msgid "Statement Report"
+msgstr "Laporan Penagihan"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_aged_trial_balance__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bank_book_report__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_cash_book_report__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_account_report__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_partner_report__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_report__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_day_book_report__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_general_ledger__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_cash_flow_report__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_financial_report__target_move
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__target_move
+msgid "Target Moves"
+msgstr "Entri yang Disertakan"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_tax
+msgid "Tax"
+msgstr "Pajak"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+msgid "Tax Amount"
+msgstr "Jumlah Pajak"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_journal_audit
+msgid "Tax Declaration"
+msgstr "Deklarasi Pajak"
+
+#. module: base_accounting_kit
+#: model:ir.actions.report,name:base_accounting_kit.action_report_account_tax
+#: model:ir.model,name:base_accounting_kit.model_kit_account_tax_report
+#: model:ir.model,name:base_accounting_kit.model_report_base_accounting_kit_report_tax
+#: model:ir.model.fields,field_description:base_accounting_kit.field_kit_account_tax_report__name
+#: model:ir.ui.menu,name:base_accounting_kit.menu_tax_report
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_tax
+msgid "Tax Report"
+msgstr "Laporan Pajak"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_agedpartnerbalance
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.res_partner_statements_view_tree
+msgid "Total"
+msgstr "Total"
+
+#. module: base_accounting_kit
+#: model:ir.actions.act_window,name:base_accounting_kit.action_account_balance_menu
+#: model:ir.actions.report,name:base_accounting_kit.action_report_trial_balance
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_balance_report__name
+#: model:ir.ui.menu,name:base_accounting_kit.menu_Balance_report
+msgid "Trial Balance"
+msgstr "Neraca Saldo"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_asset__type
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_asset_category__type
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_bulk_payment__batch_type
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_financial_report__type
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.account_asset_category_view_search
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.financial_report_view_form
+msgid "Type"
+msgstr "Jenis"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/report/report_aged_partner.py:0
+msgid "Unknown Partner"
+msgstr "Donatur/Vendor Tidak Diketahui"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_fx_revaluation.py:0
+msgid "Unrealized FX gain"
+msgstr "Keuntungan selisih kurs belum terealisasi"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_fx_revaluation.py:0
+msgid "Unrealized FX loss"
+msgstr "Kerugian selisih kurs belum terealisasi"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "Variance"
+msgstr "Selisih"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__financial_report__view_format__vertical
+msgid "Vertical"
+msgstr "Vertikal"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_common_journal_report__amount_currency
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_print_journal__amount_currency
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_report_partner_ledger__amount_currency
+msgid "With Currency"
+msgstr "Dengan Mata Uang"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_balance_report__display_account__not_zero
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_bank_book_report__display_account__not_zero
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_cash_book_report__display_account__not_zero
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_account_report__display_account__not_zero
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_general_ledger__display_account__not_zero
+msgid "With balance is not equal to 0"
+msgstr "Saldo tidak sama dengan 0"
+
+#. module: base_accounting_kit
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "With balance not equal to zero"
+msgstr "Saldo tidak sama dengan nol"
+
+#. module: base_accounting_kit
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_balance_report__display_account__movement
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_bank_book_report__display_account__movement
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_cash_book_report__display_account__movement
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_common_account_report__display_account__movement
+#: model:ir.model.fields.selection,name:base_accounting_kit.selection__account_report_general_ledger__display_account__movement
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_bank_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_cash_book
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_general_ledger
+#: model_terms:ir.ui.view,arch_db:base_accounting_kit.report_trial_balance
+msgid "With movements"
+msgstr "Yang ada mutasinya"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_bank_book_report.py:0
+#: code:addons/base_accounting_kit/wizard/account_cash_book_report.py:0
+msgid "You must choose a Start Date"
+msgstr "Tanggal Mulai harus dipilih"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_report_general_ledger.py:0
+msgid "You must define a Start Date"
+msgstr "Tanggal Mulai harus diisi"
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_aged_trial_balance.py:0
+msgid "You must set a period length greater than 0."
+msgstr "Panjang periode harus lebih dari 0."
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/wizard/account_aged_trial_balance.py:0
+msgid "You must set a start date."
+msgstr "Tanggal mulai harus diisi."
+
+#. module: base_accounting_kit
+#. odoo-python
+#: code:addons/base_accounting_kit/models/account_bulk_payment.py:0
+#: code:addons/base_accounting_kit/wizard/account_fx_revaluation.py:0
+#: model:ir.model.fields,field_description:base_accounting_kit.field_account_recurring_entries_line__tmpl_id
+msgid "id"
+msgstr "id"

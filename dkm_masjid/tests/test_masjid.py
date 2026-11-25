@@ -382,6 +382,18 @@ class TestMasjid(TransactionCase):
         if caba:
             self.assertEqual(caba.name, "Pajak Basis Kas")
 
+    def test_report_translations(self):
+        report = self.env.ref('base_accounting_kit.action_report_trial_balance')
+        self.assertEqual(report.with_context(lang='id_ID').name, "Neraca Saldo")
+        Wizard = self.env['account.balance.report'].with_context(lang='id_ID')
+        fields = Wizard.fields_get(['target_move'], ['string', 'selection'])['target_move']
+        self.assertEqual(fields['string'], "Entri yang Disertakan")
+        self.assertEqual(dict(fields['selection'])['posted'], "Semua Entri Terekam")
+        view = self.env.ref('base_accounting_kit.report_trial_balance')
+        arch = view.with_context(lang='id_ID').arch_db
+        self.assertIn("Neraca Saldo", arch)
+        self.assertIn("Sampai tanggal", arch)
+
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
         self.assertEqual(sale.code, 'PNR')
