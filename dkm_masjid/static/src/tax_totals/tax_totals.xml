@@ -12,5 +12,17 @@
                    t-out="['out_invoice', 'out_refund'].includes(dkm_move_type) ? 'Total Penerimaan'
                           : ['in_invoice', 'in_refund'].includes(dkm_move_type) ? 'Total Tagihan' : 'Total'"/>
         </xpath>
+        <!-- No cash rounding: donations are recorded at their exact amount. -->
+        <xpath expr="(//i[hasclass('o_cash_rounding_button')])[1]" position="attributes">
+            <attribute name="t-if">false</attribute>
+        </xpath>
+        <xpath expr="(//i[hasclass('o_cash_rounding_button')])[2]" position="attributes">
+            <attribute name="t-if">false</attribute>
+        </xpath>
+    </t>
+    <t t-inherit="account.TaxGroupComponent" t-inherit-mode="extension">
+        <xpath expr="//i[hasclass('o_cash_rounding_button')]" position="attributes">
+            <attribute name="t-if">false</attribute>
+        </xpath>
     </t>
 </templates>
