@@ -1,3 +1,8 @@
 id,name,model_id,group_id/id,operation,domain
 access_dkm_division_user,dkm.division user,dkm.division,base.group_user,r,
 access_dkm_division_manager,dkm.division manager,dkm.division,account.group_account_manager,crud,
+access_dkm_fund_user,dkm.fund user,dkm.fund,base.group_user,r,
+access_dkm_fund_manager,dkm.fund manager,dkm.fund,account.group_account_manager,crud,
+access_dkm_fund_report_invoice,dkm.fund.report accounting,dkm.fund.report,account.group_account_invoice,r,
+access_dkm_fund_report_readonly,dkm.fund.report readonly,dkm.fund.report,account.group_account_readonly,r,
+rule_dkm_fund_report_company,dkm.fund.report: company isolation,dkm.fund.report,,r,"[('company_id', 'in', company_ids)]"

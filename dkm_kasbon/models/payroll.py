@@ -79,6 +79,10 @@ class DkmPayroll(models.Model):
         default=lambda self: self.env['dkm.kasbon']._default_journal(),
         check_company=True, domain="[('type', 'in', ('cash', 'bank'))]",
         help="Kas atau rekening bank yang dipakai saat gaji dibayarkan.")
+    fund_id = fields.Many2one(
+        'dkm.fund', string="Sumber Dana", required=True,
+        default=lambda self: self.env['dkm.fund']._dkm_default(),
+        help="Dana yang dipakai untuk membayar gaji bulan ini.")
     line_ids = fields.One2many('dkm.payroll.line', 'payroll_id', string="Pegawai",
                                copy=True)
     note = fields.Text("Catatan")
@@ -193,12 +197,13 @@ class DkmPayroll(models.Model):
         for line in self.line_ids:
             partner = line.employee_id.work_contact_id.id
             label = f"{self.name} - {line.employee_id.name}"
+            fund = self.fund_id.id
             items.append((0, 0, {'account_id': salary.id, 'partner_id': partner,
-                                 'debit': line.wage, fname: label}))
+                                 'debit': line.wage, fname: label, 'dkm_fund_id': fund}))
             if line.allowance:
                 allowance = company._dkm_account_by_code(ALLOWANCE_ACCOUNT_CODE)
                 items.append((0, 0, {'account_id': allowance.id, 'partner_id': partner,
-                                     'debit': line.allowance,
+                                     'debit': line.allowance, 'dkm_fund_id': fund,
                                      fname: f"Tunjangan {label}"}))
             if line.deduction:
                 kasbon = line.kasbon_id

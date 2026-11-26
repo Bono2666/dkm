@@ -65,6 +65,8 @@
                             <field name="date" readonly="not editable"/>
                             <field name="journal_id" readonly="state in ('paid', 'cancel')"
                                    options="{'no_create': True, 'no_open': True}"/>
+                            <field name="fund_id" readonly="not editable"
+                                   options="{'no_create': True, 'no_open': True}"/>
                         </group>
                         <group>
                             <field name="approval_state" invisible="not approval_state"/>

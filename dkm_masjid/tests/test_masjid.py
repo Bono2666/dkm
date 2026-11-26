@@ -48,10 +48,12 @@ class TestMasjid(TransactionCase):
         self.assertFalse(self.chart.ref('inventory_valuation').active)
 
     def test_accounts(self):
-        for code in ('41000020', '41000030', '41000040', '61200010'):
+        for code in ('41000011', '41000020', '41000030', '41000040', '61200010'):
             self.assertEqual(len(self._account(code)), 1, code)
         self.assertEqual(self._name_id(self._account('41000010')),
-                         "Penerimaan Infaq & Sedekah")
+                         "Penerimaan Infaq Operasional")
+        self.assertEqual(self._name_id(self._account('41000011')),
+                         "Penerimaan Infaq Dana Umum")
         self.assertEqual(self._name_id(self._account('99999900')),
                          "Surplus (Defisit) Tahun Berjalan")
         self.assertEqual(self._name_id(self._account('31100020')),
@@ -190,16 +192,20 @@ class TestMasjid(TransactionCase):
 
     def test_receipt_categories(self):
         Product = self.cenv['product.template']
-        for name, account_code in (("Infaq & Sedekah", '41000010'),
-                                   ("Zakat", '41000020'),
-                                   ("Wakaf", '41000030'),
-                                   ("Sewa Fasilitas", '41000040')):
+        for name, account_code, fund in (
+                ("Infaq Operasional", '41000010', 'fund_operasional'),
+                ("Infaq Dana Umum", '41000011', 'fund_umum'),
+                ("Zakat", '41000020', 'fund_zakat'),
+                ("Wakaf", '41000030', 'fund_wakaf'),
+                ("Sewa Fasilitas", '41000040', 'fund_operasional')):
             product = self._category(name)
             self.assertEqual(len(product), 1, name)
             self.assertEqual(product.property_account_income_id.code,
                              account_code, name)
+            self.assertEqual(product.dkm_fund_id, self.env.ref(f'dkm_masjid.{fund}'), name)
             self.assertFalse(product.taxes_id, name)
             self.assertFalse(product.default_code, name)
+        self.assertFalse(self._category("Infaq & Sedekah"))
         self.env['dkm.masjid.setup']._setup_receipt_categories(self.company)
         self.assertEqual(len(self._category("Zakat")), 1)
 
@@ -488,7 +494,7 @@ class TestMasjid(TransactionCase):
     def test_receipt_numbering_pdf_and_email(self):
         sale = self.chart.ref('sale')
         self.assertEqual(sale.code, 'PNR')
-        infaq = self._category("Infaq & Sedekah").product_variant_id
+        infaq = self._category("Infaq Operasional").product_variant_id
         donor = self.cenv['res.partner'].create({'name': "Hamba Allah"})
         move = self.cenv['account.move'].create({
             'move_type': 'out_invoice',
@@ -516,7 +522,7 @@ class TestMasjid(TransactionCase):
         subject = template._render_field('subject', move.ids)[move.id]
         self.assertTrue(subject.startswith("Kuitansi PNR/"), subject)
         body = template._render_field('body_html', move.ids)[move.id]
-        self.assertIn("Infaq &amp; Sedekah", str(body))
+        self.assertIn("Infaq Operasional", str(body))
 
     def test_vendor_wording(self):
         help_text = self.env['res.partner'].with_context(
@@ -733,3 +739,60 @@ class TestMasjid(TransactionCase):
         ICP = self.env['ir.config_parameter'].sudo()
         self.assertEqual(ICP.get_str('auth_signup.invitation_scope'), 'b2b')
         self.assertEqual(self.env['res.users']._get_signup_invitation_scope(), 'b2b')
+
+    def test_infaq_split_on_upgrade(self):
+        """An existing database with the old single "Infaq & Sedekah"."""
+        Setup = self.env['dkm.masjid.setup']
+        infaq = self._account('41000010')
+        Setup._set_name(infaq, "Penerimaan Infaq & Sedekah")
+        old = self._category("Infaq Operasional")
+        old.dkm_fund_id = False
+        Setup._set_name(old, "Infaq & Sedekah")
+        self._category("Infaq Dana Umum").unlink()
+        self._account('41000011').unlink()
+        Setup._setup_infaq_funds()
+        self.assertEqual(self._name_id(infaq), "Penerimaan Infaq Operasional")
+        self.assertEqual(self._account('41000011').account_type, 'income')
+        self.assertFalse(self._category("Infaq & Sedekah"))
+        self.assertEqual(self._category("Infaq Operasional").dkm_fund_id,
+                         self.env.ref('dkm_masjid.fund_operasional'))
+        self.assertEqual(self._category("Infaq Dana Umum").property_account_income_id,
+                         self._account('41000011'))
+        Setup._setup_infaq_funds()     # idempotent
+        self.assertEqual(len(self._category("Infaq Dana Umum")), 1)
+
+    def test_fund_balances(self):
+        """Receipts add to the category's fund, bills spend from theirs."""
+        Move = self.cenv['account.move']
+        operasional = self.env.ref('dkm_masjid.fund_operasional')
+        umum = self.env.ref('dkm_masjid.fund_umum')
+        donor = self.cenv['res.partner'].create({'name': "Hamba Allah"})
+        for category, amount in (("Infaq Operasional", 1000000.0),
+                                 ("Infaq Dana Umum", 400000.0),
+                                 ("Sewa Fasilitas", 250000.0)):
+            receipt = Move.create({
+                'move_type': 'out_invoice', 'partner_id': donor.id,
+                'invoice_line_ids': [(0, 0, {
+                    'product_id': self._category(category).product_variant_id.id,
+                    'price_unit': amount})],
+            })
+            receipt.action_post()
+        vendor = self.cenv['res.partner'].create({'name': "PLN"})
+        bill = Move.create({
+            'move_type': 'in_invoice', 'partner_id': vendor.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [(0, 0, {'name': "Listrik", 'price_unit': 300000.0})],
+        })
+        self.assertEqual(bill.dkm_fund_id, operasional)    # default
+        bill.dkm_fund_id = umum
+        self.assertEqual(bill.invoice_line_ids.dkm_fund_id, umum)
+        bill.action_post()
+        self.env.flush_all()
+
+        Report = self.cenv['dkm.fund.report']
+        totals = {fund.id: (income, expense, balance)
+                  for fund, income, expense, balance in Report._read_group(
+                      [('company_id', '=', self.company.id)], ['fund_id'],
+                      ['income:sum', 'expense:sum', 'balance:sum'])}
+        self.assertEqual(totals[operasional.id], (1250000.0, 0.0, 1250000.0))
+        self.assertEqual(totals[umum.id], (400000.0, 300000.0, 100000.0))

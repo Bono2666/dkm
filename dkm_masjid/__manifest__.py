@@ -14,7 +14,7 @@ Penyesuaian Odoo untuk keuangan masjid
   dibeli hanya untuk Accounting Administrator; aplikasi Kontak, Dashboard
   dan Aplikasi hanya untuk admin (Settings).
 * Faktur pelanggan dipakai sebagai Nota Penerimaan: label Donatur,
-  Tanggal Penerimaan, kolom Kategori (Infaq & Sedekah, Zakat, Wakaf, Sewa
+  Tanggal Penerimaan, kolom Kategori (Infaq Operasional, Infaq Dana Umum, Zakat, Wakaf, Sewa
   Fasilitas, masing-masing ke akun pendapatannya); jatuh tempo, pengiriman
   dan incoterm disembunyikan. Nota Kredit menjadi Pengembalian Dana.
   Nomor PNR/2026/00001; PDF menjadi Kuitansi Penerimaan (dengan ucapan
@@ -35,7 +35,7 @@ Penyesuaian Odoo untuk keuangan masjid
     'author': 'DKM',
     'license': 'LGPL-3',
     'category': 'Accounting/Accounting',
-    'version': '20.0.1.25.2',
+    'version': '20.0.1.26.0',
     'depends': ['account', 'l10n_id', 'l10n_id_efaktur_coretax', 'sale',
                 'eh_account_base', 'eh_account_approval',
                 'base_accounting_kit'],
@@ -44,10 +44,12 @@ Penyesuaian Odoo untuk keuangan masjid
         'security/groups.xml',
         'views/menus.xml',
         'views/division_views.xml',
+        'views/fund_views.xml',
         'views/journal_dashboard_views.xml',
         'views/account_move_views.xml',
         'views/list_views.xml',
         'views/account_payment_views.xml',
+        'data/funds.xml',
         'data/labels.xml',
         'data/settings.xml',
         'data/mail_templates.xml',

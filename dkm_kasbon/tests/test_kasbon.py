@@ -206,3 +206,13 @@ class TestKasbon(TransactionCase):
         self.assertEqual(request.state, 'approved')
         kasbon.action_disburse()
         self.assertEqual(kasbon.state, 'active')
+
+    def test_payroll_spends_from_fund(self):
+        umum = self.env.ref('dkm_masjid.fund_umum')
+        payroll = self._payroll()
+        self.assertEqual(payroll.fund_id, self.env.ref('dkm_masjid.fund_operasional'))
+        payroll.fund_id = umum
+        payroll.action_submit()
+        payroll.action_post()
+        expense = payroll.move_id.line_ids.filtered(lambda l: l.debit)
+        self.assertEqual(expense.dkm_fund_id, umum)

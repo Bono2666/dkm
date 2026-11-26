@@ -24,7 +24,7 @@ Kasbon Pegawai
     'author': 'DKM',
     'license': 'LGPL-3',
     'category': 'Accounting/Accounting',
-    'version': '20.0.1.2.0',
+    'version': '20.0.1.3.0',
     'depends': ['dkm_masjid', 'hr', 'eh_account_approval'],
     'data': [
         'security/ir.access.csv',

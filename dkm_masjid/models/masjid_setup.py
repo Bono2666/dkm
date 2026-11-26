@@ -412,7 +412,7 @@ JOURNALS = {
 
 # l10n_id chart account ids -> name, None = archive.
 ACCOUNTS = {
-    'l10n_id_41000010': "Penerimaan Infaq & Sedekah",
+    'l10n_id_41000010': "Penerimaan Infaq Operasional",
     'l10n_id_42000060': None,   # Pengembalian Penjualan
     'l10n_id_42000070': None,   # Diskon Penjualan
     'l10n_id_51000010': None,   # Harga Pokok Penjualan
@@ -457,17 +457,21 @@ VENDOR_VIEW_TERMS = {
     },
 }
 
-# Receipt categories (sellable services) -> income account code. Chosen in the
-# Kategori column of a Nota Penerimaan, they post to the right account.
+# Receipt categories (sellable services) -> income account code and fund.
+# Chosen in the Kategori column of a Nota Penerimaan, they post to the right
+# account and add to the right Sumber Dana.
 # No internal reference: it would be printed on the receipt.
 RECEIPT_CATEGORIES = [
-    ("Infaq & Sedekah", '41000010'),
-    ("Zakat", '41000020'),
-    ("Wakaf", '41000030'),
-    ("Sewa Fasilitas", '41000040'),
+    ("Infaq Operasional", '41000010', 'dkm_masjid.fund_operasional'),
+    ("Infaq Dana Umum", '41000011', 'dkm_masjid.fund_umum'),
+    ("Zakat", '41000020', 'dkm_masjid.fund_zakat'),
+    ("Wakaf", '41000030', 'dkm_masjid.fund_wakaf'),
+    ("Sewa Fasilitas", '41000040', 'dkm_masjid.fund_operasional'),
 ]
+OLD_INFAQ = ("Infaq & Sedekah", "Penerimaan Infaq & Sedekah")
 
 NEW_ACCOUNTS = [
+    ('41000011', "Penerimaan Infaq Dana Umum", 'income'),
     ('41000020', "Penerimaan Zakat (Dana Terikat)", 'income'),
     ('41000030', "Penerimaan Wakaf (Dana Terikat)", 'income'),
     ('41000040', "Penerimaan Sewa Fasilitas", 'income'),
@@ -711,14 +715,20 @@ class DkmMasjidSetup(models.AbstractModel):
             env = self.with_company(company).env
             Account = env['account.account']
             Product = env['product.template'].with_context(active_test=False)
-            for name, account_code in RECEIPT_CATEGORIES:
-                if Product.search([('name', '=', name), ('sale_ok', '=', True),
-                                   ('company_id', '=', company.id)], limit=1):
+            for name, account_code, fund_xmlid in RECEIPT_CATEGORIES:
+                fund = self.env.ref(fund_xmlid, raise_if_not_found=False)
+                existing = Product.search([('name', '=', name), ('sale_ok', '=', True),
+                                           ('company_id', '=', company.id)], limit=1)
+                if existing:
+                    if fund and not existing.dkm_fund_id:
+                        existing.dkm_fund_id = fund
                     continue
                 account = Account.search([
                     ('code', '=', account_code),
                     ('company_ids', 'in', company.id),
                 ], limit=1)
+                if not account:
+                    continue
                 product = Product.create({
                     'name': name,
                     'type': 'service',
@@ -729,5 +739,36 @@ class DkmMasjidSetup(models.AbstractModel):
                     'supplier_taxes_id': [(5, 0, 0)],
                     'company_id': company.id,
                     'property_account_income_id': account.id,
+                    'dkm_fund_id': fund.id if fund else False,
                 })
                 self._set_name(product, name)
+
+    @api.model
+    def _setup_infaq_funds(self):
+        """Called on every upgrade: split "Infaq & Sedekah" into Infaq
+        Operasional (41000010) and Infaq Dana Umum (41000011), and give the
+        receipt categories their Sumber Dana. Leaves renamed records alone."""
+        old_category, old_account = OLD_INFAQ
+        for company in self.env['res.company'].search([]):
+            env = self.with_company(company).env
+            Account = env['account.account'].with_context(active_test=False)
+            infaq = Account.search([('code', '=', '41000010'),
+                                    ('company_ids', 'in', company.id)], limit=1)
+            if not infaq:
+                continue    # not the mosque chart
+            if infaq.with_context(lang='id_ID').name == old_account:
+                self._set_name(infaq, "Penerimaan Infaq Operasional")
+            if not Account.search([('code', '=', '41000011'),
+                                   ('company_ids', 'in', company.id)], limit=1):
+                account = Account.create({
+                    'code': '41000011', 'name': "Penerimaan Infaq Dana Umum",
+                    'account_type': 'income', 'company_ids': [(6, 0, company.ids)],
+                })
+                self._set_name(account, "Penerimaan Infaq Dana Umum")
+            Product = env['product.template'].with_context(active_test=False)
+            domain = [('sale_ok', '=', True), ('company_id', '=', company.id)]
+            old = Product.search([*domain, ('name', '=', old_category)], limit=1)
+            if old and not Product.search([*domain, ('name', '=', "Infaq Operasional")],
+                                          limit=1):
+                self._set_name(old, "Infaq Operasional")
+            self._setup_receipt_categories(company)

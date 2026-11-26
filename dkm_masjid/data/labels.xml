@@ -8,4 +8,6 @@
     <function model="dkm.masjid.setup" name="_apply_draf_wording"/>
     <!-- Contacts, Dashboards and Apps: admin only. -->
     <function model="dkm.masjid.setup" name="_apply_menu_restrictions"/>
+    <!-- Infaq Operasional / Infaq Dana Umum and the receipt categories' funds. -->
+    <function model="dkm.masjid.setup" name="_setup_infaq_funds"/>
 </odoo>
