@@ -796,3 +796,11 @@ class TestMasjid(TransactionCase):
                       ['income:sum', 'expense:sum', 'balance:sum'])}
         self.assertEqual(totals[operasional.id], (1250000.0, 0.0, 1250000.0))
         self.assertEqual(totals[umum.id], (400000.0, 300000.0, 100000.0))
+
+    def test_app_order(self):
+        roots = self.env['ir.ui.menu'].search([('parent_id', '=', False)])
+        order = [m.id for m in roots.sorted(lambda m: (m.sequence, m.id))]
+        apps = [self.env.ref(x, raise_if_not_found=False)
+                for x in ('account.menu_finance', 'hr.menu_hr_root', 'mail.menu_root_discuss')]
+        apps = [m.id for m in apps if m]
+        self.assertEqual(order[:len(apps)], apps)

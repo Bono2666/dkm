@@ -457,6 +457,9 @@ VENDOR_VIEW_TERMS = {
     },
 }
 
+# Apps shown first in the app menu, in this order (missing apps are skipped).
+APP_ORDER = ['account.menu_finance', 'hr.menu_hr_root', 'mail.menu_root_discuss']
+
 # Receipt categories (sellable services) -> income account code and fund.
 # Chosen in the Kategori column of a Nota Penerimaan, they post to the right
 # account and add to the right Sumber Dana.
@@ -621,6 +624,15 @@ class DkmMasjidSetup(models.AbstractModel):
             menu = self.env.ref(xmlid, raise_if_not_found=False)
             if menu:
                 menu.sudo().group_ids = admin
+
+    @api.model
+    def _apply_app_order(self):
+        """Called from data/labels.xml on every install and upgrade: the app
+        menu starts with Keuangan, Karyawan, Diskusi."""
+        for sequence, xmlid in enumerate(APP_ORDER, start=1):
+            menu = self.env.ref(xmlid, raise_if_not_found=False)
+            if menu:
+                menu.sudo().sequence = sequence
 
     @api.model
     def _setup_accounting(self, companies):
