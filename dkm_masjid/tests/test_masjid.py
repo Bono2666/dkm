@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from odoo import fields
 from odoo.tests import TransactionCase, tagged
 
 
@@ -280,7 +281,7 @@ class TestMasjid(TransactionCase):
         bill = self.cenv['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': vendor.id,
-            'invoice_date': '2026-11-25',
+            'invoice_date': fields.Date.today(),
             'invoice_line_ids': [(0, 0, {'name': "Listrik November",
                                          'quantity': 1,
                                          'price_unit': 450000.0})],

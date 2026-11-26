@@ -76,7 +76,7 @@
                     <field name="deduction_line_ids" invisible="not deduction_line_ids">
                         <list>
                             <field name="date"/>
-                            <field name="move_id" string="Tagihan Gaji"/>
+                            <field name="move_id" string="Penggajian"/>
                             <field name="parent_state" string="Status"/>
                             <field name="credit" string="Potongan" sum="Total"/>
                         </list>
@@ -112,7 +112,7 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">Belum ada kasbon pegawai</p>
             <p>Catat kasbon pegawai, ajukan persetujuan, lalu cairkan. Cicilannya
-               dipotong dari tagihan gaji dengan tombol <b>Potong Kasbon</b>.</p>
+               dipotong otomatis di <b>Penggajian</b> bulanan.</p>
         </field>
     </record>
 

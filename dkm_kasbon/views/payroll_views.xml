@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dkm_payroll_list" model="ir.ui.view">
+        <field name="name">dkm.payroll.list</field>
+        <field name="model">dkm.payroll</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state in ('paid', 'cancel')">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="employee_count"/>
+                <field name="amount_gross" sum="Total"/>
+                <field name="amount_deduction" sum="Total" optional="show"/>
+                <field name="amount_net" sum="Total"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="state" widget="badge"
+                       decoration-info="state in ('draft', 'to_approve')"
+                       decoration-warning="state == 'posted'"
+                       decoration-success="state == 'paid'"
+                       decoration-danger="state == 'cancel'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dkm_payroll_form" model="ir.ui.view">
+        <field name="name">dkm.payroll.form</field>
+        <field name="model">dkm.payroll</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object" string="Ajukan Persetujuan"
+                            class="oe_highlight" invisible="not editable or (state == 'to_approve' and not requires_approval)"/>
+                    <button name="action_post" type="object" string="Konfirmasi"
+                            class="oe_highlight"
+                            invisible="state != 'to_approve' or requires_approval"/>
+                    <button name="action_pay" type="object" string="Bayar Gaji"
+                            class="oe_highlight" invisible="state != 'posted'"/>
+                    <button name="action_view_approval" type="object" string="Lihat Persetujuan"
+                            invisible="not move_id or not last_approval_state"/>
+                    <button name="action_cancel" type="object" string="Batalkan"
+                            invisible="state not in ('draft', 'to_approve')"
+                            confirm="Batalkan penggajian ini?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,posted,paid"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info mb-3" role="alert"
+                         invisible="state != 'to_approve' or not approval_state or approval_state == 'approved'">
+                        Menunggu persetujuan seluruh Kepala Divisi dan Ketua DKM atas total
+                        gaji bulan ini. Tombol <b>Konfirmasi</b> muncul setelah semua menyetujui.
+                    </div>
+                    <div class="alert alert-warning mb-3" role="alert"
+                         invisible="state != 'to_approve' or approval_state or last_approval_state not in ('rejected', 'withdrawn')">
+                        Pengajuan sebelumnya ditolak atau ditarik. Perbaiki daftar gaji
+                        (lihat alasannya di <b>Lihat Persetujuan</b>), lalu ajukan ulang.
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_payments" type="object" class="oe_stat_button"
+                                icon="fa-money" string="Pembayaran"
+                                invisible="state not in ('posted', 'paid')"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="not editable" placeholder="Gaji November 2026"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date" readonly="not editable"/>
+                            <field name="journal_id" readonly="state in ('paid', 'cancel')"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="approval_state" invisible="not approval_state"/>
+                            <field name="move_id" invisible="not move_id" groups="account.group_account_readonly,account.group_account_invoice"/>
+                            <field name="editable" invisible="1"/>
+                            <field name="requires_approval" invisible="1"/>
+                            <field name="last_approval_state" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <button name="action_fill_employees" type="object" class="btn-secondary mb-2"
+                            icon="fa-users" string="Isi Semua Pegawai" invisible="not editable"/>
+                    <field name="line_ids" readonly="not editable">
+                        <list editable="bottom">
+                            <field name="employee_id" options="{'no_create': True}"/>
+                            <field name="wage" sum="Total"/>
+                            <field name="allowance" sum="Total" optional="show"/>
+                            <field name="gross" sum="Total" optional="hide"/>
+                            <field name="kasbon_id" optional="show" options="{'no_create': True}"/>
+                            <field name="deduction" sum="Total"/>
+                            <field name="net" sum="Total"/>
+                            <field name="currency_id" column_invisible="True"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer">
+                        <field name="amount_gross"/>
+                        <field name="amount_deduction"/>
+                        <field name="amount_net" class="oe_subtotal_footer_separator"/>
+                    </group>
+                    <field name="note" placeholder="Catatan..." readonly="state in ('paid', 'cancel')"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dkm_payroll_search" model="ir.ui.view">
+        <field name="name">dkm.payroll.search</field>
+        <field name="model">dkm.payroll</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="line_ids" string="Pegawai" filter_domain="[('line_ids.employee_id', 'ilike', self)]"/>
+                <filter name="open" string="Belum Lunas" domain="[('state', 'in', ('draft', 'to_approve', 'posted'))]"/>
+                <filter name="paid" string="Lunas" domain="[('state', '=', 'paid')]"/>
+                <group>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dkm_payroll" model="ir.actions.act_window">
+        <field name="name">Penggajian</field>
+        <field name="res_model">dkm.payroll</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada penggajian</p>
+            <p>Buat satu penggajian per bulan, klik <b>Isi Semua Pegawai</b>, lalu ajukan
+               total gajinya untuk disetujui. Cicilan kasbon dipotong otomatis.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dkm_payroll" name="Penggajian"
+              parent="account.menu_finance_payables"
+              action="action_dkm_payroll" sequence="24"/>
+</odoo>

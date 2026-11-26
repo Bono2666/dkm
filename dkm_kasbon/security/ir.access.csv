@@ -4,3 +4,9 @@ access_dkm_kasbon_readonly,dkm.kasbon readonly,dkm.kasbon,account.group_account_
 access_dkm_kasbon_manager,dkm.kasbon manager,dkm.kasbon,account.group_account_manager,crud,
 access_hr_employee_dkm_accounting,hr.employee accounting read,hr.employee,account.group_account_invoice,r,
 rule_dkm_kasbon_company,dkm.kasbon: company isolation,dkm.kasbon,,crud,"[('company_id', 'in', company_ids)]"
+access_dkm_payroll_account,dkm.payroll accounting,dkm.payroll,account.group_account_invoice,cru,
+access_dkm_payroll_readonly,dkm.payroll readonly,dkm.payroll,account.group_account_readonly,r,
+access_dkm_payroll_manager,dkm.payroll manager,dkm.payroll,account.group_account_manager,crud,
+access_dkm_payroll_line_account,dkm.payroll.line accounting,dkm.payroll.line,account.group_account_invoice,crud,
+access_dkm_payroll_line_readonly,dkm.payroll.line readonly,dkm.payroll.line,account.group_account_readonly,r,
+rule_dkm_payroll_company,dkm.payroll: company isolation,dkm.payroll,,crud,"[('company_id', 'in', company_ids)]"

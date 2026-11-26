@@ -30,16 +30,20 @@ class TestKasbon(TransactionCase):
             'company_id': self.company.id,
         })
 
-    def _salary_bill(self, gross=2000000.0):
-        return self.env['account.move'].with_company(self.company).create({
-            'move_type': 'in_invoice', 'company_id': self.company.id,
-            'partner_id': self.employee.work_contact_id.id,
-            'invoice_date': '2026-11-25',
-            'invoice_line_ids': [(0, 0, {'name': "Gaji November", 'price_unit': gross,
-                                         'tax_ids': [(6, 0, [])]})],
+    def _payroll(self, wage=2000000.0, employees=None):
+        employees = employees or self.employee
+        return self.env['dkm.payroll'].with_company(self.company).create({
+            'date': '2026-11-25', 'company_id': self.company.id,
+            'journal_id': self.cash.id,
+            'line_ids': [(0, 0, {'employee_id': e.id, 'wage': wage}) for e in employees],
         })
 
-    def test_kasbon_paid_through_salary(self):
+    def _pay(self, payroll):
+        action = payroll.action_pay()
+        self.env['account.payment.register'].with_context(**action['context']).create(
+            {}).action_create_payments()
+
+    def test_kasbon_paid_through_payroll(self):
         kasbon = self._kasbon()
         self.assertEqual(kasbon.installment_amount, 500000.0)
         self.assertTrue(kasbon.name.startswith('KASBON/'))
@@ -57,29 +61,119 @@ class TestKasbon(TransactionCase):
             self._kasbon(300000.0, 1).action_submit()
 
         for month in range(3):
-            bill = self._salary_bill()
-            self.assertTrue(bill.dkm_kasbon_available)
-            bill.action_dkm_add_kasbon_deduction()
-            self.assertFalse(bill.dkm_kasbon_available)
-            self.assertEqual(bill.amount_total, 1500000.0)
-            bill.action_post()
+            payroll = self._payroll()
+            self.assertEqual(payroll.name, "Gaji November 2026")
+            line = payroll.line_ids
+            self.assertEqual(line.kasbon_id, kasbon)
+            self.assertEqual(line.deduction, 500000.0)
+            self.assertEqual(payroll.amount_gross, 2000000.0)
+            self.assertEqual(payroll.amount_net, 1500000.0)
+            payroll.action_submit()
+            self.assertEqual(payroll.state, 'to_approve')
+            self.assertEqual(payroll.move_id.journal_id.code, 'GAJI')
+            payroll.action_post()
+            self.assertEqual(payroll.state, 'posted')
             self.assertEqual(kasbon.paid_count, month + 1)
+            self._pay(payroll)
+            self.assertEqual(payroll.state, 'paid')
         self.assertEqual(kasbon.residual, 0.0)
         self.assertEqual(kasbon.state, 'paid')
 
-        # Paid off: a new kasbon is allowed.
+        # Paid off: no deduction any more, and a new kasbon is allowed.
+        self.assertFalse(self._payroll().line_ids.kasbon_id)
         self._kasbon(300000.0, 1).action_submit()
 
-    def test_reset_salary_bill_restores_kasbon(self):
+    def test_reset_payroll_restores_kasbon(self):
         kasbon = self._kasbon(1000000.0, 2)
         kasbon.action_submit()
         kasbon.action_disburse()
-        bill = self._salary_bill()
-        bill.action_dkm_add_kasbon_deduction()
-        bill.action_post()
+        payroll = self._payroll()
+        payroll.action_submit()
+        payroll.action_post()
         self.assertEqual(kasbon.residual, 500000.0)
-        bill.button_draft()
+        payroll.move_id.button_draft()
         self.assertEqual(kasbon.residual, 1000000.0)
+
+    def test_fill_employees(self):
+        other = self.env['hr.employee'].create({'name': "Pak Imam", 'company_id': self.company.id})
+        payroll = self._payroll()
+        payroll.action_fill_employees()
+        self.assertEqual(payroll.line_ids.employee_id, self.employee | other)
+        with self.assertRaises(UserError):     # Pak Imam has no gaji yet
+            payroll.action_submit()
+        payroll.line_ids.filtered(lambda l: l.employee_id == other).wage = 1000000.0
+        payroll.action_submit()
+        payroll.action_post()
+        # Next month starts from last month's amounts.
+        nxt = self.env['dkm.payroll'].create({'date': '2026-12-25', 'company_id': self.company.id})
+        nxt.action_fill_employees()
+        self.assertEqual(nxt.name, "Gaji Desember 2026")
+        wages = {l.employee_id: l.wage for l in nxt.line_ids}
+        self.assertEqual(wages, {self.employee: 2000000.0, other: 1000000.0})
+
+    def test_payroll_approved_once(self):
+        Users = self.env['res.users'].with_context(no_reset_password=True)
+        groups = (self.env.ref('account.group_account_invoice')
+                  | self.env.ref('eh_account_base.group_eh_user'))
+        common = {'company_ids': [(6, 0, self.company.ids)], 'company_id': self.company.id,
+                  'group_ids': [(6, 0, groups.ids)]}
+        heads = Users.browse()
+        for login in ('gkadiv1', 'gketua1'):
+            heads |= Users.create({'name': login, 'login': login, **common})
+        self.env['eh.approval.policy'].create({
+            'name': "Persetujuan Penggajian", 'company_id': self.company.id,
+            'document_type': 'entry', 'entry_origin': 'manual',
+            'journal_ids': [(6, 0, self.company._dkm_payroll_journal().ids)],
+            'rule_ids': [(0, 0, {'name': "Semua", 'min_amount': 0.0, 'max_amount': 0.0,
+                                 'step_ids': [(0, 0, {'approver_ids': [(6, 0, heads.ids)],
+                                                      'approval_minimum': len(heads)})]})],
+        })
+        other = self.env['hr.employee'].create({'name': "Pak Imam", 'company_id': self.company.id})
+        payroll = self._payroll(1500000.0, self.employee | other)
+        payroll.action_submit()
+        request = payroll.move_id.eh_active_approval_request_id
+        self.assertEqual(payroll.approval_state, 'in_review')
+        self.assertEqual(request.submitted_amount, 3000000.0)   # one request, the total
+        self.assertFalse(payroll.editable)
+        with self.assertRaises(UserError):
+            payroll.action_post()
+
+        # Rejected: fix the amounts and submit again.
+        request.with_user(heads[0]).action_reject("Gaji imam belum naik")
+        self.assertTrue(payroll.editable)
+        self.assertEqual(payroll.last_approval_state, 'rejected')
+        payroll.line_ids.filtered(lambda l: l.employee_id == other).wage = 2000000.0
+        payroll.action_submit()
+        request = payroll.move_id.eh_active_approval_request_id
+        self.assertEqual(request.submitted_amount, 3500000.0)
+        for head in heads:
+            request.with_user(head).action_approve("Setuju")
+        self.assertEqual(payroll.approval_state, 'approved')
+        payroll.action_post()
+        self.assertEqual(payroll.state, 'posted')
+        self._pay(payroll)
+        self.assertEqual(payroll.state, 'paid')
+
+    def test_salary_bill_blocked(self):
+        Account = self.env['account.account'].with_company(self.company)
+        domain = Account._check_company_domain(self.company)
+        salary = Account.search([*domain, ('code', '=', '61100010')], limit=1)
+        supplies = Account.search([*domain, ('code', '=', '66110000')], limit=1)
+
+        def bill(account):
+            return self.env['account.move'].with_company(self.company).create({
+                'move_type': 'in_invoice', 'company_id': self.company.id,
+                'partner_id': self.employee.work_contact_id.id,
+                'invoice_date': '2026-11-25',
+                'invoice_line_ids': [(0, 0, {'name': "Uji", 'price_unit': 100000.0,
+                                             'account_id': account.id,
+                                             'tax_ids': [(6, 0, [])]})],
+            })
+        with self.assertRaises(UserError):
+            bill(salary).action_post()
+        reimburse = bill(supplies)     # other expenses for an employee are fine
+        reimburse.action_post()
+        self.assertEqual(reimburse.state, 'posted')
 
     def test_approval_by_all_heads(self):
         Users = self.env['res.users'].with_context(no_reset_password=True)
@@ -112,43 +206,3 @@ class TestKasbon(TransactionCase):
         self.assertEqual(request.state, 'approved')
         kasbon.action_disburse()
         self.assertEqual(kasbon.state, 'active')
-
-    def test_salary_bill_skips_approval(self):
-        self.env['eh.approval.policy'].create({
-            'name': "Persetujuan Tagihan", 'company_id': self.company.id,
-            'document_type': 'in_invoice',
-            'rule_ids': [(0, 0, {
-                'name': "Di atas Rp 250.000", 'min_amount': 250000.01, 'max_amount': 0.0,
-                'step_ids': [(0, 0, {'inject_manager': True})],
-            })],
-        })
-        Account = self.env['account.account'].with_company(self.company)
-        domain = Account._check_company_domain(self.company)
-        salary = Account.search([*domain, ('code', '=', '61100010')], limit=1)
-        supplies = Account.search([*domain, ('code', '=', '66110000')], limit=1)
-        self.assertTrue(salary and supplies)
-
-        # Salary (with the kasbon deduction) posts without approval.
-        kasbon = self._kasbon(1000000.0, 2)
-        kasbon.action_submit()
-        kasbon.action_disburse()
-        bill = self._salary_bill()
-        bill.invoice_line_ids.account_id = salary
-        bill.action_dkm_add_kasbon_deduction()
-        self.assertFalse(bill.eh_requires_approval)
-        bill.action_post()
-        self.assertEqual(bill.state, 'posted')
-
-        # Other expenses paid to an employee still need approval.
-        other = self._salary_bill()
-        other.invoice_line_ids.account_id = supplies
-        self.assertTrue(other.eh_requires_approval)
-        with self.assertRaises(UserError):
-            other.action_post()
-
-        # So does a salary account billed to a non-employee vendor.
-        vendor = self.env['res.partner'].create({'name': "Toko Uji"})
-        third = self._salary_bill()
-        third.write({'partner_id': vendor.id})
-        third.invoice_line_ids.account_id = salary
-        self.assertTrue(third.eh_requires_approval)
