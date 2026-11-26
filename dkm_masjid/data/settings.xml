@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Accounts are created by the admin: no "Don't have an account?" sign-up
+         link on the login page (invitation only). Set once; the admin can still
+         change it under Settings. -->
+    <data noupdate="1">
+        <function model="ir.config_parameter" name="set_str"
+                  eval="('auth_signup.invitation_scope', 'b2b')"/>
+    </data>
+</odoo>

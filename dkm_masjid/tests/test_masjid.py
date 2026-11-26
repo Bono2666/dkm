@@ -727,3 +727,9 @@ class TestMasjid(TransactionCase):
         donor_id, _name = self.env['res.partner'].with_user(treasurer).with_context(
             res_partner_search_mode='customer').name_create("Hamba Allah")
         self.assertTrue(donor_id)
+
+    def test_no_self_signup(self):
+        """Users are registered by the admin: the login page has no sign-up link."""
+        ICP = self.env['ir.config_parameter'].sudo()
+        self.assertEqual(ICP.get_str('auth_signup.invitation_scope'), 'b2b')
+        self.assertEqual(self.env['res.users']._get_signup_invitation_scope(), 'b2b')
