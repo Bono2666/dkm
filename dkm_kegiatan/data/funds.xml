@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="fund_kegiatan" model="dkm.fund">
+        <field name="name">Dana Kegiatan</field>
+        <field name="sequence">25</field>
+        <field name="note">Dana terikat: donasi untuk kegiatan tertentu (Qurban, Ramadhan, ...).</field>
+    </record>
+</odoo>

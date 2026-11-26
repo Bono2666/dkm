@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_activity" model="ir.actions.report">
+        <field name="name">Laporan Kegiatan</field>
+        <field name="model">dkm.activity</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dkm_kegiatan.report_activity</field>
+        <field name="print_report_name">'Laporan Kegiatan - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_dkm_activity"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_activity_table">
+        <!-- rows: [{'name', 'planned', 'actual'}], total: {'planned', 'actual'} -->
+        <table class="table table-sm o_main_table mb-4">
+            <thead>
+                <tr>
+                    <th class="text-start">Pos</th>
+                    <th class="text-end">Anggaran</th>
+                    <th class="text-end">Realisasi</th>
+                    <th class="text-end">%</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="rows" t-as="row">
+                    <td><t t-out="row['name']"/></td>
+                    <td class="text-end">
+                        <t t-if="row['planned']" t-out="row['planned']"
+                           t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                        <t t-else="">-</t>
+                    </td>
+                    <td class="text-end">
+                        <t t-out="row['actual']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                    </td>
+                    <td class="text-end">
+                        <t t-if="row['planned']"><t t-out="row['percent']"/>%</t>
+                    </td>
+                </tr>
+                <tr t-if="not rows"><td colspan="4" class="text-muted">Belum ada.</td></tr>
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td class="text-end"><strong>
+                        <t t-out="total['planned']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                    </strong></td>
+                    <td class="text-end"><strong>
+                        <t t-out="total['actual']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                    </strong></td>
+                    <td/>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <template id="report_activity_lines">
+        <table class="table table-sm mb-4" style="font-size: 0.9em;">
+            <thead>
+                <tr>
+                    <th class="text-start">Tanggal</th>
+                    <th class="text-start">No.</th>
+                    <th class="text-start">Keterangan</th>
+                    <th class="text-end">Jumlah</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="lines" t-as="line">
+                    <td><t t-out="line.date" t-options="{'widget': 'date'}"/></td>
+                    <td><t t-out="line.move_id.name"/></td>
+                    <td>
+                        <t t-out="line.name or line.product_id.name"/>
+                        <t t-if="show_partner and line.partner_id"> - <t t-out="line.partner_id.name"/></t>
+                    </td>
+                    <td class="text-end">
+                        <t t-out="line[field]" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                    </td>
+                </tr>
+                <tr t-if="not lines"><td colspan="4" class="text-muted">Belum ada.</td></tr>
+            </tbody>
+        </table>
+    </template>
+
+    <template id="report_activity">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <t t-set="currency" t-value="o.currency_id"/>
+                    <t t-set="data" t-value="o._dkm_report_data()"/>
+                    <div class="page">
+                        <h3 class="mb-0">Laporan Kegiatan</h3>
+                        <h2 class="mt-1"><t t-out="o.name"/></h2>
+                        <div class="row mb-3">
+                            <div class="col-6" t-if="o.date_start">
+                                <strong>Periode:</strong>
+                                <t t-out="o.date_start" t-options="{'widget': 'date'}"/>
+                                <t t-if="o.date_end"> s.d. <t t-out="o.date_end" t-options="{'widget': 'date'}"/></t>
+                            </div>
+                            <div class="col-6" t-if="o.division_id">
+                                <strong>Penanggung Jawab:</strong> Divisi <t t-out="o.division_id.name"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm mb-4" style="width: 60%;">
+                            <tr>
+                                <td>Total Penerimaan</td>
+                                <td class="text-end"><t t-out="o.amount_income" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                            </tr>
+                            <tr>
+                                <td>Total Pengeluaran</td>
+                                <td class="text-end"><t t-out="o.amount_expense" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong><t t-if="o.amount_balance &lt; 0">Kekurangan Dana</t><t t-else="">Sisa Dana</t></strong></td>
+                                <td class="text-end"><strong><t t-out="abs(o.amount_balance)" t-options="{'widget': 'monetary', 'display_currency': currency}"/></strong></td>
+                            </tr>
+                        </table>
+
+                        <h5>Penerimaan</h5>
+                        <t t-call="dkm_kegiatan.report_activity_table"
+                           rows="data['income_rows']" total="data['income_total']"/>
+                        <h5>Pengeluaran</h5>
+                        <t t-call="dkm_kegiatan.report_activity_table"
+                           rows="data['expense_rows']" total="data['expense_total']"/>
+
+                        <div style="page-break-inside: avoid;">
+                            <h5>Rincian Pengeluaran</h5>
+                            <t t-call="dkm_kegiatan.report_activity_lines"
+                               lines="data['expense_lines']" field="'expense'" show_partner="True"/>
+                        </div>
+                        <div>
+                            <h5>Rincian Penerimaan</h5>
+                            <t t-call="dkm_kegiatan.report_activity_lines"
+                               lines="data['income_lines']" field="'income'" show_partner="False"/>
+                        </div>
+
+                        <div class="row mt-5" style="page-break-inside: avoid;">
+                            <div class="col-6 text-center">
+                                <p>Bendahara</p>
+                                <br/><br/><br/>
+                                <p>(..............................)</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>Ketua DKM</p>
+                                <br/><br/><br/>
+                                <p>(..............................)</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

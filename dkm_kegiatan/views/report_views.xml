@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dkm_activity_report_list" model="ir.ui.view">
+        <field name="name">dkm.activity.report.list</field>
+        <field name="model">dkm.activity.report</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="date"/>
+                <field name="activity_id"/>
+                <field name="move_id"/>
+                <field name="partner_id" optional="show"/>
+                <field name="name" optional="show"/>
+                <field name="budget_id" optional="show"/>
+                <field name="product_id" optional="hide"/>
+                <field name="fund_id" optional="show"/>
+                <field name="account_id" optional="hide"/>
+                <field name="income" sum="Total"/>
+                <field name="expense" sum="Total"/>
+                <field name="balance" sum="Total" optional="hide"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dkm_activity_report_pivot" model="ir.ui.view">
+        <field name="name">dkm.activity.report.pivot</field>
+        <field name="model">dkm.activity.report</field>
+        <field name="arch" type="xml">
+            <pivot disable_linking="0">
+                <field name="activity_id" type="row"/>
+                <field name="income" type="measure"/>
+                <field name="expense" type="measure"/>
+                <field name="balance" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_dkm_activity_report_search" model="ir.ui.view">
+        <field name="name">dkm.activity.report.search</field>
+        <field name="model">dkm.activity.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="activity_id"/>
+                <field name="budget_id"/>
+                <field name="partner_id"/>
+                <field name="fund_id"/>
+                <filter name="date" string="Tanggal" date="date"/>
+                <separator/>
+                <filter name="income" string="Penerimaan" domain="[('type', '=', 'income')]"/>
+                <filter name="expense" string="Pengeluaran" domain="[('type', '=', 'expense')]"/>
+                <group>
+                    <filter name="group_activity" string="Kegiatan" context="{'group_by': 'activity_id'}"/>
+                    <filter name="group_type" string="Jenis" context="{'group_by': 'type'}"/>
+                    <filter name="group_budget" string="Pos Anggaran" context="{'group_by': 'budget_id'}"/>
+                    <filter name="group_fund" string="Sumber Dana" context="{'group_by': 'fund_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dkm_activity_report" model="ir.actions.act_window">
+        <field name="name">Laporan Kegiatan</field>
+        <field name="res_model">dkm.activity.report</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="context">{'search_default_group_activity': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada transaksi kegiatan</p>
+            <p>Pilih kegiatan pada Nota Penerimaan atau Tagihan; setelah dikonfirmasi,
+               transaksinya muncul di sini.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dkm_activity_report" name="Laporan Kegiatan"
+              parent="account.menu_finance_reports"
+              action="action_dkm_activity_report" sequence="1"/>
+    <menuitem id="menu_dkm_activity_report_shortcut" name="Laporan Kegiatan"
+              parent="menu_dkm_activity_root"
+              action="action_dkm_activity_report" sequence="10"/>
+</odoo>

@@ -1,0 +1,10 @@
+id,name,model_id,group_id/id,operation,domain
+access_dkm_activity_user,dkm.activity user,dkm.activity,base.group_user,r,
+access_dkm_activity_account,dkm.activity accounting,dkm.activity,account.group_account_invoice,cru,
+access_dkm_activity_manager,dkm.activity manager,dkm.activity,account.group_account_manager,crud,
+access_dkm_activity_budget_user,dkm.activity.budget user,dkm.activity.budget,base.group_user,r,
+access_dkm_activity_budget_account,dkm.activity.budget accounting,dkm.activity.budget,account.group_account_invoice,crud,
+access_dkm_activity_report_account,dkm.activity.report accounting,dkm.activity.report,account.group_account_invoice,r,
+access_dkm_activity_report_readonly,dkm.activity.report readonly,dkm.activity.report,account.group_account_readonly,r,
+rule_dkm_activity_company,dkm.activity: company isolation,dkm.activity,,crud,"[('company_id', 'in', company_ids)]"
+rule_dkm_activity_report_company,dkm.activity.report: company isolation,dkm.activity.report,,r,"[('company_id', 'in', company_ids)]"

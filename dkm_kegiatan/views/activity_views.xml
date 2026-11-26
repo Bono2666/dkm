@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dkm_activity_list" model="ir.ui.view">
+        <field name="name">dkm.activity.list</field>
+        <field name="model">dkm.activity</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state in ('done', 'cancel')">
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end" optional="show"/>
+                <field name="division_id" optional="show"/>
+                <field name="amount_income"/>
+                <field name="amount_expense"/>
+                <field name="amount_balance"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'open'"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancel'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dkm_activity_budget_list" model="ir.ui.view">
+        <field name="name">dkm.activity.budget.list</field>
+        <field name="model">dkm.activity.budget</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="planned_amount" sum="Total"/>
+                <field name="actual_amount" sum="Total"/>
+                <field name="difference" sum="Total" optional="show"/>
+                <field name="progress" widget="progressbar" optional="show"/>
+                <field name="type" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dkm_activity_form" model="ir.ui.view">
+        <field name="name">dkm.activity.form</field>
+        <field name="model">dkm.activity</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open" type="object" string="Mulai Kegiatan"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_done" type="object" string="Selesai"
+                            invisible="state != 'open'"
+                            confirm="Tandai kegiatan ini selesai? Setelah selesai, kegiatan tidak bisa dipilih lagi pada transaksi baru."/>
+                    <button name="action_print" type="object" string="Cetak Laporan"
+                            class="oe_highlight" invisible="state not in ('open', 'done')"/>
+                    <button name="action_draft" type="object" string="Buka Kembali"
+                            invisible="state not in ('done', 'cancel')"/>
+                    <button name="action_cancel" type="object" string="Batalkan"
+                            invisible="state not in ('draft', 'open')"
+                            confirm="Batalkan kegiatan ini?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_transactions" type="object"
+                                class="oe_stat_button" icon="fa-list">
+                            <field name="transaction_count" widget="statinfo" string="Transaksi"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="mis. Qurban 1447 H"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="division_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="amount_income"/>
+                            <field name="amount_expense"/>
+                            <field name="amount_balance" decoration-danger="amount_balance &lt; 0"
+                                   decoration-bf="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Anggaran Pengeluaran" name="expense">
+                            <field name="expense_budget_ids"
+                                   context="{'default_type': 'expense', 'list_view_ref': 'dkm_kegiatan.view_dkm_activity_budget_list'}"/>
+                        </page>
+                        <page string="Target Penerimaan" name="income">
+                            <field name="income_budget_ids"
+                                   context="{'default_type': 'income', 'list_view_ref': 'dkm_kegiatan.view_dkm_activity_budget_list'}"/>
+                        </page>
+                        <page string="Keterangan" name="note">
+                            <field name="note" placeholder="Rencana, panitia, catatan kegiatan..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_dkm_activity_search" model="ir.ui.view">
+        <field name="name">dkm.activity.search</field>
+        <field name="model">dkm.activity</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="division_id"/>
+                <filter name="active_activities" string="Rencana &amp; Berjalan"
+                        domain="[('state', 'in', ('draft', 'open'))]"/>
+                <filter name="done" string="Selesai" domain="[('state', '=', 'done')]"/>
+                <group>
+                    <filter name="group_division" string="Penanggung Jawab" context="{'group_by': 'division_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_dkm_activity" model="ir.actions.act_window">
+        <field name="name">Kegiatan</field>
+        <field name="res_model">dkm.activity</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Belum ada kegiatan</p>
+            <p>Buat kegiatan seperti Qurban atau Ramadhan beserta anggarannya, lalu pilih
+               kegiatan itu pada Nota Penerimaan dan Tagihan. Laporannya bisa dicetak
+               untuk jamaah.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_dkm_activity_root" name="Kegiatan"
+              parent="account.menu_finance" sequence="3"
+              groups="account.group_account_readonly,account.group_account_invoice"/>
+    <menuitem id="menu_dkm_activity" name="Kegiatan"
+              parent="menu_dkm_activity_root" action="action_dkm_activity" sequence="1"/>
+</odoo>

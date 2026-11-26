@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Every install/upgrade: the "Donasi Kegiatan" receipt category. -->
+    <function model="dkm.masjid.setup" name="_setup_activity_category"/>
+</odoo>
