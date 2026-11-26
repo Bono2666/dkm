@@ -16,6 +16,7 @@
                 <field name="account_id" optional="hide"/>
                 <field name="income" sum="Total"/>
                 <field name="expense" sum="Total"/>
+                <field name="transfer" sum="Total" optional="show"/>
                 <field name="balance" sum="Total" optional="hide"/>
                 <field name="currency_id" column_invisible="True"/>
             </list>
@@ -30,6 +31,7 @@
                 <field name="activity_id" type="row"/>
                 <field name="income" type="measure"/>
                 <field name="expense" type="measure"/>
+                <field name="transfer" type="measure"/>
                 <field name="balance" type="measure"/>
             </pivot>
         </field>
@@ -48,6 +50,7 @@
                 <separator/>
                 <filter name="income" string="Penerimaan" domain="[('type', '=', 'income')]"/>
                 <filter name="expense" string="Pengeluaran" domain="[('type', '=', 'expense')]"/>
+                <filter name="transfer" string="Pindahan Dana" domain="[('type', '=', 'transfer')]"/>
                 <group>
                     <filter name="group_activity" string="Kegiatan" context="{'group_by': 'activity_id'}"/>
                     <filter name="group_type" string="Jenis" context="{'group_by': 'type'}"/>

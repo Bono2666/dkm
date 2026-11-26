@@ -13,19 +13,23 @@ Kegiatan
   Anggaran per baris. Kategori penerimaan "Donasi Kegiatan" (akun
   41000050) menambah Sumber Dana "Dana Kegiatan"; tagihan kegiatan
   otomatis memakai Dana Kegiatan dan bisa diganti (subsidi dari Dana Umum).
+* Pindahkan Sisa Dana: sisa Dana Kegiatan dilepas ke Dana Umum/Operasional
+  (Debit Aset Neto Terikat, Kredit Aset Neto Tidak Terikat) atau diteruskan
+  ke kegiatan lain.
 * Laporan > Laporan Kegiatan (pivot/daftar) dan PDF Laporan Kegiatan:
   ringkasan, anggaran vs realisasi, rincian transaksi dan tanda tangan.
 """,
     'author': 'DKM',
     'license': 'LGPL-3',
     'category': 'Accounting/Accounting',
-    'version': '20.0.1.0.0',
+    'version': '20.0.1.1.0',
     'depends': ['dkm_masjid'],
     'data': [
         'security/ir.access.csv',
         'data/funds.xml',
         'data/setup.xml',
         'views/activity_views.xml',
+        'views/activity_transfer_views.xml',
         'views/account_move_views.xml',
         'views/report_views.xml',
         'report/activity_report.xml',

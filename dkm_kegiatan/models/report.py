@@ -3,7 +3,8 @@ from odoo import fields, models, tools
 
 
 class DkmActivityReport(models.Model):
-    """Posted income and expense lines recorded for an activity."""
+    """Posted income and expense lines recorded for an activity, and the
+    transfers of its remaining Dana Kegiatan (Aset Neto lines)."""
     _name = 'dkm.activity.report'
     _description = "Laporan Kegiatan"
     _auto = False
@@ -20,9 +21,13 @@ class DkmActivityReport(models.Model):
     move_id = fields.Many2one('account.move', string="Dokumen", readonly=True)
     partner_id = fields.Many2one('res.partner', string="Donatur/Vendor", readonly=True)
     name = fields.Char("Keterangan", readonly=True)
-    type = fields.Selection([('income', "Penerimaan"), ('expense', "Pengeluaran")],
+    type = fields.Selection([('income', "Penerimaan"), ('expense', "Pengeluaran"),
+                             ('transfer', "Pindahan Dana")],
                             string="Jenis", readonly=True)
     income = fields.Monetary("Penerimaan", readonly=True)
+    transfer = fields.Monetary("Pindahan Dana", readonly=True,
+                               help="Sisa dana yang dipindahkan dari (negatif) atau ke "
+                                    "(positif) kegiatan ini.")
     expense = fields.Monetary("Pengeluaran", readonly=True)
     balance = fields.Monetary("Selisih", readonly=True)
 
@@ -37,13 +42,17 @@ class DkmActivityReport(models.Model):
                        aml.account_id, aml.product_id, aml.move_id, aml.partner_id,
                        aml.{label} AS name,
                        CASE WHEN acc.account_type LIKE 'income%' THEN 'income'
-                            ELSE 'expense' END AS type,
+                            WHEN acc.account_type LIKE 'expense%' THEN 'expense'
+                            ELSE 'transfer' END AS type,
                        CASE WHEN acc.account_type LIKE 'income%' THEN -aml.balance ELSE 0 END AS income,
                        CASE WHEN acc.account_type LIKE 'expense%' THEN aml.balance ELSE 0 END AS expense,
+                       CASE WHEN acc.account_type LIKE 'equity%' THEN -aml.balance ELSE 0 END AS transfer,
                        -aml.balance AS balance
                   FROM account_move_line aml
                   JOIN account_account acc ON acc.id = aml.account_id
                  WHERE aml.parent_state = 'posted'
                    AND aml.dkm_activity_id IS NOT NULL
-                   AND (acc.account_type LIKE 'income%' OR acc.account_type LIKE 'expense%')
+                   AND (acc.account_type LIKE 'income%' OR acc.account_type LIKE 'expense%'
+                        OR (acc.account_type LIKE 'equity%'
+                            AND acc.account_type != 'equity_unaffected'))
             )""")

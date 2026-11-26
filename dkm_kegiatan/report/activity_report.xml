@@ -107,6 +107,13 @@
                                 <td>Total Pengeluaran</td>
                                 <td class="text-end"><t t-out="o.amount_expense" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
                             </tr>
+                            <tr t-if="o.amount_transfer">
+                                <td>
+                                    <t t-if="o.amount_transfer &gt; 0">Saldo Pindahan dari Kegiatan Lain</t>
+                                    <t t-else="">Sisa Dana yang Dipindahkan</t>
+                                </td>
+                                <td class="text-end"><t t-out="abs(o.amount_transfer)" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                            </tr>
                             <tr>
                                 <td><strong><t t-if="o.amount_balance &lt; 0">Kekurangan Dana</t><t t-else="">Sisa Dana</t></strong></td>
                                 <td class="text-end"><strong><t t-out="abs(o.amount_balance)" t-options="{'widget': 'monetary', 'display_currency': currency}"/></strong></td>

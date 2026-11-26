@@ -132,3 +132,54 @@ class TestKegiatan(TransactionCase):
         self.assertEqual(self.activity.state, 'done')
         self.activity.action_draft()
         self.assertEqual(self.activity.state, 'open')
+
+    def _transfer(self, user=None, **vals):
+        Wizard = self.env['dkm.activity.transfer']
+        if user:
+            Wizard = Wizard.with_user(user)
+        wizard = Wizard.with_context(default_activity_id=self.activity.id).create(vals)
+        wizard.action_confirm()
+        return wizard
+
+    def test_transfer_remainder_to_dana_umum(self):
+        self._receipt(1000000.0)
+        self._bill(700000.0, self._budget("Hewan Qurban"))
+        self._bill(200000.0, self._budget("Konsumsi Panitia"), fund=self.fund_umum)  # subsidy
+        activity = self.activity
+        self.assertEqual(activity.amount_balance, 100000.0)
+        self.assertEqual(activity.fund_remainder, 300000.0)     # subsidy is not Dana Kegiatan
+
+        with self.assertRaises(UserError):
+            self._transfer(amount=400000.0)
+        activity.action_done()
+        treasurer = self.env['res.users'].with_context(no_reset_password=True).create({
+            'name': "Bendahara Kegiatan", 'login': 'bdh_kegiatan',
+            'company_ids': [(6, 0, self.company.ids)], 'company_id': self.company.id,
+            'group_ids': [(6, 0, self.env.ref('account.group_account_invoice').ids)],
+        })
+        wizard = self._transfer(user=treasurer)
+        self.assertEqual(wizard.amount, 300000.0)               # defaults to the remainder
+        self.assertEqual(activity.fund_remainder, 0.0)
+        self.assertEqual(activity.amount_transfer, -300000.0)
+        self.assertEqual(activity.amount_balance, -200000.0)
+        self.env.flush_all()
+
+        Report = self.env['dkm.fund.report']
+        balances = dict(Report._read_group([('company_id', '=', self.company.id)],
+                                           ['fund_id'], ['balance:sum']))
+        self.assertEqual(balances[self.fund_kegiatan], 0.0)
+        self.assertEqual(balances[self.fund_umum], 100000.0)    # +300.000 - 200.000
+
+        html = str(self.env['ir.actions.report'].with_context(lang='id_ID')._render_qweb_html(
+            'dkm_kegiatan.action_report_activity', activity.ids)[0])
+        self.assertIn("Sisa Dana yang Dipindahkan", html)
+
+    def test_transfer_remainder_to_next_activity(self):
+        self._receipt(500000.0)
+        nxt = self.env['dkm.activity'].create({'name': "Qurban 1448 H",
+                                               'company_id': self.company.id})
+        self._transfer(target='activity', target_activity_id=nxt.id, amount=200000.0)
+        self.assertEqual(self.activity.fund_remainder, 300000.0)
+        self.assertEqual(nxt.amount_transfer, 200000.0)
+        self.assertEqual(nxt.fund_remainder, 200000.0)
+        self.assertEqual(nxt.amount_balance, 200000.0)

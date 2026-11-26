@@ -52,6 +52,8 @@
                             confirm="Tandai kegiatan ini selesai? Setelah selesai, kegiatan tidak bisa dipilih lagi pada transaksi baru."/>
                     <button name="action_print" type="object" string="Cetak Laporan"
                             class="oe_highlight" invisible="state not in ('open', 'done')"/>
+                    <button name="action_transfer_remainder" type="object" string="Pindahkan Sisa Dana"
+                            invisible="state not in ('open', 'done') or fund_remainder &lt;= 0"/>
                     <button name="action_draft" type="object" string="Buka Kembali"
                             invisible="state not in ('done', 'cancel')"/>
                     <button name="action_cancel" type="object" string="Batalkan"
@@ -78,8 +80,10 @@
                         <group>
                             <field name="amount_income"/>
                             <field name="amount_expense"/>
+                            <field name="amount_transfer" invisible="not amount_transfer"/>
                             <field name="amount_balance" decoration-danger="amount_balance &lt; 0"
                                    decoration-bf="1"/>
+                            <field name="fund_remainder" invisible="not fund_remainder"/>
                             <field name="company_id" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>

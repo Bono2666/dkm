@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dkm_activity_transfer_form" model="ir.ui.view">
+        <field name="name">dkm.activity.transfer.form</field>
+        <field name="model">dkm.activity.transfer</field>
+        <field name="arch" type="xml">
+            <form>
+                <p class="text-muted">
+                    Sisa Dana Kegiatan dipindahkan tanpa memindahkan uang kas: dana terikat
+                    kegiatan ini dilepas ke sumber dana lain, atau diteruskan ke kegiatan lain.
+                </p>
+                <group>
+                    <group>
+                        <field name="activity_id"/>
+                        <field name="remainder"/>
+                        <field name="amount"/>
+                    </group>
+                    <group>
+                        <field name="target" widget="radio"/>
+                        <field name="fund_id" invisible="target != 'fund'" required="target == 'fund'"
+                               options="{'no_create': True, 'no_open': True}"/>
+                        <field name="target_activity_id" invisible="target != 'activity'"
+                               required="target == 'activity'"
+                               options="{'no_create': True, 'no_open': True}"/>
+                        <field name="date"/>
+                    </group>
+                </group>
+                <field name="note" placeholder="Keterangan (opsional), mis. sesuai keputusan rapat DKM"/>
+                <field name="kegiatan_fund_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <footer>
+                    <button name="action_confirm" type="object" string="Pindahkan" class="btn-primary"
+                            confirm="Pindahkan sisa dana ini? Entri jurnalnya langsung dibukukan."/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -84,7 +84,8 @@ class DkmFundReport(models.Model):
     move_id = fields.Many2one('account.move', string="Dokumen", readonly=True)
     partner_id = fields.Many2one('res.partner', string="Donatur/Vendor", readonly=True)
     name = fields.Char("Keterangan", readonly=True)
-    opening = fields.Monetary("Saldo Awal", readonly=True)
+    opening = fields.Monetary("Saldo Awal/Pindahan", readonly=True,
+                              help="Saldo awal dana dan pemindahan antar dana (akun Aset Neto).")
     income = fields.Monetary("Penerimaan", readonly=True)
     expense = fields.Monetary("Pengeluaran", readonly=True)
     balance = fields.Monetary("Saldo", readonly=True)

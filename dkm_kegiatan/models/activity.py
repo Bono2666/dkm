@@ -37,7 +37,12 @@ class DkmActivity(models.Model):
     budget_expense = fields.Monetary("Anggaran Pengeluaran", compute='_compute_budget')
     amount_income = fields.Monetary("Penerimaan", compute='_compute_amounts')
     amount_expense = fields.Monetary("Pengeluaran", compute='_compute_amounts')
+    amount_transfer = fields.Monetary("Pindahan Dana", compute='_compute_amounts')
     amount_balance = fields.Monetary("Sisa Dana", compute='_compute_amounts')
+    fund_remainder = fields.Monetary(
+        "Sisa Dana Kegiatan", compute='_compute_amounts',
+        help="Dana Kegiatan yang belum terpakai: donasi kegiatan dikurangi pengeluaran "
+             "yang dibayar dari Dana Kegiatan (tanpa subsidi Dana Umum/Operasional).")
     transaction_count = fields.Integer("Transaksi", compute='_compute_amounts')
 
     @api.constrains('date_start', 'date_end')
@@ -57,19 +62,27 @@ class DkmActivity(models.Model):
                 lambda b: b.type == 'expense').mapped('planned_amount'))
 
     def _compute_amounts(self):
+        self.env['account.move.line'].flush_model()     # the report is a SQL view
+        Report = self.env['dkm.activity.report'].sudo()
         totals = {
-            activity.id: (income, expense, balance, count)
-            for activity, income, expense, balance, count
-            in self.env['dkm.activity.report'].sudo()._read_group(
+            activity.id: (income, expense, transfer, balance, count)
+            for activity, income, expense, transfer, balance, count in Report._read_group(
                 [('activity_id', 'in', self.ids)], ['activity_id'],
-                ['income:sum', 'expense:sum', 'balance:sum', '__count'])
+                ['income:sum', 'expense:sum', 'transfer:sum', 'balance:sum', '__count'])
         }
+        fund = self.env.ref('dkm_kegiatan.fund_kegiatan', raise_if_not_found=False)
+        remainders = dict(Report._read_group(
+            [('activity_id', 'in', self.ids), ('fund_id', '=', fund.id if fund else 0)],
+            ['activity_id'], ['balance:sum']))
         for activity in self:
-            income, expense, balance, count = totals.get(activity.id, (0.0, 0.0, 0.0, 0))
+            income, expense, transfer, balance, count = totals.get(
+                activity.id, (0.0, 0.0, 0.0, 0.0, 0))
             activity.amount_income = income
             activity.amount_expense = expense
+            activity.amount_transfer = transfer
             activity.amount_balance = balance
             activity.transaction_count = count
+            activity.fund_remainder = remainders.get(activity, 0.0)
 
     def action_open(self):
         self.filtered(lambda a: a.state == 'draft').state = 'open'
@@ -102,6 +115,14 @@ class DkmActivity(models.Model):
             'context': {'search_default_group_type': 1},
         }
 
+    def action_transfer_remainder(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window', 'name': "Pindahkan Sisa Dana",
+            'res_model': 'dkm.activity.transfer', 'view_mode': 'form', 'target': 'new',
+            'context': {'default_activity_id': self.id},
+        }
+
     def action_print(self):
         return self.env.ref('dkm_kegiatan.action_report_activity').report_action(self)
 
@@ -109,6 +130,7 @@ class DkmActivity(models.Model):
         """Rows for the PDF: budget vs actual per pos (plus unbudgeted
         amounts by category/account) and the posted transactions."""
         self.ensure_one()
+        self.env['account.move.line'].flush_model()
         lines = self.env['dkm.activity.report'].sudo().search(
             [('activity_id', '=', self.id)], order='date, id')
 
@@ -165,6 +187,7 @@ class DkmActivityBudget(models.Model):
     progress = fields.Float("Realisasi (%)", compute='_compute_actual')
 
     def _compute_actual(self):
+        self.env['account.move.line'].flush_model()
         totals = {
             budget.id: (income, expense)
             for budget, income, expense in self.env['dkm.activity.report'].sudo()._read_group(
